@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seguimiento de reuniones – Tablero</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #f4f5fb;
+      color: #111827;
+    }
+
+    header {
+      padding: 12px 20px 8px;
+      background: #ffffff;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .title {
+      font-size: 18px;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .title span {
+      font-size: 11px;
+      color: #6b7280;
+      font-weight: 400;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    button {
+      border-radius: 999px;
+      border: none;
+      padding: 6px 11px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.15s;
+      white-space: nowrap;
+    }
+
+    button:active {
+      transform: translateY(1px);
+      box-shadow: none;
+    }
+
+    .btn-main {
+      background: #2563eb;
+      color: #ffffff;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, .35);
+    }
+
+    .btn-ghost {
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .btn-danger {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .user-info {
+      font-size: 11px;
+      color: #6b7280;
+    }
+
+    .container {
+      padding: 12px 16px 18px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .info-row {
+      font-size: 11px;
+      color: #6b7280;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .info-row strong {
+      color: #111827;
+      font-weight: 600;
+    }
+
+    .search-row {
+      margin-top: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    select, input[type="text"], input[type="date"] {
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      padding: 6px 9px;
+      font-size: 13px;
+      outline: none;
+      background: #ffffff;
+    }
+
+    select:focus, input[type="text"]:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, .25);
+    }
+
+    .table-wrapper {
+      margin-top: 8px;
+      flex: 1;
+      border-radius: 14px;
+      overflow: auto;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: max(100%, 900px);
+      font-size: 12px;
+    }
+
+    thead {
+      background: #f3f4f6;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    th, td {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 6px 8px;
+      text-align: left;
+      min-width: 135px;
+      background: #ffffff;
+    }
+
+    th {
+      font-weight: 600;
+      font-size: 12px;
+      color: #374151;
+      position: sticky;
+      top: 0;
+      background: #f3f4f6;
+      z-index: 11;
+    }
+
+    /* Fijar primeras 5 columnas */
+    th.sticky, td.sticky {
+      position: sticky;
+      left: 0;
+      z-index: 9;
+      background: #ffffff;
+    }
+
+    th.sticky:nth-child(1), td.sticky:nth-child(1) { left: 0; }
+    th.sticky:nth-child(2), td.sticky:nth-child(2) { left: 140px; }
+    th.sticky:nth-child(3), td.sticky:nth-child(3) { left: 280px; }
+    th.sticky:nth-child(4), td.sticky:nth-child(4) { left: 420px; }
+    th.sticky:nth-child(5), td.sticky:nth-child(5) { left: 560px; }
+
+    tr:nth-child(even) td {
+      background: #fafafb;
+    }
+
+    td[contenteditable="true"] {
+      cursor: text;
+    }
+
+    td:focus-visible {
+      outline: 2px solid #2563eb;
+      outline-offset: -2px;
+    }
+
+    .estado-pill {
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .estado-P  { background: #fee2e2; color: #b91c1c; }
+    .estado-EP { background: #fef3c7; color: #92400e; }
+    .estado-T  { background: #dcfce7; color: #166534; }
+
+    .estado-select {
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      padding: 3px 6px;
+      font-size: 11px;
+    }
+
+    .responsable-select {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      padding: 3px 6px;
+      font-size: 11px;
+    }
+
+    /* Comentarios: triangulito amarillo */
+    td[data-has-comment="1"] {
+      position: relative;
+    }
+    td[data-has-comment="1"]::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 0;
+      height: 0;
+      border-top: 11px solid #facc15;
+      border-left: 11px solid transparent;
+    }
+
+    .footer-note {
+      font-size: 11px;
+      color: #6b7280;
+      margin-top: 6px;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .toolbar {
+        width: 100%;
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title">
+      Seguimiento de tareas y reuniones
+      <span id="userLabel">Cargando usuario…</span>
+    </div>
+    <div class="toolbar">
+      <button id="btnAddRow" class="btn-main">+ Fila</button>
+      <button id="btnAddColumn" class="btn-ghost">+ Columna</button>
+      <button id="btnEditResponsables" class="btn-ghost">Responsables</button>
+      <button id="btnExport" class="btn-ghost">⬇ Exportar JSON</button>
+      <button id="btnImport" class="btn-ghost">⬆ Importar JSON</button>
+      <button id="btnLogout" class="btn-danger">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="info-row">
+      <span>Columnas base: <strong>tema, sub tema, responsable, estado, fecha de término</strong>.</span>
+      <span>➕ Cada nueva reunión agrega una columna con la fecha del día.</span>
+      <span>🖱 Clic derecho en cualquier celda para agregar un comentario (triángulo amarillo).</span>
+    </div>
+
+    <div class="search-row">
+      <span>Buscar:</span>
+      <select id="searchColumn">
+        <option value="all">Todas las columnas</option>
+        <option value="tema">tema</option>
+        <option value="subTema">sub tema</option>
+        <option value="responsable">responsable</option>
+        <option value="estado">estado</option>
+        <option value="fechaTermino">fecha de término</option>
+      </select>
+      <input id="searchText" type="text" placeholder="Escribe una palabra o frase" />
+      <button id="btnApplyFilter" class="btn-ghost">Filtro</button>
+      <button id="btnClearFilter" class="btn-ghost">Quitar filtro</button>
+    </div>
+
+    <div class="table-wrapper">
+      <table id="tabla">
+        <thead>
+          <tr id="headerRow"></tr>
+        </thead>
+        <tbody id="bodyRows"></tbody>
+      </table>
+    </div>
+
+    <div class="footer-note">
+      ✔ Los datos (incluyendo comentarios y lista de responsables) se guardan en este navegador, por usuario.
+    </div>
+  </div>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // ⚙️ Configuración Supabase
+    const SUPABASE_URL = 'https://hrbmstaklleraiacqmky.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhyYm1zdGFrbGxlcmFpYWNxbWt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyMTA2OTQsImV4cCI6MjA3ODc4NjY5NH0.tN00tAjMJpJK_8gnerocbOSzHp93N5yc9KohTBpMeZc';
+
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const BASE_COLUMNS = ['tema', 'subTema', 'responsable', 'estado', 'fechaTermino'];
+    const BASE_HEADERS = {
+      tema: 'tema',
+      subTema: 'sub tema',
+      responsable: 'responsable',
+      estado: 'estado',
+      fechaTermino: 'fecha de termino'
+    };
+
+    let currentUser = null;
+    let storageKey = null;
+
+    const state = {
+      responsables: [''],      // se ajusta luego
+      meetings: [],            // array de fechas (strings)
+      rows: [],                // datos de filas
+      comments: {},            // "rowIndex|colKey": texto
+      filter: { column: 'all', text: '' }
+    };
+
+    const headerRow = document.getElementById('headerRow');
+    const bodyRows = document.getElementById('bodyRows');
+
+    const btnAddRow = document.getElementById('btnAddRow');
+    const btnAddColumn = document.getElementById('btnAddColumn');
+    const btnEditResponsables = document.getElementById('btnEditResponsables');
+    const btnExport = document.getElementById('btnExport');
+    const btnImport = document.getElementById('btnImport');
+    const btnLogout = document.getElementById('btnLogout');
+
+    const searchColumn = document.getElementById('searchColumn');
+    const searchText = document.getElementById('searchText');
+    const btnApplyFilter = document.getElementById('btnApplyFilter');
+    const btnClearFilter = document.getElementById('btnClearFilter');
+
+    const userLabel = document.getElementById('userLabel');
+
+    // ---------- UTILIDADES ----------
+    function todayString() {
+      const d = new Date();
+      const dd = String(d.getDate()).padStart(2, '0');
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const yy = String(d.getFullYear()).slice(-2);
+      return `${dd}/${mm}/${yy}`;
+    }
+
+    function saveState() {
+      if (!storageKey) return;
+      localStorage.setItem(storageKey, JSON.stringify(state));
+    }
+
+    function loadState() {
+      if (!storageKey) return;
+      const raw = localStorage.getItem(storageKey);
+      if (!raw) {
+        // Estado inicial vacío
+        state.responsables = [''];
+        state.meetings = [];
+        state.rows = [];
+        state.comments = {};
+        return;
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        Object.assign(state, parsed);
+      } catch (e) {
+        console.error('Error al leer estado guardado', e);
+      }
+    }
+
+    function getCommentKey(rowIndex, colKey) {
+      return rowIndex + '|' + colKey;
+    }
+
+    // ---------- RENDER TABLA ----------
+    function renderHeader() {
+      headerRow.innerHTML = '';
+      BASE_COLUMNS.forEach((colName, index) => {
+        const th = document.createElement('th');
+        th.textContent = BASE_HEADERS[colName];
+        th.classList.add('sticky');
+        headerRow.appendChild(th);
+      });
+
+      state.meetings.forEach(dateLabel => {
+        const th = document.createElement('th');
+        th.textContent = dateLabel;
+        headerRow.appendChild(th);
+      });
+    }
+
+    function renderBody() {
+      bodyRows.innerHTML = '';
+
+      state.rows.forEach((row, rowIndex) => {
+        // aplicar filtro
+        if (state.filter.text.trim() !== '') {
+          const txt = state.filter.text.toLowerCase();
+          let match = false;
+
+          const checkValue = (val) => {
+            if (typeof val === 'string' && val.toLowerCase().includes(txt)) match = true;
+          };
+
+          if (state.filter.column === 'all') {
+            checkValue(row.tema);
+            checkValue(row.subTema);
+            checkValue(row.responsable);
+            checkValue(row.estado);
+            checkValue(row.fechaTermino);
+            state.meetings.forEach(m => {
+              checkValue((row.reuniones || {})[m]);
+            });
+          } else {
+            if (BASE_COLUMNS.includes(state.filter.column)) {
+              checkValue(row[state.filter.column]);
+            } else {
+              // podría ser columna de reunión
+              checkValue((row.reuniones || {})[state.filter.column]);
+            }
+          }
+
+          if (!match) return; // no se muestra esta fila
+        }
+
+        const tr = document.createElement('tr');
+
+        // --- tema ---
+        let td = document.createElement('td');
+        td.classList.add('sticky');
+        td.contentEditable = true;
+        td.textContent = row.tema || '';
+        td.dataset.row = rowIndex;
+        td.dataset.field = 'tema';
+        td.addEventListener('input', handleTextEdit);
+        tr.appendChild(td);
+
+        // --- sub tema ---
+        td = document.createElement('td');
+        td.classList.add('sticky');
+        td.contentEditable = true;
+        td.textContent = row.subTema || '';
+        td.dataset.row = rowIndex;
+        td.dataset.field = 'subTema';
+        td.addEventListener('input', handleTextEdit);
+        tr.appendChild(td);
+
+        // --- responsable ---
+        td = document.createElement('td');
+        td.classList.add('sticky');
+        const selResp = document.createElement('select');
+        selResp.className = 'responsable-select';
+        state.responsables.forEach(r => {
+          const opt = document.createElement('option');
+          opt.value = r;
+          opt.textContent = r === '' ? '—' : r;
+          selResp.appendChild(opt);
+        });
+        selResp.value = row.responsable || '';
+        selResp.dataset.row = rowIndex;
+        selResp.addEventListener('change', (e) => {
+          state.rows[rowIndex].responsable = e.target.value;
+          saveState();
+        });
+        td.appendChild(selResp);
+        tr.appendChild(td);
+
+        // --- estado ---
+        td = document.createElement('td');
+        td.classList.add('sticky');
+        const selEstado = document.createElement('select');
+        selEstado.className = 'estado-select';
+        [['P', 'P'], ['EP', 'EP'], ['T', 'T']].forEach(([val, label]) => {
+          const opt = document.createElement('option');
+          opt.value = val;
+          opt.textContent = label;
+          selEstado.appendChild(opt);
+        });
+        selEstado.value = row.estado || 'P';
+        selEstado.dataset.row = rowIndex;
+        selEstado.addEventListener('change', (e) => {
+          state.rows[rowIndex].estado = e.target.value;
+          saveState();
+          renderBody(); // para refrescar color
+        });
+        const pill = document.createElement('span');
+        pill.className = 'estado-pill estado-' + (row.estado || 'P');
+        pill.textContent = row.estado || 'P';
+        selEstado.style.marginRight = '4px';
+        td.appendChild(selEstado);
+        td.appendChild(pill);
+        tr.appendChild(td);
+
+        // --- fecha de termino ---
+        td = document.createElement('td');
+        td.classList.add('sticky');
+        td.contentEditable = true;
+        td.textContent = row.fechaTermino || '';
+        td.dataset.row = rowIndex;
+        td.dataset.field = 'fechaTermino';
+        td.addEventListener('input', handleTextEdit);
+        tr.appendChild(td);
+
+        // --- columnas de reuniones ---
+        state.meetings.forEach(dateLabel => {
+          td = document.createElement('td');
+          const colKey = dateLabel;
+          const value = (row.reuniones || {})[colKey] || '';
+          td.contentEditable = true;
+          td.textContent = value;
+          td.dataset.row = rowIndex;
+          td.dataset.meeting = colKey;
+          td.addEventListener('input', handleMeetingEdit);
+
+          const cKey = getCommentKey(rowIndex, colKey);
+          if (state.comments[cKey]) {
+            td.dataset.hasComment = '1';
+          }
+
+          tr.appendChild(td);
+        });
+
+        bodyRows.appendChild(tr);
+      });
+    }
+
+    function renderTable() {
+      renderHeader();
+      renderBody();
+    }
+
+    // ---------- EVENTOS EDICIÓN ----------
+    function handleTextEdit(e) {
+      const rowIndex = Number(e.target.dataset.row);
+      const field = e.target.dataset.field;
+      if (!Number.isFinite(rowIndex) || !field) return;
+      state.rows[rowIndex][field] = e.target.textContent;
+      saveState();
+    }
+
+    function handleMeetingEdit(e) {
+      const rowIndex = Number(e.target.dataset.row);
+      const meetingKey = e.target.dataset.meeting;
+      if (!Number.isFinite(rowIndex) || !meetingKey) return;
+      if (!state.rows[rowIndex].reuniones) {
+        state.rows[rowIndex].reuniones = {};
+      }
+      state.rows[rowIndex].reuniones[meetingKey] = e.target.textContent;
+      saveState();
+    }
+
+    // Comentarios con clic derecho
+    document.getElementById('tabla').addEventListener('contextmenu', (e) => {
+      const td = e.target.closest('td');
+      if (!td || td.parentElement.parentElement.tagName === 'THEAD') return;
+      e.preventDefault();
+
+      const rowIndex = td.dataset.row;
+      if (rowIndex === undefined) return;
+
+      // columna
+      let colKey = td.dataset.field;
+      if (td.dataset.meeting) colKey = td.dataset.meeting;
+      if (!colKey) colKey = 'base-' + td.cellIndex;
+
+      const key = getCommentKey(rowIndex, colKey);
+      const actual = state.comments[key] || '';
+
+      const nuevo = prompt('Comentario para esta celda (deja vacío para borrar):', actual);
+      if (nuevo === null) return; // cancelado
+
+      if (nuevo.trim() === '') {
+        delete state.comments[key];
+        td.removeAttribute('data-has-comment');
+      } else {
+        state.comments[key] = nuevo.trim();
+        td.dataset.hasComment = '1';
+      }
+      saveState();
+    });
+
+    // ---------- BOTONES PRINCIPALES ----------
+    btnAddRow.addEventListener('click', () => {
+      state.rows.push({
+        tema: '',
+        subTema: '',
+        responsable: '',
+        estado: 'P',
+        fechaTermino: '',
+        reuniones: {}
+      });
+      saveState();
+      renderTable();
+    });
+
+    btnAddColumn.addEventListener('click', () => {
+      const today = todayString();
+      const label = prompt('Fecha para la nueva reunión (dd/mm/aa). Deja vacío para usar la fecha de hoy:', today) || today;
+      if (state.meetings.includes(label)) {
+        alert('Esa fecha ya existe como columna.');
+        return;
+      }
+      state.meetings.push(label);
+      // inicializar texto de esa reunión
+      state.rows.forEach(row => {
+        if (!row.reuniones) row.reuniones = {};
+        row.reuniones[label] = row.reuniones[label] || '';
+      });
+      saveState();
+      renderTable();
+    });
+
+    btnEditResponsables.addEventListener('click', () => {
+      const lista = state.responsables.join('\n');
+      const nuevo = prompt('Edita la lista de responsables (uno por línea):', lista);
+      if (nuevo === null) return;
+      const arr = nuevo.split('\n').map(x => x.trim()).filter(x => x !== '');
+      arr.unshift(''); // opción vacía
+      state.responsables = arr;
+      saveState();
+      renderTable();
+    });
+
+    btnExport.addEventListener('click', () => {
+      const dataStr = JSON.stringify(state, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'seguimiento_reuniones.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    btnImport.addEventListener('click', () => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'application/json';
+      input.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const imported = JSON.parse(reader.result);
+            Object.assign(state, imported);
+            saveState();
+            renderTable();
+          } catch (err) {
+            console.error(err);
+            alert('No se pudo importar el archivo JSON.');
+          }
+        };
+        reader.readAsText(file);
+      });
+      input.click();
+    });
+
+    btnLogout.addEventListener('click', async () => {
+      try {
+        await supabaseClient.auth.signOut();
+      } catch (e) {
+        console.warn('Error al cerrar sesión', e);
+      } finally {
+        window.location.href = 'index.html';
+      }
+    });
+
+    // ---------- FILTRO ----------
+    btnApplyFilter.addEventListener('click', () => {
+      state.filter.column = searchColumn.value;
+      state.filter.text = searchText.value.trim();
+      renderTable();
+    });
+
+    btnClearFilter.addEventListener('click', () => {
+      state.filter.column = 'all';
+      state.filter.text = '';
+      searchColumn.value = 'all';
+      searchText.value = '';
+      renderTable();
+    });
+
+    // ---------- INICIALIZACIÓN ----------
+    async function init() {
+      // Checar sesión
+      const { data, error } = await supabaseClient.auth.getSession();
+      if (error) {
+        console.error(error);
+      }
+      if (!data || !data.session) {
+        // Sin sesión => regresar al login
+        window.location.href = 'index.html';
+        return;
+      }
+
+      currentUser = data.session.user;
+      storageKey = 'seguimiento_reuniones_' + currentUser.id;
+
+      userLabel.textContent = currentUser.email || 'Usuario sin correo';
+
+      loadState();
+
+      if (!Array.isArray(state.responsables) || state.responsables.length === 0) {
+        state.responsables = ['', 'responsable 1', 'responsable 2'];
+      }
+      if (!Array.isArray(state.rows)) {
+        state.rows = [];
+      }
+      if (!Array.isArray(state.meetings)) {
+        state.meetings = [];
+      }
+      if (!state.comments) {
+        state.comments = {};
+      }
+
+      renderTable();
+    }
+
+    init();
+  </script>
+</body>
+</html>

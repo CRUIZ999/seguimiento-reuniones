@@ -1,160 +1,188 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Seguimiento de tareas y reuniones</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Fuente -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: #f5f6fb;
+      --bg: #f5f7fb;
       --card-bg: #ffffff;
-      --primary: #0f74ff;
-      --primary-soft: #e6f0ff;
-      --border-soft: #dde3f0;
-      --text-main: #111827;
+      --primary: #0f6fff;
+      --primary-soft: #e3efff;
+      --border: #dde3f0;
+      --text-main: #1f2933;
       --text-soft: #6b7280;
-      --danger: #ef4444;
-      --success: #10b981;
+      --danger: #e11d48;
       --warning: #f59e0b;
-      --radius-xl: 18px;
+      --success: #22c55e;
+      --radius-lg: 16px;
       --radius-md: 10px;
-      --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.08);
+      --radius-sm: 6px;
+      --shadow-soft: 0 16px 40px rgba(15, 23, 42, 0.12);
     }
 
     * {
       box-sizing: border-box;
-      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
     }
 
     body {
       margin: 0;
+      padding: 24px;
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: var(--bg);
       color: var(--text-main);
     }
 
-    .page {
+    .app {
       max-width: 1400px;
-      margin: 20px auto 40px;
-      padding: 0 16px;
-    }
-
-    .card {
+      margin: 0 auto;
       background: var(--card-bg);
-      border-radius: var(--radius-xl);
+      border-radius: var(--radius-lg);
       box-shadow: var(--shadow-soft);
-      padding: 18px 20px 20px;
+      padding: 20px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
-    .header-row {
+    /* Header superior */
+    .app-header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
       gap: 12px;
-      margin-bottom: 8px;
     }
 
     .title-group {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
-    h1 {
+    .title {
       font-size: 20px;
       font-weight: 600;
-      margin: 0;
-    }
-
-    .subtitle {
-      font-size: 12px;
-      color: var(--text-soft);
-      margin-top: 2px;
     }
 
     .user-info {
-      font-size: 12px;
+      font-size: 13px;
       color: var(--text-soft);
     }
 
     .user-email {
-      font-weight: 600;
+      font-weight: 500;
       color: var(--text-main);
     }
 
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     .btn {
+      border: none;
       border-radius: 999px;
-      border: 1px solid transparent;
+      padding: 7px 14px;
       font-size: 13px;
-      padding: 6px 14px;
+      font-weight: 500;
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      cursor: pointer;
-      background: #f3f4ff;
-      color: var(--text-main);
-      transition: background 0.15s, box-shadow 0.15s, border-color 0.15s,
-        transform 0.05s;
-      white-space: nowrap;
+      background: #eef2ff;
+      color: #374151;
+      transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
     }
 
     .btn-primary {
       background: var(--primary);
       color: #ffffff;
-      border-color: var(--primary);
-      box-shadow: 0 8px 20px rgba(15, 116, 255, 0.25);
+      box-shadow: 0 8px 18px rgba(15, 111, 255, 0.35);
     }
 
-    .btn-icon {
-      padding-inline: 9px;
-      justify-content: center;
+    .btn-primary:hover {
+      background: #0c59c7;
     }
 
-    .btn-danger {
-      background: #fee2e2;
-      color: #b91c1c;
-      border-color: #fecaca;
-    }
-
-    .btn:hover {
-      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
-      transform: translateY(-1px);
-    }
-
-    .btn:active {
-      transform: translateY(0);
-      box-shadow: none;
-    }
-
-    .btn-outline {
-      background: #fff;
-      border-color: var(--border-soft);
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
       color: var(--text-soft);
     }
 
-    .btn-outline-primary {
+    .btn-ghost:hover {
+      background: #f3f4ff;
+    }
+
+    .btn-icon {
+      padding-inline: 10px;
+      min-width: 36px;
+      justify-content: center;
+    }
+
+    .btn:hover {
+      transform: translateY(-0.5px);
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding-inline: 10px;
+      padding-block: 4px;
+      font-size: 11px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .pill-p {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .pill-ep {
+      background: #fef3c7;
+      color: #b45309;
+    }
+
+    .pill-t {
+      background: #dcfce7;
+      color: #15803d;
+    }
+
+    /* Boton ayuda */
+    .help-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
       background: #fff;
-      border-color: var(--primary-soft);
-      color: var(--primary);
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-soft);
     }
 
-    .btn .icon {
-      font-size: 14px;
+    .help-btn:hover {
+      background: #f3f4ff;
     }
 
+    /* Barra de herramientas */
     .toolbar {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      margin-top: 8px;
-      margin-bottom: 12px;
+      align-items: center;
+      gap: 12px;
       flex-wrap: wrap;
     }
 
@@ -166,42 +194,17 @@
       flex-wrap: wrap;
     }
 
-    .badge-counter {
-      font-size: 11px;
-      background: #f9fafb;
-      border-radius: 999px;
-      padding: 4px 8px;
-      border: 1px solid var(--border-soft);
-      color: var(--text-soft);
-      display: inline-flex;
-      gap: 6px;
-    }
-
-    .badge-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 999px;
-    }
-
-    .dot-pendiente {
-      background: var(--warning);
-    }
-
-    .dot-proceso {
-      background: #38bdf8;
-    }
-
-    .dot-terminado {
-      background: var(--success);
-    }
-
     /* Tabla */
     .table-wrapper {
-      margin-top: 6px;
       border-radius: var(--radius-md);
-      border: 1px solid var(--border-soft);
+      border: 1px solid var(--border);
       overflow: hidden;
       background: #fff;
+    }
+
+    .table-scroll {
+      max-height: 520px;
+      overflow: auto;
     }
 
     table {
@@ -211,916 +214,604 @@
     }
 
     thead {
+      position: sticky;
+      top: 0;
+      z-index: 2;
       background: #f9fafb;
     }
 
-    th,
-    td {
-      padding: 6px 8px;
-      border-bottom: 1px solid #edf0f6;
-      vertical-align: top;
+    th, td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: middle;
     }
 
     th {
-      text-align: left;
       font-size: 12px;
       font-weight: 600;
-      color: #6b7280;
-      position: relative;
+      color: var(--text-soft);
       background: #f9fafb;
     }
 
-    tbody tr:nth-child(even) {
-      background: #fcfdff;
+    tr:nth-child(even) td {
+      background: #fbfcff;
     }
 
-    tbody tr:hover {
-      background: #f4f6ff;
-    }
-
-    .col-tema {
-      width: 18%;
-    }
-
-    .col-subtema {
-      width: 27%;
-    }
-
-    .col-responsable {
-      width: 17%;
-    }
-
-    .col-estado {
-      width: 13%;
-    }
-
-    .col-fecha {
-      width: 25%;
-      max-width: 40ch; /* ~40 caracteres visibles hacia la derecha */
-      word-wrap: break-word;
-      white-space: normal;
+    tr:hover td {
+      background: #f3f4ff;
     }
 
     .cell-input {
       width: 100%;
-      border: none;
-      background: transparent;
-      font-size: 13px;
-      padding: 3px 2px;
-      outline: none;
-      resize: none;
-      font-family: inherit;
-    }
-
-    .cell-input::placeholder {
-      color: #cbd5f5;
-    }
-
-    .estado-pill {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 38px;
-      padding: 4px 9px;
-      border-radius: 999px;
-      border: none;
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .estado-P {
-      background: #fef3c7;
-      color: #92400e;
-    }
-
-    .estado-EP {
-      background: #e0f2fe;
-      color: #075985;
-    }
-
-    .estado-T {
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    .estado-select {
-      margin-left: 4px;
-      padding: 2px 4px;
       border-radius: 6px;
-      border: 1px solid #e5e7eb;
-      font-size: 11px;
-      background: white;
+      border: 1px solid transparent;
+      padding: 5px 7px;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      background: transparent;
     }
 
-    /* Header filters */
+    .cell-input:focus {
+      background: #fefefe;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(15, 111, 255, 0.35);
+    }
+
+    /* Filtros en encabezado */
     .filter-input {
       width: 100%;
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
-      padding: 3px 6px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 4px 8px;
       font-size: 11px;
-      margin-top: 4px;
       outline: none;
+      background: #fff;
+      margin-top: 4px;
     }
 
     .filter-input:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 1px rgba(15, 116, 255, 0.12);
+      box-shadow: 0 0 0 1px rgba(15, 111, 255, 0.2);
     }
 
-    .filter-select {
-      width: 100%;
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
-      padding: 3px 6px;
+    /* Estado select visual */
+    .estado-select {
+      width: 70px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 3px 8px;
       font-size: 11px;
-      margin-top: 4px;
-      background: #fff;
+      font-weight: 500;
+      color: #111827;
+      background: #f9fafb;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .estado-select.p {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+
+    .estado-select.ep {
+      background: #fef3c7;
+      color: #b45309;
+    }
+
+    .estado-select.t {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .estado-select:focus {
+      box-shadow: 0 0 0 1px rgba(15, 111, 255, 0.25);
+    }
+
+    /* Fecha */
+    .date-input {
+      width: 140px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      padding: 4px 8px;
+      font-size: 12px;
+      font-family: inherit;
       outline: none;
     }
 
-    .filter-select:focus {
+    .date-input:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 1px rgba(15, 116, 255, 0.12);
+      box-shadow: 0 0 0 1px rgba(15, 111, 255, 0.2);
     }
 
-    .table-footer-note {
+    /* Footer pequeño */
+    .footer-note {
       font-size: 11px;
       color: var(--text-soft);
-      padding-top: 6px;
-    }
-
-    .table-footer-note span {
-      font-weight: 500;
-    }
-
-    .table-footer-note .check {
-      color: var(--primary);
-    }
-
-    /* Date picker overlay */
-    #datePickerOverlay {
-      position: absolute;
-      z-index: 20;
-      transform: translateY(-50%);
-    }
-    #datePickerOverlay input {
-      border-radius: 8px;
-      border: 1px solid #cbd5f5;
-      padding: 4px 6px;
-      font-size: 12px;
-      background: #fff;
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
-    }
-
-    /* Help modal */
-    .help-icon-btn {
-      width: 30px;
-      height: 30px;
-      border-radius: 999px;
-      border: 1px solid #e5e7eb;
-      display: inline-flex;
+      display: flex;
       align-items: center;
-      justify-content: center;
-      background: #fff;
-      cursor: pointer;
-      color: #6b7280;
-      font-weight: 600;
-      font-size: 15px;
-      margin-left: 4px;
+      gap: 4px;
     }
 
-    .help-icon-btn:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
-      transform: translateY(-1px);
+    .footer-note input {
+      transform: translateY(1px);
     }
 
+    /* Modal básico */
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.35);
+      background: rgba(15, 23, 42, 0.32);
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 40;
+      z-index: 50;
+    }
+
+    .modal-backdrop.show {
+      display: flex;
     }
 
     .modal {
+      width: 420px;
+      max-width: 90vw;
       background: #fff;
       border-radius: 18px;
-      max-width: 640px;
-      width: calc(100% - 32px);
-      padding: 18px 20px 18px;
-      box-shadow: 0 18px 60px rgba(15, 23, 42, 0.35);
-      max-height: 80vh;
-      overflow: auto;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25);
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
 
     .modal-header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 6px;
+      align-items: center;
+      gap: 8px;
     }
 
     .modal-title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
     }
 
+    .modal-body {
+      font-size: 13px;
+      color: var(--text-soft);
+      max-height: 340px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
     .modal-close {
-      background: #f3f4ff;
-      border-radius: 999px;
       border: none;
-      width: 26px;
-      height: 26px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+      background: transparent;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 18px;
+      color: #9ca3af;
     }
 
-    .modal p {
-      font-size: 13px;
-      color: var(--text-soft);
-      margin-top: 4px;
-      margin-bottom: 6px;
+    .modal-close:hover {
+      color: #6b7280;
     }
 
-    .modal ul {
+    .help-list {
       padding-left: 18px;
-      margin: 4px 0 10px;
-      font-size: 13px;
-      color: var(--text-soft);
     }
 
-    .modal li {
-      margin-bottom: 3px;
+    .help-list li {
+      margin-bottom: 4px;
     }
 
-    .modal strong {
-      color: var(--text-main);
-    }
-
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
+      body {
+        padding: 12px;
+      }
+      .app {
+        padding: 16px;
+      }
       .toolbar {
         flex-direction: column;
         align-items: flex-start;
       }
-      .toolbar-right {
-        align-self: stretch;
-        justify-content: space-between;
+      .table-wrapper {
+        border-radius: 10px;
       }
     }
   </style>
 </head>
-
 <body>
-  <div class="page">
-    <div class="card">
-      <div class="header-row">
-        <div>
-          <div class="title-group">
-            <h1>Seguimiento de tareas y reuniones</h1>
-            <button class="help-icon-btn" id="btnHelp" title="Ayuda">?</button>
-          </div>
-          <div class="subtitle">
-            Columnas base: <strong>tema</strong>, <strong>sub tema</strong>, <strong>responsable</strong>,
-            <strong>estado</strong>, <strong>fecha de término</strong>. Cada nueva reunión agrega una columna nueva.
-          </div>
-        </div>
-        <div class="user-info">
-          Usuario: <span class="user-email" id="userEmail"></span>
-        </div>
-      </div>
-
-      <div class="toolbar">
-        <div class="toolbar-left">
-          <button class="btn btn-primary" id="btnNuevaFila">
-            <span class="icon">＋</span> Fila
-          </button>
-          <button class="btn btn-outline-primary" id="btnNuevaColumna">
-            <span class="icon">▤</span> Columna
-          </button>
-
-          <button class="btn btn-outline" id="btnGestionResponsables">
-            Responsables
-          </button>
-
-          <span class="badge-counter" id="resumenEstados">
-            <span><span class="badge-dot dot-pendiente"></span> P: 0</span>
-            <span><span class="badge-dot dot-proceso"></span> EP: 0</span>
-            <span><span class="badge-dot dot-terminado"></span> T: 0</span>
-          </span>
-        </div>
-
-        <div class="toolbar-right">
-          <button class="btn btn-outline btn-icon" id="btnExportar" title="Exportar JSON">
-            <span class="icon">⭳</span>
-          </button>
-          <button class="btn btn-outline btn-icon" id="btnImportar" title="Importar JSON">
-            <span class="icon">⭱</span>
-          </button>
-
-          <input type="file" id="inputImportar" accept="application/json" style="display:none" />
-
-          <button class="btn btn-danger" id="btnCerrarSesion">
-            Cerrar sesión
-          </button>
-        </div>
-      </div>
-
-      <div class="table-wrapper">
-        <table id="tabla">
-          <thead>
-            <tr id="headerRow">
-              <th class="col-tema">tema</th>
-              <th class="col-subtema">sub tema</th>
-              <th class="col-responsable">responsable</th>
-              <th class="col-estado">estado</th>
-              <th class="col-fecha">fecha de termino</th>
-              <!-- columnas dinámicas de reuniones se insertan aquí -->
-            </tr>
-            <tr id="filterRow">
-              <th><input class="filter-input" data-col="tema" placeholder="Filtrar tema" /></th>
-              <th><input class="filter-input" data-col="subtema" placeholder="Filtrar sub tema" /></th>
-              <th>
-                <select class="filter-select" data-col="responsable" id="filtroResponsable">
-                  <option value="">Todos</option>
-                </select>
-              </th>
-              <th>
-                <select class="filter-select" data-col="estado" id="filtroEstado">
-                  <option value="">Todos</option>
-                  <option value="P">P</option>
-                  <option value="EP">EP</option>
-                  <option value="T">T</option>
-                </select>
-              </th>
-              <th><input class="filter-input" data-col="fecha" placeholder="Filtrar fecha" /></th>
-              <!-- filtros dinámicos de reuniones -->
-            </tr>
-          </thead>
-          <tbody id="tbody">
-          </tbody>
-        </table>
-      </div>
-
-      <div class="table-footer-note">
-        <span class="check">✔</span>
-        Los datos (incluyendo comentarios y lista de responsables) se guardan en este navegador, por usuario.
-        Para usarlos en otra computadora, exporta el JSON e impórtalo en esta misma página.
-      </div>
+<div class="app">
+  <!-- Encabezado -->
+  <div class="app-header">
+    <div class="title-group">
+      <div class="title">Seguimiento de tareas y reuniones</div>
+      <button id="btnAyuda" class="help-btn" title="Ver ayuda">?</button>
+    </div>
+    <div class="header-actions">
+      <span class="user-info">
+        Usuario: <span id="userEmail" class="user-email">(sin sesión)</span>
+      </span>
+      <button id="btnCerrarSesion" class="btn btn-ghost">Cerrar sesión</button>
     </div>
   </div>
 
-  <!-- Overlay del datepicker -->
-  <div id="datePickerOverlay" style="display:none;">
-    <input type="date" id="datePickerInput" />
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <button id="btnNuevaFila" class="btn btn-primary">+ Fila</button>
+      <button id="btnNuevaColumna" class="btn">+ Columna</button>
+    </div>
+    <div class="toolbar-right">
+      <!-- Solo iconos para exportar / importar -->
+      <button id="btnExportar" class="btn btn-icon" title="Exportar JSON">⬇️</button>
+      <button id="btnImportar" class="btn btn-icon" title="Importar JSON">⬆️</button>
+    </div>
   </div>
 
-  <!-- Modal de ayuda -->
-  <div class="modal-backdrop" id="helpModalBackdrop">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-title">Ayuda rápida del tablero</div>
-        <button class="modal-close" id="helpModalClose">✕</button>
-      </div>
+  <!-- Tabla -->
+  <div class="table-wrapper">
+    <div class="table-scroll">
+      <table id="tabla">
+        <thead>
+        <tr>
+          <th style="min-width: 140px;">
+            tema
+            <input type="text" class="filter-input" data-col="tema" placeholder="Filtrar tema">
+          </th>
+          <th style="min-width: 140px;">
+            sub tema
+            <input type="text" class="filter-input" data-col="subtema" placeholder="Filtrar sub tema">
+          </th>
+          <th style="min-width: 140px;">
+            responsable
+            <input type="text" class="filter-input" data-col="responsable" placeholder="Filtrar responsable">
+          </th>
+          <th style="width: 90px;">
+            estado
+            <input type="text" class="filter-input" data-col="estado" placeholder="P / EP / T">
+          </th>
+          <th style="min-width: 160px;">
+            fecha de termino
+            <input type="text" class="filter-input" data-col="fecha" placeholder="Filtrar fecha">
+          </th>
+          <th style="min-width: 220px;">
+            notas / comentarios
+            <input type="text" class="filter-input" data-col="notas" placeholder="Filtrar notas">
+          </th>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+        <!-- filas renderizadas por JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    <input type="checkbox" checked disabled>
+    <span>Los datos (incluyendo comentarios y lista de responsables) se guardan en este navegador, por usuario.</span>
+  </div>
+</div>
+
+<!-- Modal ayuda -->
+<div id="modalAyuda" class="modal-backdrop">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Ayuda rápida</div>
+      <button class="modal-close" data-close="ayuda">&times;</button>
+    </div>
+    <div class="modal-body">
       <p>
-        Aquí puedes llevar el control de acuerdos, tareas y seguimientos de tus reuniones.
-        Todo lo que edites se guarda automáticamente en tu navegador, ligado a tu correo.
+        Esta página te ayuda a llevar el <strong>seguimiento de tareas y reuniones</strong> de forma simple.
       </p>
-
-      <p><strong>Botones principales:</strong></p>
-      <ul>
-        <li><strong>＋ Fila</strong>: agrega una nueva fila a la tabla.</li>
-        <li><strong>▤ Columna</strong>: agrega una nueva columna de reunión (escribe un título o fecha).</li>
-        <li><strong>Responsables</strong>: administra la lista de responsables disponibles.</li>
-        <li><strong>⭳</strong> Exportar: descarga un archivo JSON con toda la información del tablero.</li>
-        <li><strong>⭱</strong> Importar: carga un archivo JSON previamente exportado.</li>
-        <li><strong>Cerrar sesión</strong>: limpia la sesión actual y vuelve al login.</li>
-      </ul>
-
-      <p><strong>Columnas base:</strong></p>
-      <ul>
-        <li><strong>tema</strong>: asunto principal o categoría de la tarea.</li>
-        <li><strong>sub tema</strong>: detalle o descripción de lo que se va a hacer.</li>
-        <li><strong>responsable</strong>: persona encargada (elige de la lista desplegable).</li>
-        <li><strong>estado</strong>:
-          <strong>P</strong> (Pendiente),
-          <strong>EP</strong> (En proceso),
-          <strong>T</strong> (Terminado). Se muestra como pastilla de color.
+      <ul class="help-list">
+        <li><strong>+ Fila</strong>: agrega una nueva tarea en blanco al final de la tabla.</li>
+        <li><strong>+ Columna</strong>: reservado para futuras columnas relacionadas con reuniones específicas.</li>
+        <li>Haz clic en las celdas de <strong>tema</strong>, <strong>sub tema</strong> y <strong>notas</strong> para escribir libremente.</li>
+        <li>En la columna <strong>responsable</strong> escribe el nombre de la persona que llevará la tarea.</li>
+        <li>En <strong>estado</strong> elige:
+          <ul>
+            <li><span class="pill pill-p">P</span>: Pendiente</li>
+            <li><span class="pill pill-ep">EP</span>: En proceso</li>
+            <li><span class="pill pill-t">T</span>: Terminado</li>
+          </ul>
         </li>
-        <li><strong>fecha de término</strong>: fecha objetivo; al hacer clic se despliega un calendario.</li>
-      </ul>
-
-      <p><strong>Filtros:</strong></p>
-      <ul>
-        <li>En la segunda fila del encabezado puedes filtrar por cada columna (texto, responsable y estado).</li>
-        <li>Los filtros se aplican en vivo a medida que escribes o cambias las opciones.</li>
-      </ul>
-
-      <p><strong>Notas:</strong></p>
-      <ul>
-        <li>Las columnas de reunión se agregan hacia la derecha y también se pueden filtrar por su contenido.</li>
-        <li>El texto en “fecha de termino” tiene un ancho máximo aproximado de 40 caracteres y crece hacia abajo si es más largo.</li>
+        <li>En <strong>fecha de termino</strong> se muestra un pequeño calendario para seleccionar la fecha límite.</li>
+        <li>Los <strong>filtros</strong> están directamente en el encabezado de cada columna: escribe texto y la tabla se filtra al instante.</li>
+        <li>Los datos se guardan automáticamente en <strong>localStorage</strong> de tu navegador (no en la nube).</li>
+        <li><strong>Cerrar sesión</strong> borra la sesión actual y te regresa al login; las tareas quedan guardadas en tu navegador.</li>
+        <li>Usa siempre el mismo correo en el login para mantener tus tareas agrupadas por usuario.</li>
       </ul>
     </div>
   </div>
+</div>
 
-  <script>
-    /********** SESIÓN **********/
-    const userEmailSpan = document.getElementById('userEmail');
-    const emailSesion = localStorage.getItem('usuarioEmail') || '';
-    userEmailSpan.textContent = emailSesion || '(sin sesión)';
+<script>
+  /********** SESIÓN **********/
+  const userEmailSpan = document.getElementById('userEmail');
 
-    // Aceptar diferentes formatos que pueda estar guardando el login
-    const rawSesion = localStorage.getItem('sesionActiva');
-    const sesionActiva = rawSesion === '1' || rawSesion === 'true' || rawSesion === 'YES';
+  // Consideramos que hay sesión SI existe usuarioEmail en localStorage
+  const emailSesion = localStorage.getItem('usuarioEmail') || '';
 
-    if (!sesionActiva) {
-      alert('No hay sesión activa, vuelve a iniciar desde el login.');
-      window.location.href = 'index.html';
+  userEmailSpan.textContent = emailSesion || '(sin sesión)';
+
+  if (!emailSesion) {
+    alert('No hay sesión activa, vuelve a iniciar desde el login.');
+    window.location.href = 'index.html';
+  }
+
+  // Cerrar sesión
+  document.getElementById('btnCerrarSesion').addEventListener('click', () => {
+    localStorage.removeItem('usuarioEmail');
+    window.location.href = 'index.html';
+  });
+
+  /********** Datos y persistencia **********/
+  const STORAGE_KEY = 'tareasReuniones_v1';
+
+  // Cada fila: { id, tema, subtema, responsable, estado, fecha, notas }
+  let filas = [];
+
+  function cargarFilas() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      filas = [];
+      return;
     }
-
-    /********** DATOS Y STORAGE **********/
-    const STORAGE_KEY_PREFIX = 'tablero_reuniones_';
-    const STORAGE_KEY = STORAGE_KEY_PREFIX + (emailSesion || 'anonimo');
-
-    let filas = [];            // filas del tablero
-    let columnasReunion = [];  // nombres de columnas extra
-
-    const defaultResponsables = ['cruiz@elcedro.mx'];
-    let listaResponsables =
-      JSON.parse(localStorage.getItem('listaResponsables_' + emailSesion)) ||
-      defaultResponsables.slice();
-
-    function saveResponsables() {
-      localStorage.setItem('listaResponsables_' + emailSesion, JSON.stringify(listaResponsables));
-      poblarFiltroResponsable();
+    try {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) filas = parsed;
+      else filas = [];
+    } catch (e) {
+      console.error('Error al leer datos de localStorage', e);
+      filas = [];
     }
+  }
 
-    function cargarDesdeStorage() {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) {
-        filas = [];
-        columnasReunion = [];
-        return;
-      }
-      try {
-        const obj = JSON.parse(raw);
-        filas = obj.filas || [];
-        columnasReunion = obj.columnasReunion || [];
-      } catch (e) {
-        console.error('Error leyendo storage', e);
-        filas = [];
-        columnasReunion = [];
-      }
-    }
+  function guardarFilas() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(filas));
+  }
 
-    function guardarEnStorage() {
-      const obj = { filas, columnasReunion };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
-      actualizarResumenEstados();
-    }
+  /********** Render **********/
+  const tbody = document.getElementById('tbody');
 
-    /********** UI BÁSICA **********/
-    const tbody = document.getElementById('tbody');
-    const headerRow = document.getElementById('headerRow');
-    const filterRow = document.getElementById('filterRow');
+  function crearEstadoSelect(fila, idx) {
+    const select = document.createElement('select');
+    select.className = 'estado-select';
 
-    function crearFilaVacia() {
-      const fila = {
-        id: Date.now() + '_' + Math.random().toString(36).slice(2),
-        tema: '',
-        subtema: '',
-        responsable: listaResponsables[0] || '',
-        estado: 'P',
-        fecha: '',
-        reuniones: {}
-      };
-      columnasReunion.forEach(col => {
-        fila.reuniones[col] = '';
-      });
-      filas.push(fila);
-    }
-
-    function renderColumnasReunion() {
-      // limpia todas las TH extra
-      while (headerRow.children.length > 5) headerRow.removeChild(headerRow.lastChild);
-      while (filterRow.children.length > 5) filterRow.removeChild(filterRow.lastChild);
-
-      columnasReunion.forEach(col => {
-        const th = document.createElement('th');
-        th.textContent = col;
-        headerRow.appendChild(th);
-
-        const thFilter = document.createElement('th');
-        const input = document.createElement('input');
-        input.className = 'filter-input';
-        input.dataset.col = 'reunion:' + col;
-        input.placeholder = 'Filtrar ' + col;
-        thFilter.appendChild(input);
-        filterRow.appendChild(thFilter);
-      });
-    }
-
-    function crearCeldaTexto(fila, campo, claseOpcional) {
-      const td = document.createElement('td');
-      if (claseOpcional) td.classList.add(claseOpcional);
-
-      const input = document.createElement('textarea');
-      input.className = 'cell-input';
-      input.value = fila[campo] || '';
-      input.rows = 1;
-
-      input.addEventListener('input', () => {
-        fila[campo] = input.value;
-        guardarEnStorage();
-        aplicarFiltros();
-      });
-
-      td.appendChild(input);
-      return td;
-    }
-
-    function crearCeldaResponsable(fila) {
-      const td = document.createElement('td');
-      const select = document.createElement('select');
-      select.className = 'cell-input';
-
-      listaResponsables.forEach(resp => {
-        const opt = document.createElement('option');
-        opt.value = resp;
-        opt.textContent = resp;
-        select.appendChild(opt);
-      });
-
-      select.value = fila.responsable || '';
-      select.addEventListener('change', () => {
-        fila.responsable = select.value;
-        guardarEnStorage();
-        aplicarFiltros();
-      });
-
-      td.appendChild(select);
-      return td;
-    }
-
-    function crearCeldaEstado(fila) {
-      const td = document.createElement('td');
-
-      const btn = document.createElement('button');
-      btn.className = 'estado-pill estado-' + fila.estado;
-      btn.textContent = fila.estado;
-      btn.type = 'button';
-
-      btn.addEventListener('click', () => {
-        const orden = ['P', 'EP', 'T'];
-        const idx = orden.indexOf(fila.estado);
-        fila.estado = orden[(idx + 1) % orden.length];
-        btn.textContent = fila.estado;
-        btn.className = 'estado-pill estado-' + fila.estado;
-        guardarEnStorage();
-        aplicarFiltros();
-      });
-
-      td.appendChild(btn);
-      return td;
-    }
-
-    /** DATE PICKER **/
-    const dateOverlay = document.getElementById('datePickerOverlay');
-    const dateInput = document.getElementById('datePickerInput');
-    let dateOverlayFila = null;
-
-    function formatearFechaDisplay(iso) {
-      if (!iso) return '';
-      // iso: yyyy-mm-dd
-      const [y, m, d] = iso.split('-');
-      if (!y || !m || !d) return iso;
-      return `${d}/${m}/${y.slice(2)}`;
-    }
-
-    function parseFechaDisplay(display) {
-      // display: dd/mm/yy o dd/mm/yyyy
-      if (!display) return '';
-      const parts = display.split('/');
-      if (parts.length !== 3) return '';
-      let [d, m, y] = parts;
-      if (y.length === 2) {
-        y = '20' + y;
-      }
-      if (d.length === 1) d = '0' + d;
-      if (m.length === 1) m = '0' + m;
-      return `${y}-${m}-${d}`;
-    }
-
-    function crearCeldaFecha(fila) {
-      const td = document.createElement('td');
-      td.classList.add('col-fecha');
-
-      const input = document.createElement('textarea');
-      input.className = 'cell-input';
-      input.readOnly = true;
-      input.value = fila.fecha || '';
-      input.rows = 1;
-
-      td.addEventListener('click', (e) => {
-        const rect = td.getBoundingClientRect();
-        dateOverlay.style.display = 'block';
-        dateOverlay.style.top = window.scrollY + rect.top + rect.height / 2 + 'px';
-        dateOverlay.style.left = window.scrollX + rect.left + 'px';
-
-        const iso = parseFechaDisplay(fila.fecha);
-        if (iso) dateInput.value = iso;
-        else dateInput.value = '';
-
-        dateOverlayFila = fila;
-        dateInput.focus();
-        e.stopPropagation();
-      });
-
-      input.addEventListener('focus', (ev) => {
-        ev.target.blur();
-      });
-
-      td.appendChild(input);
-      return td;
-    }
-
-    document.addEventListener('click', (e) => {
-      if (!dateOverlay.contains(e.target)) {
-        dateOverlay.style.display = 'none';
-        dateOverlayFila = null;
-      }
+    // Opciones
+    ['P', 'EP', 'T'].forEach(val => {
+      const opt = document.createElement('option');
+      opt.value = val;
+      opt.textContent = val;
+      select.appendChild(opt);
     });
 
-    dateInput.addEventListener('change', () => {
-      if (!dateOverlayFila) return;
-      const iso = dateInput.value;
-      const display = formatearFechaDisplay(iso);
-      dateOverlayFila.fecha = display;
-      guardarEnStorage();
-      renderFilas();
-      dateOverlay.style.display = 'none';
-      dateOverlayFila = null;
-      aplicarFiltros();
+    select.value = fila.estado || 'P';
+
+    function actualizarClase() {
+      select.classList.remove('p', 'ep', 't');
+      if (select.value === 'P') select.classList.add('p');
+      else if (select.value === 'EP') select.classList.add('ep');
+      else if (select.value === 'T') select.classList.add('t');
+    }
+
+    actualizarClase();
+
+    select.addEventListener('change', () => {
+      filas[idx].estado = select.value;
+      actualizarClase();
+      guardarFilas();
+      aplicarFiltrosYRender();
     });
 
-    function crearCeldaReunion(fila, nombreCol) {
-      const td = document.createElement('td');
-      const input = document.createElement('textarea');
-      input.className = 'cell-input';
-      input.value = (fila.reuniones && fila.reuniones[nombreCol]) || '';
-      input.rows = 1;
+    return select;
+  }
 
-      input.addEventListener('input', () => {
-        if (!fila.reuniones) fila.reuniones = {};
-        fila.reuniones[nombreCol] = input.value;
-        guardarEnStorage();
-        aplicarFiltros();
+  function renderFilas(lista) {
+    tbody.innerHTML = '';
+
+    lista.forEach((fila, idx) => {
+      const tr = document.createElement('tr');
+
+      // tema
+      const tdTema = document.createElement('td');
+      const inpTema = document.createElement('input');
+      inpTema.type = 'text';
+      inpTema.className = 'cell-input';
+      inpTema.value = fila.tema || '';
+      inpTema.addEventListener('input', () => {
+        filas[idx].tema = inpTema.value;
+        guardarFilas();
+        aplicarFiltrosYRender();
       });
+      tdTema.appendChild(inpTema);
+      tr.appendChild(tdTema);
 
-      td.appendChild(input);
-      return td;
-    }
-
-    function renderFilas() {
-      tbody.innerHTML = '';
-      filas.forEach(fila => {
-        const tr = document.createElement('tr');
-        tr.dataset.id = fila.id;
-
-        tr.appendChild(crearCeldaTexto(fila, 'tema', 'col-tema'));
-        tr.appendChild(crearCeldaTexto(fila, 'subtema', 'col-subtema'));
-        tr.appendChild(crearCeldaResponsable(fila));
-        tr.appendChild(crearCeldaEstado(fila));
-        tr.appendChild(crearCeldaFecha(fila));
-
-        columnasReunion.forEach(col => {
-          tr.appendChild(crearCeldaReunion(fila, col));
-        });
-
-        tbody.appendChild(tr);
+      // sub tema
+      const tdSub = document.createElement('td');
+      const inpSub = document.createElement('input');
+      inpSub.type = 'text';
+      inpSub.className = 'cell-input';
+      inpSub.value = fila.subtema || '';
+      inpSub.addEventListener('input', () => {
+        filas[idx].subtema = inpSub.value;
+        guardarFilas();
+        aplicarFiltrosYRender();
       });
-    }
+      tdSub.appendChild(inpSub);
+      tr.appendChild(tdSub);
 
-    function actualizarResumenEstados() {
-      const span = document.getElementById('resumenEstados');
-      const conteo = { P: 0, EP: 0, T: 0 };
-      filas.forEach(f => {
-        conteo[f.estado] = (conteo[f.estado] || 0) + 1;
+      // responsable
+      const tdResp = document.createElement('td');
+      const inpResp = document.createElement('input');
+      inpResp.type = 'text';
+      inpResp.className = 'cell-input';
+      inpResp.value = fila.responsable || '';
+      inpResp.addEventListener('input', () => {
+        filas[idx].responsable = inpResp.value;
+        guardarFilas();
+        aplicarFiltrosYRender();
       });
-      span.innerHTML =
-        `<span><span class="badge-dot dot-pendiente"></span> P: ${conteo.P || 0}</span>
-         <span><span class="badge-dot dot-proceso"></span> EP: ${conteo.EP || 0}</span>
-         <span><span class="badge-dot dot-terminado"></span> T: ${conteo.T || 0}</span>`;
-    }
+      tdResp.appendChild(inpResp);
+      tr.appendChild(tdResp);
 
-    /********** FILTROS POR ENCABEZADO **********/
-    function obtenerValoresFiltros() {
-      const filtros = {
-        tema: document.querySelector('.filter-input[data-col="tema"]').value.trim().toLowerCase(),
-        subtema: document.querySelector('.filter-input[data-col="subtema"]').value.trim().toLowerCase(),
-        responsable: document.querySelector('.filter-select[data-col="responsable"]').value,
-        estado: document.querySelector('.filter-select[data-col="estado"]').value,
-        fecha: document.querySelector('.filter-input[data-col="fecha"]').value.trim().toLowerCase(),
-        reuniones: {}
-      };
+      // estado
+      const tdEst = document.createElement('td');
+      const selEstado = crearEstadoSelect(fila, idx);
+      tdEst.appendChild(selEstado);
+      tr.appendChild(tdEst);
 
-      columnasReunion.forEach(col => {
-        const inp = document.querySelector('.filter-input[data-col="reunion:' + col + '"]');
-        filtros.reuniones[col] = inp ? inp.value.trim().toLowerCase() : '';
+      // fecha
+      const tdFecha = document.createElement('td');
+      const inpFecha = document.createElement('input');
+      inpFecha.type = 'date';
+      inpFecha.className = 'date-input';
+      inpFecha.value = fila.fecha || '';
+      inpFecha.addEventListener('change', () => {
+        filas[idx].fecha = inpFecha.value;
+        guardarFilas();
+        aplicarFiltrosYRender();
       });
+      tdFecha.appendChild(inpFecha);
+      tr.appendChild(tdFecha);
 
-      return filtros;
-    }
+      // notas
+      const tdNotas = document.createElement('td');
+      const inpNotas = document.createElement('textarea');
+      inpNotas.rows = 1;
+      inpNotas.style.width = '100%';
+      inpNotas.style.resize = 'vertical';
+      inpNotas.style.borderRadius = '6px';
+      inpNotas.style.border = '1px solid transparent';
+      inpNotas.style.fontFamily = 'inherit';
+      inpNotas.style.fontSize = '13px';
+      inpNotas.style.padding = '4px 6px';
+      inpNotas.value = fila.notas || '';
+      inpNotas.addEventListener('input', () => {
+        filas[idx].notas = inpNotas.value;
+        guardarFilas();
+        // no hace falta re-render completo
+      });
+      tdNotas.appendChild(inpNotas);
+      tr.appendChild(tdNotas);
 
-    function filaCumpleFiltros(fila, filtros) {
-      if (filtros.tema && !(fila.tema || '').toLowerCase().includes(filtros.tema)) return false;
-      if (filtros.subtema && !(fila.subtema || '').toLowerCase().includes(filtros.subtema)) return false;
-      if (filtros.responsable && fila.responsable !== filtros.responsable) return false;
-      if (filtros.estado && fila.estado !== filtros.estado) return false;
-      if (filtros.fecha && !(fila.fecha || '').toLowerCase().includes(filtros.fecha)) return false;
+      tbody.appendChild(tr);
+    });
+  }
 
-      for (const col of columnasReunion) {
-        const filtroCol = filtros.reuniones[col];
-        if (filtroCol) {
-          const valor = (fila.reuniones && fila.reuniones[col]) ? fila.reuniones[col].toLowerCase() : '';
-          if (!valor.includes(filtroCol)) return false;
-        }
-      }
+  /********** Filtros por encabezado **********/
+  const filtros = {
+    tema: '',
+    subtema: '',
+    responsable: '',
+    estado: '',
+    fecha: '',
+    notas: ''
+  };
 
+  document.querySelectorAll('.filter-input').forEach(input => {
+    input.addEventListener('input', () => {
+      const col = input.dataset.col;
+      filtros[col] = input.value.toLowerCase();
+      aplicarFiltrosYRender();
+    });
+  });
+
+  function aplicarFiltrosYRender() {
+    let lista = [...filas];
+
+    lista = lista.filter(f => {
+      if (filtros.tema && !(f.tema || '').toLowerCase().includes(filtros.tema)) return false;
+      if (filtros.subtema && !(f.subtema || '').toLowerCase().includes(filtros.subtema)) return false;
+      if (filtros.responsable && !(f.responsable || '').toLowerCase().includes(filtros.responsable)) return false;
+      if (filtros.estado && !(f.estado || '').toLowerCase().includes(filtros.estado)) return false;
+      if (filtros.fecha && !(f.fecha || '').toLowerCase().includes(filtros.fecha)) return false;
+      if (filtros.notas && !(f.notas || '').toLowerCase().includes(filtros.notas)) return false;
       return true;
-    }
-
-    function aplicarFiltros() {
-      const filtros = obtenerValoresFiltros();
-      const trs = tbody.querySelectorAll('tr');
-      trs.forEach(tr => {
-        const id = tr.dataset.id;
-        const fila = filas.find(f => f.id === id);
-        if (!fila) return;
-        tr.style.display = filaCumpleFiltros(fila, filtros) ? '' : 'none';
-      });
-      actualizarResumenEstados();
-    }
-
-    document.getElementById('filterRow').addEventListener('input', (ev) => {
-      if (ev.target.matches('.filter-input') || ev.target.matches('.filter-select')) {
-        aplicarFiltros();
-      }
     });
 
-    /********** RESPONSABLES **********/
-    function poblarFiltroResponsable() {
-      const sel = document.getElementById('filtroResponsable');
-      const valorActual = sel.value;
-      sel.innerHTML = '<option value="">Todos</option>';
-      listaResponsables.forEach(r => {
-        const opt = document.createElement('option');
-        opt.value = r;
-        opt.textContent = r;
-        sel.appendChild(opt);
-      });
-      if ([...sel.options].some(o => o.value === valorActual)) {
-        sel.value = valorActual;
-      }
-    }
+    renderFilas(lista);
+  }
 
-    function gestionarResponsables() {
-      const actual = listaResponsables.join('\n');
-      const texto = prompt(
-        'Edita la lista de responsables (uno por línea):',
-        actual
-      );
-      if (texto === null) return;
-      const nuevos = texto
-        .split('\n')
-        .map(t => t.trim())
-        .filter(t => t.length > 0);
-      if (nuevos.length === 0) {
-        alert('Debe haber al menos un responsable.');
-        return;
-      }
-      listaResponsables = Array.from(new Set(nuevos));
-      saveResponsables();
-      guardarEnStorage();
-      renderFilas();
-    }
-
-    /********** EXPORTAR / IMPORTAR **********/
-    document.getElementById('btnExportar').addEventListener('click', () => {
-      const data = { filas, columnasReunion, responsables: listaResponsables };
-      const blob = new Blob([JSON.stringify(data, null, 2)], {
-        type: 'application/json'
-      });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'tablero_reuniones.json';
-      a.click();
-      URL.revokeObjectURL(url);
+  /********** Eventos toolbar **********/
+  document.getElementById('btnNuevaFila').addEventListener('click', () => {
+    filas.push({
+      id: Date.now(),
+      tema: '',
+      subtema: '',
+      responsable: '',
+      estado: 'P',
+      fecha: '',
+      notas: ''
     });
+    guardarFilas();
+    aplicarFiltrosYRender();
+  });
 
-    document.getElementById('btnImportar').addEventListener('click', () => {
-      document.getElementById('inputImportar').click();
-    });
+  document.getElementById('btnNuevaColumna').addEventListener('click', () => {
+    alert('Función "+ Columna" reservada para futuras mejoras de columnas por reunión.');
+  });
 
-    document.getElementById('inputImportar').addEventListener('change', (ev) => {
-      const file = ev.target.files[0];
+  // Exportar / Importar JSON
+  document.getElementById('btnExportar').addEventListener('click', () => {
+    const dataStr = JSON.stringify(filas, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'tareas_reuniones.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  document.getElementById('btnImportar').addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json';
+    input.onchange = e => {
+      const file = e.target.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = evt => {
         try {
-          const data = JSON.parse(e.target.result);
-          filas = data.filas || [];
-          columnasReunion = data.columnasReunion || [];
-          listaResponsables = data.responsables || listaResponsables;
-          saveResponsables();
-          renderColumnasReunion();
-          renderFilas();
-          guardarEnStorage();
-          aplicarFiltros();
-          alert('Datos importados correctamente.');
+          const imported = JSON.parse(evt.target.result);
+          if (Array.isArray(imported)) {
+            filas = imported;
+            guardarFilas();
+            aplicarFiltrosYRender();
+          } else {
+            alert('El archivo no tiene el formato esperado.');
+          }
         } catch (err) {
           console.error(err);
-          alert('Error al importar el archivo.');
+          alert('Error al leer el archivo JSON.');
         }
       };
       reader.readAsText(file);
-      ev.target.value = '';
-    });
+    };
+    input.click();
+  });
 
-    /********** NUEVA FILA / COLUMNA **********/
-    document.getElementById('btnNuevaFila').addEventListener('click', () => {
-      crearFilaVacia();
-      guardarEnStorage();
-      renderFilas();
-      aplicarFiltros();
-    });
-
-    document.getElementById('btnNuevaColumna').addEventListener('click', () => {
-      const nombre = prompt('Título de la nueva columna de reunión (ej. 16/11/25):', '');
-      if (!nombre) return;
-      if (columnasReunion.includes(nombre)) {
-        alert('Ya existe una columna con ese nombre.');
-        return;
-      }
-      columnasReunion.push(nombre);
-      filas.forEach(f => {
-        if (!f.reuniones) f.reuniones = {};
-        f.reuniones[nombre] = '';
-      });
-      renderColumnasReunion();
-      renderFilas();
-      guardarEnStorage();
-      aplicarFiltros();
-    });
-
-    /********** CERRAR SESIÓN **********/
-    document.getElementById('btnCerrarSesion').addEventListener('click', () => {
-      if (!confirm('¿Cerrar sesión?')) return;
-      localStorage.removeItem('sesionActiva');
-      window.location.href = 'index.html';
-    });
-
-    /********** AYUDA (MODAL) **********/
-    const helpBackdrop = document.getElementById('helpModalBackdrop');
-    document.getElementById('btnHelp').addEventListener('click', () => {
-      helpBackdrop.style.display = 'flex';
-    });
-    document.getElementById('helpModalClose').addEventListener('click', () => {
-      helpBackdrop.style.display = 'none';
-    });
-    helpBackdrop.addEventListener('click', (ev) => {
-      if (ev.target === helpBackdrop) {
-        helpBackdrop.style.display = 'none';
-      }
-    });
-
-    /********** INICIALIZACIÓN **********/
-    function init() {
-      poblarFiltroResponsable();
-      cargarDesdeStorage();
-      renderColumnasReunion();
-      if (filas.length === 0) {
-        crearFilaVacia();
-      }
-      renderFilas();
-      guardarEnStorage();
-      aplicarFiltros();
+  /********** Modal ayuda **********/
+  const modalAyuda = document.getElementById('modalAyuda');
+  document.getElementById('btnAyuda').addEventListener('click', () => {
+    modalAyuda.classList.add('show');
+  });
+  modalAyuda.addEventListener('click', (e) => {
+    if (e.target === modalAyuda || e.target.dataset.close === 'ayuda') {
+      modalAyuda.classList.remove('show');
     }
+  });
 
-    document.getElementById('btnGestionResponsables').addEventListener('click', gestionarResponsables);
-
-    init();
-  </script>
+  /********** Inicio **********/
+  cargarFilas();
+  aplicarFiltrosYRender();
+</script>
 </body>
 </html>

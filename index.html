@@ -8,13 +8,11 @@
   <!-- Fuente -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <!-- Supabase JS clásico (más compatible que el modo module) -->
+  <!-- Supabase JS clásico -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       font-family: 'Inter', sans-serif;
@@ -95,9 +93,7 @@
       transition: background-color 0.15s, box-shadow 0.15s, transform 0.05s;
     }
 
-    button:active {
-      transform: scale(0.98);
-    }
+    button:active { transform: scale(0.98); }
 
     #btnLogin {
       background: #2563eb;
@@ -105,18 +101,14 @@
       box-shadow: 0 8px 18px rgba(37, 99, 235, 0.35);
     }
 
-    #btnLogin:hover {
-      background: #1d4ed8;
-    }
+    #btnLogin:hover { background: #1d4ed8; }
 
     #btnSignup {
       background: #e5e7eb;
       color: #111827;
     }
 
-    #btnSignup:hover {
-      background: #d1d5db;
-    }
+    #btnSignup:hover { background: #d1d5db; }
 
     .helper {
       margin-top: 1rem;
@@ -125,9 +117,7 @@
       line-height: 1.4;
     }
 
-    .helper strong {
-      color: #111827;
-    }
+    .helper strong { color: #111827; }
 
     .alert {
       margin-bottom: 0.75rem;
@@ -185,7 +175,6 @@
     const supabaseUrl = 'https://hrbmstaklleraiacqmky.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhyYm1zdGFrbGxlcmFpYWNxbWt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyMTA2OTQsImV4cCI6MjA3ODc4NjY5NH0.tN00tAjMJpJK_8gnerocbOSzHp93N5yc9KohTBpMeZc';
 
-    // cliente supabase (sin persistir sesión para que siempre pida login)
     const supabase = window.supabase.createClient(supabaseUrl, supabaseKey, {
       auth: { persistSession: false }
     });
@@ -219,11 +208,13 @@
         console.error(error);
         showAlert('Error al iniciar sesión: ' + error.message, 'error');
       } else {
-        console.log('Sesion iniciada:', data);
+        console.log('Sesión iniciada:', data);
         showAlert('Inicio de sesión exitoso.', 'success');
 
-        // 👉 aquí puedes redirigir a tu tablero HTML:
-        // window.location.href = 'tablero.html';
+        // 👉 Redirigir al tablero después de un pequeño delay
+        setTimeout(() => {
+          window.location.href = 'tablero.html';
+        }, 900);
       }
     }
 
@@ -248,15 +239,12 @@
       }
     }
 
-    // Eventos de los botones
     document.getElementById('btnLogin').addEventListener('click', handleLogin);
     document.getElementById('btnSignup').addEventListener('click', handleSignup);
 
-    // Prevenir que el form recargue la página si se presiona Enter
     document.getElementById('authForm').addEventListener('submit', function (e) {
       e.preventDefault();
     });
   </script>
 </body>
 </html>
-

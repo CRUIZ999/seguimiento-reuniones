@@ -3,480 +3,478 @@
 <head>
   <meta charset="UTF-8" />
   <title>Seguimiento de tareas y reuniones</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Fuente -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --azul: #0f6cf5;
-      --azul-claro: #e7f1ff;
-      --gris-borde: #e1e4e8;
-      --gris-fondo: #f6f8fa;
-      --gris-texto: #586069;
-      --rojo: #ff4b4b;
-      --verde: #1f883d;
-      --amarillo: #f5b800;
+      --bg: #f5f6fb;
+      --card-bg: #ffffff;
+      --primary: #0f74ff;
+      --primary-soft: #e6f0ff;
+      --border-soft: #dde3f0;
+      --text-main: #111827;
+      --text-soft: #6b7280;
+      --danger: #ef4444;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --radius-xl: 18px;
+      --radius-md: 10px;
+      --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.08);
     }
 
     * {
       box-sizing: border-box;
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
         sans-serif;
     }
 
     body {
       margin: 0;
-      background: #ffffff;
-      color: #111827;
+      background: var(--bg);
+      color: var(--text-main);
     }
 
     .page {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      background: var(--gris-fondo);
+      max-width: 1400px;
+      margin: 20px auto 40px;
+      padding: 0 16px;
     }
 
-    header {
-      padding: 16px 24px 8px;
-      background: #ffffff;
-      border-bottom: 1px solid var(--gris-borde);
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-soft);
+      padding: 18px 20px 20px;
+    }
+
+    .header-row {
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .title-group {
+      display: flex;
+      align-items: center;
       gap: 8px;
     }
 
-    .header-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .title {
+    h1 {
       font-size: 20px;
       font-weight: 600;
+      margin: 0;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-top: 2px;
     }
 
     .user-info {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .user-email {
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid transparent;
       font-size: 13px;
-      color: var(--gris-texto);
-    }
-
-    .header-actions {
-      display: flex;
-      justify-content: space-between;
+      padding: 6px 14px;
+      display: inline-flex;
       align-items: center;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-top: 4px;
+      gap: 6px;
+      cursor: pointer;
+      background: #f3f4ff;
+      color: var(--text-main);
+      transition: background 0.15s, box-shadow 0.15s, border-color 0.15s,
+        transform 0.05s;
+      white-space: nowrap;
     }
 
-    .btn-group {
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 8px 20px rgba(15, 116, 255, 0.25);
+    }
+
+    .btn-icon {
+      padding-inline: 9px;
+      justify-content: center;
+    }
+
+    .btn-danger {
+      background: #fee2e2;
+      color: #b91c1c;
+      border-color: #fecaca;
+    }
+
+    .btn:hover {
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    .btn-outline {
+      background: #fff;
+      border-color: var(--border-soft);
+      color: var(--text-soft);
+    }
+
+    .btn-outline-primary {
+      background: #fff;
+      border-color: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .btn .icon {
+      font-size: 14px;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-left,
+    .toolbar-right {
       display: flex;
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
     }
 
-    button {
+    .badge-counter {
+      font-size: 11px;
+      background: #f9fafb;
       border-radius: 999px;
-      border: 1px solid var(--gris-borde);
-      background: #ffffff;
-      padding: 6px 14px;
-      font-size: 13px;
-      cursor: pointer;
+      padding: 4px 8px;
+      border: 1px solid var(--border-soft);
+      color: var(--text-soft);
       display: inline-flex;
-      align-items: center;
       gap: 6px;
-      transition: background 0.12s ease, border-color 0.12s ease,
-        box-shadow 0.12s ease, transform 0.06s ease;
     }
 
-    button svg {
-      width: 14px;
-      height: 14px;
-    }
-
-    button:hover {
-      background: #f3f4f6;
-      border-color: #cbd5e1;
-    }
-
-    button:active {
-      transform: translateY(1px);
-      box-shadow: inset 0 0 0 1px #e5e7eb;
-    }
-
-    .btn-primary {
-      background: var(--azul);
-      border-color: var(--azul);
-      color: #ffffff;
-    }
-
-    .btn-primary:hover {
-      background: #0c58c4;
-      border-color: #0c58c4;
-    }
-
-    .btn-ghost {
-      background: transparent;
-      border-color: transparent;
-    }
-
-    .btn-ghost:hover {
-      background: #f3f4f6;
-      border-color: transparent;
-    }
-
-    .chip-toggle {
-      font-size: 12px;
-      padding: 5px 12px;
-    }
-
-    .chip-toggle--active {
-      background: var(--azul);
-      border-color: var(--azul);
-      color: #ffffff;
-    }
-
-    .toolbar-filters {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      font-size: 13px;
-    }
-
-    .toolbar-filters span {
-      color: var(--gris-texto);
-    }
-
-    .filter-select {
+    .badge-dot {
+      width: 6px;
+      height: 6px;
       border-radius: 999px;
-      border: 1px solid var(--gris-borde);
-      padding: 4px 10px;
-      font-size: 13px;
-      background: #ffffff;
-      min-width: 120px;
     }
 
-    main {
-      flex: 1;
-      padding: 12px 16px 20px;
-      overflow: hidden;
+    .dot-pendiente {
+      background: var(--warning);
     }
 
+    .dot-proceso {
+      background: #38bdf8;
+    }
+
+    .dot-terminado {
+      background: var(--success);
+    }
+
+    /* Tabla */
     .table-wrapper {
-      background: #ffffff;
-      border-radius: 14px;
-      border: 1px solid var(--gris-borde);
+      margin-top: 6px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-soft);
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      height: calc(100vh - 150px);
-      min-height: 360px;
-    }
-
-    .table-scroll {
-      flex: 1;
-      overflow: auto;
+      background: #fff;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 13px;
-      table-layout: fixed;
     }
 
     thead {
       background: #f9fafb;
-      position: sticky;
-      top: 0;
-      z-index: 2;
     }
 
     th,
     td {
-      border-bottom: 1px solid #edf1f5;
       padding: 6px 8px;
-      text-align: left;
-      vertical-align: middle;
+      border-bottom: 1px solid #edf0f6;
+      vertical-align: top;
     }
 
     th {
-      font-weight: 500;
-      color: #4b5563;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 600;
+      color: #6b7280;
       position: relative;
       background: #f9fafb;
-      white-space: nowrap;
     }
 
-    th .th-label {
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    tbody tr:nth-child(even) {
+      background: #fcfdff;
     }
 
-    th .th-filter {
-      font-size: 11px;
-      color: var(--gris-texto);
-      cursor: pointer;
-      border-radius: 8px;
-      padding: 1px 6px;
+    tbody tr:hover {
+      background: #f4f6ff;
     }
 
-    th .th-filter:hover {
-      background: #e5e7eb;
+    .col-tema {
+      width: 18%;
     }
 
-    th:first-child {
-      padding-left: 16px;
+    .col-subtema {
+      width: 27%;
     }
 
-    td:first-child {
-      padding-left: 16px;
+    .col-responsable {
+      width: 17%;
     }
 
-    tr:nth-child(even) td {
-      background: #fafafa;
+    .col-estado {
+      width: 13%;
     }
 
-    tr:hover td {
-      background: #f2f6ff;
+    .col-fecha {
+      width: 25%;
+      max-width: 40ch; /* ~40 caracteres visibles hacia la derecha */
+      word-wrap: break-word;
+      white-space: normal;
     }
 
-    .td-input,
-    .td-textarea {
+    .cell-input {
       width: 100%;
-      border-radius: 6px;
-      border: 1px solid transparent;
-      padding: 3px 6px;
-      font-size: 13px;
-      font-family: inherit;
+      border: none;
       background: transparent;
-      resize: none;
-    }
-
-    .td-input:focus,
-    .td-textarea:focus {
-      outline: none;
-      border-color: var(--azul);
-      background: #ffffff;
-      box-shadow: 0 0 0 1px rgba(15, 108, 245, 0.08);
-    }
-
-    .td-textarea {
-      min-height: 28px;
-      max-height: none; /* sin límite hacia abajo */
-    }
-
-    .td-fecha {
-      max-width: 160px; /* limita horizontalmente ~40 caracteres aprox */
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .select-estado,
-    .select-responsable {
-      width: 100%;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      padding: 3px 8px;
       font-size: 13px;
-      font-family: inherit;
-      background: #f3f4f6;
-      cursor: pointer;
-    }
-
-    .select-estado:focus,
-    .select-responsable:focus {
+      padding: 3px 2px;
       outline: none;
-      border-color: var(--azul);
-      background: #ffffff;
-      box-shadow: 0 0 0 1px rgba(15, 108, 245, 0.08);
+      resize: none;
+      font-family: inherit;
     }
 
-    .badge-estado {
+    .cell-input::placeholder {
+      color: #cbd5f5;
+    }
+
+    .estado-pill {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 32px;
-      padding: 2px 8px;
+      min-width: 38px;
+      padding: 4px 9px;
       border-radius: 999px;
-      font-size: 12px;
-      font-weight: 500;
-      color: #ffffff;
+      border: none;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
     }
 
     .estado-P {
-      background: var(--amarillo);
+      background: #fef3c7;
+      color: #92400e;
     }
 
     .estado-EP {
-      background: var(--azul);
+      background: #e0f2fe;
+      color: #075985;
     }
 
     .estado-T {
-      background: var(--verde);
+      background: #dcfce7;
+      color: #166534;
     }
 
-    .footer-info {
-      padding: 6px 12px 8px;
+    .estado-select {
+      margin-left: 4px;
+      padding: 2px 4px;
+      border-radius: 6px;
+      border: 1px solid #e5e7eb;
       font-size: 11px;
-      color: var(--gris-texto);
-      border-top: 1px solid #edf1f5;
-      background: #fafafa;
-      display: flex;
-      align-items: center;
-      gap: 4px;
+      background: white;
     }
 
-    .footer-info input[type='checkbox'] {
-      width: 12px;
-      height: 12px;
+    /* Header filters */
+    .filter-input {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      padding: 3px 6px;
+      font-size: 11px;
+      margin-top: 4px;
+      outline: none;
     }
 
-    .info-dot {
-      width: 6px;
-      height: 6px;
+    .filter-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(15, 116, 255, 0.12);
+    }
+
+    .filter-select {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      padding: 3px 6px;
+      font-size: 11px;
+      margin-top: 4px;
+      background: #fff;
+      outline: none;
+    }
+
+    .filter-select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(15, 116, 255, 0.12);
+    }
+
+    .table-footer-note {
+      font-size: 11px;
+      color: var(--text-soft);
+      padding-top: 6px;
+    }
+
+    .table-footer-note span {
+      font-weight: 500;
+    }
+
+    .table-footer-note .check {
+      color: var(--primary);
+    }
+
+    /* Date picker overlay */
+    #datePickerOverlay {
+      position: absolute;
+      z-index: 20;
+      transform: translateY(-50%);
+    }
+    #datePickerOverlay input {
+      border-radius: 8px;
+      border: 1px solid #cbd5f5;
+      padding: 4px 6px;
+      font-size: 12px;
+      background: #fff;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+    }
+
+    /* Help modal */
+    .help-icon-btn {
+      width: 30px;
+      height: 30px;
       border-radius: 999px;
-      background: var(--verde);
-    }
-
-    .icon-only {
-      padding: 6px 8px;
-      width: 32px;
-      justify-content: center;
-    }
-
-    .icon-only svg {
-      width: 15px;
-      height: 15px;
-    }
-
-    .right-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    /* modal ayuda */
-    .help-icon {
-      width: 26px;
-      height: 26px;
-      border-radius: 999px;
-      border: 1px solid var(--gris-borde);
+      border: 1px solid #e5e7eb;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 15px;
+      background: #fff;
       cursor: pointer;
-      background: #ffffff;
-      color: var(--gris-texto);
+      color: #6b7280;
+      font-weight: 600;
+      font-size: 15px;
+      margin-left: 4px;
     }
 
-    .help-icon:hover {
-      background: #f3f4f6;
+    .help-icon-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+      transform: translateY(-1px);
     }
 
-    .help-modal-backdrop {
+    .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.25);
+      background: rgba(15, 23, 42, 0.35);
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 50;
+      z-index: 40;
     }
 
-    .help-modal {
-      background: #ffffff;
-      border-radius: 14px;
-      padding: 18px 18px 14px;
+    .modal {
+      background: #fff;
+      border-radius: 18px;
       max-width: 640px;
+      width: calc(100% - 32px);
+      padding: 18px 20px 18px;
+      box-shadow: 0 18px 60px rgba(15, 23, 42, 0.35);
       max-height: 80vh;
       overflow: auto;
-      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.25);
-      font-size: 13px;
     }
 
-    .help-modal h2 {
-      margin: 0 0 8px;
-      font-size: 16px;
-    }
-
-    .help-modal h3 {
-      margin: 12px 0 4px;
-      font-size: 14px;
-    }
-
-    .help-modal ul {
-      margin: 0;
-      padding-left: 18px;
-    }
-
-    .help-modal-close {
-      float: right;
-      border-radius: 999px;
-      border: none;
-      background: #f3f4f6;
-      width: 24px;
-      height: 24px;
-      cursor: pointer;
+    .modal-header {
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      background: #f3f4ff;
+      border-radius: 999px;
+      border: none;
+      width: 26px;
+      height: 26px;
+      display: inline-flex;
+      align-items: center;
       justify-content: center;
+      cursor: pointer;
       font-size: 14px;
     }
 
-    .help-modal-close:hover {
-      background: #e5e7eb;
+    .modal p {
+      font-size: 13px;
+      color: var(--text-soft);
+      margin-top: 4px;
+      margin-bottom: 6px;
     }
 
-    /* mensajes */
-    .toast {
-      position: fixed;
-      right: 16px;
-      bottom: 16px;
-      background: #111827;
-      color: #ffffff;
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-      display: none;
-      align-items: center;
-      gap: 8px;
-      z-index: 60;
+    .modal ul {
+      padding-left: 18px;
+      margin: 4px 0 10px;
+      font-size: 13px;
+      color: var(--text-soft);
     }
 
-    .toast.show {
-      display: inline-flex;
+    .modal li {
+      margin-bottom: 3px;
     }
 
-    .toast-success {
-      background: #16a34a;
-    }
-
-    .toast-error {
-      background: #b91c1c;
+    .modal strong {
+      color: var(--text-main);
     }
 
     @media (max-width: 768px) {
-      header {
-        padding: 12px 12px 8px;
+      .toolbar {
+        flex-direction: column;
+        align-items: flex-start;
       }
-
-      main {
-        padding: 8px;
-      }
-
-      .table-wrapper {
-        height: calc(100vh - 140px);
+      .toolbar-right {
+        align-self: stretch;
+        justify-content: space-between;
       }
     }
   </style>
@@ -484,146 +482,156 @@
 
 <body>
   <div class="page">
-    <header>
-      <div class="header-top">
+    <div class="card">
+      <div class="header-row">
         <div>
-          <div class="title">Seguimiento de tareas y reuniones</div>
-          <div class="user-info">Usuario:
-            <span id="userEmail">(sin sesión)</span>
+          <div class="title-group">
+            <h1>Seguimiento de tareas y reuniones</h1>
+            <button class="help-icon-btn" id="btnHelp" title="Ayuda">?</button>
+          </div>
+          <div class="subtitle">
+            Columnas base: <strong>tema</strong>, <strong>sub tema</strong>, <strong>responsable</strong>,
+            <strong>estado</strong>, <strong>fecha de término</strong>. Cada nueva reunión agrega una columna nueva.
           </div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <div class="help-icon" id="btnHelp" title="Ayuda">?</div>
+        <div class="user-info">
+          Usuario: <span class="user-email" id="userEmail"></span>
         </div>
       </div>
 
-      <div class="header-actions">
-        <div class="btn-group">
-          <button id="btnAddRow" class="btn-primary">
-            + Fila
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <button class="btn btn-primary" id="btnNuevaFila">
+            <span class="icon">＋</span> Fila
           </button>
-          <button id="btnAddColumn">
-            + Columna
+          <button class="btn btn-outline-primary" id="btnNuevaColumna">
+            <span class="icon">▤</span> Columna
           </button>
 
-          <!-- exportar / importar sólo iconos -->
-          <button id="btnExport" class="icon-only" title="Exportar JSON">
-            📤
+          <button class="btn btn-outline" id="btnGestionResponsables">
+            Responsables
           </button>
-          <button id="btnImport" class="icon-only" title="Importar JSON">
-            📥
-          </button>
+
+          <span class="badge-counter" id="resumenEstados">
+            <span><span class="badge-dot dot-pendiente"></span> P: 0</span>
+            <span><span class="badge-dot dot-proceso"></span> EP: 0</span>
+            <span><span class="badge-dot dot-terminado"></span> T: 0</span>
+          </span>
         </div>
 
-        <div class="right-actions">
-          <!-- filtros de fechas -->
-          <div class="btn-group">
-            <button id="btnFiltroTodos" class="chip-toggle chip-toggle--active">
-              Todas
-            </button>
-            <button id="btnFiltroUltimas2" class="chip-toggle">
-              Últimas 2
-            </button>
-            <button id="btnFiltroHoy" class="chip-toggle">
-              Solo hoy
-            </button>
-          </div>
+        <div class="toolbar-right">
+          <button class="btn btn-outline btn-icon" id="btnExportar" title="Exportar JSON">
+            <span class="icon">⭳</span>
+          </button>
+          <button class="btn btn-outline btn-icon" id="btnImportar" title="Importar JSON">
+            <span class="icon">⭱</span>
+          </button>
 
-          <!-- flechas + cerrar sesión -->
-          <div class="btn-group">
-            <button id="btnScrollLeft" class="icon-only" title="Desplazar columnas a la izquierda">
-              ◀
-            </button>
-            <button id="btnScrollRight" class="icon-only" title="Desplazar columnas a la derecha">
-              ▶
-            </button>
+          <input type="file" id="inputImportar" accept="application/json" style="display:none" />
 
-            <button id="btnLogout" class="btn-ghost" style="margin-left:4px;">
-              Cerrar sesión
-            </button>
-          </div>
+          <button class="btn btn-danger" id="btnCerrarSesion">
+            Cerrar sesión
+          </button>
         </div>
       </div>
-    </header>
 
-    <main>
       <div class="table-wrapper">
-        <div class="table-scroll" id="tableScroll">
-          <table id="tabla">
-            <thead>
-              <tr id="thead-row">
-                <!-- Se llena por JS -->
-              </tr>
-            </thead>
-            <tbody id="tbody">
-              <!-- Filas dinámicas -->
-            </tbody>
-          </table>
-        </div>
-
-        <div class="footer-info">
-          <div class="info-dot"></div>
-          <span>Los datos (incluyendo comentarios y lista de responsables) se guardan en este navegador, por
-            usuario.</span>
-        </div>
+        <table id="tabla">
+          <thead>
+            <tr id="headerRow">
+              <th class="col-tema">tema</th>
+              <th class="col-subtema">sub tema</th>
+              <th class="col-responsable">responsable</th>
+              <th class="col-estado">estado</th>
+              <th class="col-fecha">fecha de termino</th>
+              <!-- columnas dinámicas de reuniones se insertan aquí -->
+            </tr>
+            <tr id="filterRow">
+              <th><input class="filter-input" data-col="tema" placeholder="Filtrar tema" /></th>
+              <th><input class="filter-input" data-col="subtema" placeholder="Filtrar sub tema" /></th>
+              <th>
+                <select class="filter-select" data-col="responsable" id="filtroResponsable">
+                  <option value="">Todos</option>
+                </select>
+              </th>
+              <th>
+                <select class="filter-select" data-col="estado" id="filtroEstado">
+                  <option value="">Todos</option>
+                  <option value="P">P</option>
+                  <option value="EP">EP</option>
+                  <option value="T">T</option>
+                </select>
+              </th>
+              <th><input class="filter-input" data-col="fecha" placeholder="Filtrar fecha" /></th>
+              <!-- filtros dinámicos de reuniones -->
+            </tr>
+          </thead>
+          <tbody id="tbody">
+          </tbody>
+        </table>
       </div>
-    </main>
-  </div>
 
-  <!-- modal de ayuda -->
-  <div class="help-modal-backdrop" id="helpBackdrop">
-    <div class="help-modal">
-      <button class="help-modal-close" id="btnHelpClose">×</button>
-      <h2>Ayuda - Seguimiento de tareas y reuniones</h2>
-      <p>Resumen de funciones principales del tablero.</p>
-
-      <h3>Columnas base</h3>
-      <ul>
-        <li><b>tema</b>: asunto principal a tratar.</li>
-        <li><b>sub tema</b>: detalle o tema secundario. Aquí puedes pegar un enlace de Google Drive; si la celda sólo
-          contiene una URL, al hacer doble clic se abre en otra pestaña.</li>
-        <li><b>responsable</b>: persona a cargo (desplegable). Puedes gestionar la lista de responsables desde el menú
-          “Responsables”.</li>
-        <li><b>estado</b>: P (Pendiente), EP (En proceso), T (Terminado) con colores.</li>
-        <li><b>fecha de término</b>: fecha objetivo. Haz clic para seleccionar desde un calendario.</li>
-      </ul>
-
-      <h3>Filas y columnas</h3>
-      <ul>
-        <li><b>+ Fila</b>: agrega una nueva tarea.</li>
-        <li><b>+ Columna</b>: agrega una columna de reunión (por ejemplo, una fecha de junta) al final de la tabla.</li>
-      </ul>
-
-      <h3>Filtros</h3>
-      <ul>
-        <li>En el encabezado de cada columna puedes filtrar escribiendo una palabra (la tabla se actualiza en
-          automático).</li>
-        <li>Usa los chips de fecha:
-          <ul>
-            <li><b>Todas</b>: muestra todas las columnas de reunión.</li>
-            <li><b>Últimas 2</b>: muestra sólo las dos últimas columnas de reunión.</li>
-            <li><b>Solo hoy</b>: muestra únicamente la columna de reunión correspondiente a la fecha actual (si existe).
-            </li>
-          </ul>
-        </li>
-      </ul>
-
-      <h3>Exportar / Importar</h3>
-      <ul>
-        <li>📤 Exportar: descarga un archivo JSON con toda la información del tablero.</li>
-        <li>📥 Importar: puedes cargar un archivo JSON previamente exportado para restaurar o copiar información.</li>
-      </ul>
-
-      <h3>Sesión</h3>
-      <ul>
-        <li><b>Cerrar sesión</b>: termina tu sesión actual. La próxima vez que entres se te pedirá correo y contraseña.
-        </li>
-      </ul>
+      <div class="table-footer-note">
+        <span class="check">✔</span>
+        Los datos (incluyendo comentarios y lista de responsables) se guardan en este navegador, por usuario.
+        Para usarlos en otra computadora, exporta el JSON e impórtalo en esta misma página.
+      </div>
     </div>
   </div>
 
-  <!-- mensajes flotantes -->
-  <div id="toast" class="toast"></div>
+  <!-- Overlay del datepicker -->
+  <div id="datePickerOverlay" style="display:none;">
+    <input type="date" id="datePickerInput" />
+  </div>
+
+  <!-- Modal de ayuda -->
+  <div class="modal-backdrop" id="helpModalBackdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Ayuda rápida del tablero</div>
+        <button class="modal-close" id="helpModalClose">✕</button>
+      </div>
+      <p>
+        Aquí puedes llevar el control de acuerdos, tareas y seguimientos de tus reuniones.
+        Todo lo que edites se guarda automáticamente en tu navegador, ligado a tu correo.
+      </p>
+
+      <p><strong>Botones principales:</strong></p>
+      <ul>
+        <li><strong>＋ Fila</strong>: agrega una nueva fila a la tabla.</li>
+        <li><strong>▤ Columna</strong>: agrega una nueva columna de reunión (escribe un título o fecha).</li>
+        <li><strong>Responsables</strong>: administra la lista de responsables disponibles.</li>
+        <li><strong>⭳</strong> Exportar: descarga un archivo JSON con toda la información del tablero.</li>
+        <li><strong>⭱</strong> Importar: carga un archivo JSON previamente exportado.</li>
+        <li><strong>Cerrar sesión</strong>: limpia la sesión actual y vuelve al login.</li>
+      </ul>
+
+      <p><strong>Columnas base:</strong></p>
+      <ul>
+        <li><strong>tema</strong>: asunto principal o categoría de la tarea.</li>
+        <li><strong>sub tema</strong>: detalle o descripción de lo que se va a hacer.</li>
+        <li><strong>responsable</strong>: persona encargada (elige de la lista desplegable).</li>
+        <li><strong>estado</strong>:
+          <strong>P</strong> (Pendiente),
+          <strong>EP</strong> (En proceso),
+          <strong>T</strong> (Terminado). Se muestra como pastilla de color.
+        </li>
+        <li><strong>fecha de término</strong>: fecha objetivo; al hacer clic se despliega un calendario.</li>
+      </ul>
+
+      <p><strong>Filtros:</strong></p>
+      <ul>
+        <li>En la segunda fila del encabezado puedes filtrar por cada columna (texto, responsable y estado).</li>
+        <li>Los filtros se aplican en vivo a medida que escribes o cambias las opciones.</li>
+      </ul>
+
+      <p><strong>Notas:</strong></p>
+      <ul>
+        <li>Las columnas de reunión se agregan hacia la derecha y también se pueden filtrar por su contenido.</li>
+        <li>El texto en “fecha de termino” tiene un ancho máximo aproximado de 40 caracteres y crece hacia abajo si es más largo.</li>
+      </ul>
+    </div>
+  </div>
 
   <script>
     /********** SESIÓN **********/
@@ -631,386 +639,386 @@
     const emailSesion = localStorage.getItem('usuarioEmail') || '';
     userEmailSpan.textContent = emailSesion || '(sin sesión)';
 
-    if (localStorage.getItem('sesionActiva') !== '1') {
+    // Aceptar diferentes formatos que pueda estar guardando el login
+    const rawSesion = localStorage.getItem('sesionActiva');
+    const sesionActiva = rawSesion === '1' || rawSesion === 'true' || rawSesion === 'YES';
+
+    if (!sesionActiva) {
       alert('No hay sesión activa, vuelve a iniciar desde el login.');
       window.location.href = 'index.html';
     }
 
-    document.getElementById('btnLogout').addEventListener('click', () => {
-      localStorage.removeItem('sesionActiva');
-      localStorage.removeItem('usuarioEmail');
-      window.location.href = 'index.html';
-    });
+    /********** DATOS Y STORAGE **********/
+    const STORAGE_KEY_PREFIX = 'tablero_reuniones_';
+    const STORAGE_KEY = STORAGE_KEY_PREFIX + (emailSesion || 'anonimo');
 
-    /********** UTILIDADES **********/
-    const ESTADOS = ['P', 'EP', 'T'];
+    let filas = [];            // filas del tablero
+    let columnasReunion = [];  // nombres de columnas extra
 
-    const STORAGE_KEY = 'tablero_tareas_v3';
-    const RESPONSABLES_KEY = 'tablero_responsables_v3';
+    const defaultResponsables = ['cruiz@elcedro.mx'];
+    let listaResponsables =
+      JSON.parse(localStorage.getItem('listaResponsables_' + emailSesion)) ||
+      defaultResponsables.slice();
 
-    function showToast(msg, type = 'info') {
-      const toast = document.getElementById('toast');
-      toast.textContent = msg;
-      toast.className = 'toast show';
-      if (type === 'success') toast.classList.add('toast-success');
-      if (type === 'error') toast.classList.add('toast-error');
-      setTimeout(() => {
-        toast.className = 'toast';
-      }, 2200);
+    function saveResponsables() {
+      localStorage.setItem('listaResponsables_' + emailSesion, JSON.stringify(listaResponsables));
+      poblarFiltroResponsable();
     }
-
-    function hoyISO() {
-      const d = new Date();
-      const y = d.getFullYear();
-      const m = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      return `${y}-${m}-${day}`;
-    }
-
-    function isoToDDMMYY(iso) {
-      if (!iso) return '';
-      const [y, m, d] = iso.split('-');
-      return `${d}/${m}/${y.slice(-2)}`;
-    }
-
-    function ddmmyyToISO(str) {
-      if (!str) return '';
-      const parts = str.split(/[\/\-]/);
-      if (parts.length < 3) return '';
-      let [d, m, y] = parts;
-      if (y.length === 2) {
-        const currentCentury = String(new Date().getFullYear()).slice(0, 2);
-        y = currentCentury + y;
-      }
-      return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
-    }
-
-    /********** ESTADO DE LA APP **********/
-    let responsables = [];
-    let data = {
-      columnasReunion: [], // [{id, tituloISO}]
-      filas: [] // {tema, subTema, responsable, estado, fechaTerminoISO, reuniones:{colId: texto}}
-    };
 
     function cargarDesdeStorage() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) data = JSON.parse(raw);
-      } catch (e) {
-        console.error(e);
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        filas = [];
+        columnasReunion = [];
+        return;
       }
       try {
-        const rawR = localStorage.getItem(RESPONSABLES_KEY);
-        if (rawR) responsables = JSON.parse(rawR);
-        else responsables = ['cruiz@elcedro.mx'];
+        const obj = JSON.parse(raw);
+        filas = obj.filas || [];
+        columnasReunion = obj.columnasReunion || [];
       } catch (e) {
-        responsables = ['cruiz@elcedro.mx'];
+        console.error('Error leyendo storage', e);
+        filas = [];
+        columnasReunion = [];
       }
     }
 
     function guardarEnStorage() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      localStorage.setItem(RESPONSABLES_KEY, JSON.stringify(responsables));
+      const obj = { filas, columnasReunion };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
+      actualizarResumenEstados();
     }
 
-    /********** UI: CABECERAS + FILTROS EN ENCABEZADO **********/
-    const columnasBase = [
-      { key: 'tema', label: 'tema', ancho: 180 },
-      { key: 'subTema', label: 'sub tema', ancho: 220 },
-      { key: 'responsable', label: 'responsable', ancho: 160 },
-      { key: 'estado', label: 'estado', ancho: 100 },
-      { key: 'fechaTermino', label: 'fecha de termino', ancho: 130 }
-    ];
+    /********** UI BÁSICA **********/
+    const tbody = document.getElementById('tbody');
+    const headerRow = document.getElementById('headerRow');
+    const filterRow = document.getElementById('filterRow');
 
-    const filtros = {
-      tema: '',
-      subTema: '',
-      responsable: '',
-      estado: '',
-      fechaTermino: ''
-    };
+    function crearFilaVacia() {
+      const fila = {
+        id: Date.now() + '_' + Math.random().toString(36).slice(2),
+        tema: '',
+        subtema: '',
+        responsable: listaResponsables[0] || '',
+        estado: 'P',
+        fecha: '',
+        reuniones: {}
+      };
+      columnasReunion.forEach(col => {
+        fila.reuniones[col] = '';
+      });
+      filas.push(fila);
+    }
 
-    let filtroFechaModo = 'todas'; // todas | ultimas2 | hoy
+    function renderColumnasReunion() {
+      // limpia todas las TH extra
+      while (headerRow.children.length > 5) headerRow.removeChild(headerRow.lastChild);
+      while (filterRow.children.length > 5) filterRow.removeChild(filterRow.lastChild);
 
-    function construirEncabezado() {
-      const theadRow = document.getElementById('thead-row');
-      theadRow.innerHTML = '';
-
-      function creaTH(col) {
+      columnasReunion.forEach(col => {
         const th = document.createElement('th');
-        th.style.minWidth = col.ancho + 'px';
+        th.textContent = col;
+        headerRow.appendChild(th);
 
-        const labelDiv = document.createElement('div');
-        labelDiv.className = 'th-label';
-        const labelSpan = document.createElement('span');
-        labelSpan.textContent = col.label;
-        labelDiv.appendChild(labelSpan);
-        th.appendChild(labelDiv);
-
-        // input filtro
+        const thFilter = document.createElement('th');
         const input = document.createElement('input');
-        input.type = 'text';
-        input.placeholder = 'filtrar...';
-        input.style.width = '100%';
-        input.style.marginTop = '3px';
-        input.style.borderRadius = '999px';
-        input.style.border = '1px solid var(--gris-borde)';
-        input.style.padding = '2px 8px';
-        input.style.fontSize = '11px';
-        input.dataset.key = col.key;
-
-        input.value = filtros[col.key] || '';
-
-        input.addEventListener('input', (e) => {
-          filtros[col.key] = e.target.value.toLowerCase();
-          renderTabla();
-        });
-
-        th.appendChild(input);
-        return th;
-      }
-
-      columnasBase.forEach(c => {
-        theadRow.appendChild(creaTH(c));
-      });
-
-      // columnas de reunión (después de fecha de termino)
-      data.columnasReunion.forEach(col => {
-        const th = document.createElement('th');
-        th.textContent = col.titulo || col.id;
-        th.style.minWidth = '160px';
-        theadRow.appendChild(th);
+        input.className = 'filter-input';
+        input.dataset.col = 'reunion:' + col;
+        input.placeholder = 'Filtrar ' + col;
+        thFilter.appendChild(input);
+        filterRow.appendChild(thFilter);
       });
     }
 
-    /********** UI: RENDER FILAS **********/
-    function pasaFiltros(fila) {
-      // filtros de texto
-      const tTema = (fila.tema || '').toLowerCase();
-      const tSub = (fila.subTema || '').toLowerCase();
-      const tResp = (fila.responsable || '').toLowerCase();
-      const tEst = (fila.estado || '').toLowerCase();
-      const fech = isoToDDMMYY(fila.fechaTermino || '').toLowerCase();
+    function crearCeldaTexto(fila, campo, claseOpcional) {
+      const td = document.createElement('td');
+      if (claseOpcional) td.classList.add(claseOpcional);
 
-      if (filtros.tema && !tTema.includes(filtros.tema)) return false;
-      if (filtros.subTema && !tSub.includes(filtros.subTema)) return false;
-      if (filtros.responsable && !tResp.includes(filtros.responsable)) return false;
-      if (filtros.estado && !tEst.includes(filtros.estado)) return false;
-      if (filtros.fechaTermino && !fech.includes(filtros.fechaTermino)) return false;
+      const input = document.createElement('textarea');
+      input.className = 'cell-input';
+      input.value = fila[campo] || '';
+      input.rows = 1;
 
-      return true;
+      input.addEventListener('input', () => {
+        fila[campo] = input.value;
+        guardarEnStorage();
+        aplicarFiltros();
+      });
+
+      td.appendChild(input);
+      return td;
     }
 
-    function columnasReunionVisibles() {
-      if (filtroFechaModo === 'todas') return data.columnasReunion;
+    function crearCeldaResponsable(fila) {
+      const td = document.createElement('td');
+      const select = document.createElement('select');
+      select.className = 'cell-input';
 
-      if (filtroFechaModo === 'ultimas2') {
-        return data.columnasReunion.slice(-2);
-      }
+      listaResponsables.forEach(resp => {
+        const opt = document.createElement('option');
+        opt.value = resp;
+        opt.textContent = resp;
+        select.appendChild(opt);
+      });
 
-      if (filtroFechaModo === 'hoy') {
-        const hoy = hoyISO();
-        return data.columnasReunion.filter(c => c.tituloISO === hoy);
-      }
+      select.value = fila.responsable || '';
+      select.addEventListener('change', () => {
+        fila.responsable = select.value;
+        guardarEnStorage();
+        aplicarFiltros();
+      });
 
-      return data.columnasReunion;
+      td.appendChild(select);
+      return td;
     }
 
-    function renderTabla() {
-      construirEncabezado();
+    function crearCeldaEstado(fila) {
+      const td = document.createElement('td');
 
-      const tbody = document.getElementById('tbody');
+      const btn = document.createElement('button');
+      btn.className = 'estado-pill estado-' + fila.estado;
+      btn.textContent = fila.estado;
+      btn.type = 'button';
+
+      btn.addEventListener('click', () => {
+        const orden = ['P', 'EP', 'T'];
+        const idx = orden.indexOf(fila.estado);
+        fila.estado = orden[(idx + 1) % orden.length];
+        btn.textContent = fila.estado;
+        btn.className = 'estado-pill estado-' + fila.estado;
+        guardarEnStorage();
+        aplicarFiltros();
+      });
+
+      td.appendChild(btn);
+      return td;
+    }
+
+    /** DATE PICKER **/
+    const dateOverlay = document.getElementById('datePickerOverlay');
+    const dateInput = document.getElementById('datePickerInput');
+    let dateOverlayFila = null;
+
+    function formatearFechaDisplay(iso) {
+      if (!iso) return '';
+      // iso: yyyy-mm-dd
+      const [y, m, d] = iso.split('-');
+      if (!y || !m || !d) return iso;
+      return `${d}/${m}/${y.slice(2)}`;
+    }
+
+    function parseFechaDisplay(display) {
+      // display: dd/mm/yy o dd/mm/yyyy
+      if (!display) return '';
+      const parts = display.split('/');
+      if (parts.length !== 3) return '';
+      let [d, m, y] = parts;
+      if (y.length === 2) {
+        y = '20' + y;
+      }
+      if (d.length === 1) d = '0' + d;
+      if (m.length === 1) m = '0' + m;
+      return `${y}-${m}-${d}`;
+    }
+
+    function crearCeldaFecha(fila) {
+      const td = document.createElement('td');
+      td.classList.add('col-fecha');
+
+      const input = document.createElement('textarea');
+      input.className = 'cell-input';
+      input.readOnly = true;
+      input.value = fila.fecha || '';
+      input.rows = 1;
+
+      td.addEventListener('click', (e) => {
+        const rect = td.getBoundingClientRect();
+        dateOverlay.style.display = 'block';
+        dateOverlay.style.top = window.scrollY + rect.top + rect.height / 2 + 'px';
+        dateOverlay.style.left = window.scrollX + rect.left + 'px';
+
+        const iso = parseFechaDisplay(fila.fecha);
+        if (iso) dateInput.value = iso;
+        else dateInput.value = '';
+
+        dateOverlayFila = fila;
+        dateInput.focus();
+        e.stopPropagation();
+      });
+
+      input.addEventListener('focus', (ev) => {
+        ev.target.blur();
+      });
+
+      td.appendChild(input);
+      return td;
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!dateOverlay.contains(e.target)) {
+        dateOverlay.style.display = 'none';
+        dateOverlayFila = null;
+      }
+    });
+
+    dateInput.addEventListener('change', () => {
+      if (!dateOverlayFila) return;
+      const iso = dateInput.value;
+      const display = formatearFechaDisplay(iso);
+      dateOverlayFila.fecha = display;
+      guardarEnStorage();
+      renderFilas();
+      dateOverlay.style.display = 'none';
+      dateOverlayFila = null;
+      aplicarFiltros();
+    });
+
+    function crearCeldaReunion(fila, nombreCol) {
+      const td = document.createElement('td');
+      const input = document.createElement('textarea');
+      input.className = 'cell-input';
+      input.value = (fila.reuniones && fila.reuniones[nombreCol]) || '';
+      input.rows = 1;
+
+      input.addEventListener('input', () => {
+        if (!fila.reuniones) fila.reuniones = {};
+        fila.reuniones[nombreCol] = input.value;
+        guardarEnStorage();
+        aplicarFiltros();
+      });
+
+      td.appendChild(input);
+      return td;
+    }
+
+    function renderFilas() {
       tbody.innerHTML = '';
-
-      const colsReuVisibles = columnasReunionVisibles();
-
-      data.filas.forEach((fila, rowIndex) => {
-        if (!pasaFiltros(fila)) return;
-
+      filas.forEach(fila => {
         const tr = document.createElement('tr');
+        tr.dataset.id = fila.id;
 
-        // tema
-        let tdTema = document.createElement('td');
-        const inpTema = document.createElement('textarea');
-        inpTema.className = 'td-textarea';
-        inpTema.value = fila.tema || '';
-        inpTema.addEventListener('change', () => {
-          fila.tema = inpTema.value;
-          guardarEnStorage();
-        });
-        tdTema.appendChild(inpTema);
-        tr.appendChild(tdTema);
+        tr.appendChild(crearCeldaTexto(fila, 'tema', 'col-tema'));
+        tr.appendChild(crearCeldaTexto(fila, 'subtema', 'col-subtema'));
+        tr.appendChild(crearCeldaResponsable(fila));
+        tr.appendChild(crearCeldaEstado(fila));
+        tr.appendChild(crearCeldaFecha(fila));
 
-        // sub tema
-        let tdSub = document.createElement('td');
-        const inpSub = document.createElement('textarea');
-        inpSub.className = 'td-textarea';
-        inpSub.value = fila.subTema || '';
-        // doble clic para abrir link si sólo hay URL
-        inpSub.addEventListener('dblclick', () => {
-          const v = inpSub.value.trim();
-          if (v.startsWith('http://') || v.startsWith('https://')) {
-            window.open(v, '_blank');
-          }
-        });
-        inpSub.addEventListener('change', () => {
-          fila.subTema = inpSub.value;
-          guardarEnStorage();
-        });
-        tdSub.appendChild(inpSub);
-        tr.appendChild(tdSub);
-
-        // responsable
-        let tdResp = document.createElement('td');
-        const selResp = document.createElement('select');
-        selResp.className = 'select-responsable';
-
-        // opción vacía
-        const optEmpty = document.createElement('option');
-        optEmpty.value = '';
-        optEmpty.textContent = '';
-        selResp.appendChild(optEmpty);
-
-        responsables.forEach(r => {
-          const opt = document.createElement('option');
-          opt.value = r;
-          opt.textContent = r;
-          selResp.appendChild(opt);
-        });
-        selResp.value = fila.responsable || '';
-
-        selResp.addEventListener('change', () => {
-          fila.responsable = selResp.value;
-          guardarEnStorage();
-        });
-
-        tdResp.appendChild(selResp);
-        tr.appendChild(tdResp);
-
-        // estado (badge + select)
-        let tdEst = document.createElement('td');
-        const wrapEst = document.createElement('div');
-        wrapEst.style.display = 'flex';
-        wrapEst.style.alignItems = 'center';
-        wrapEst.style.gap = '6px';
-
-        const badge = document.createElement('span');
-        badge.className = 'badge-estado';
-        setBadgeEstado(badge, fila.estado || 'P');
-
-        const selEst = document.createElement('select');
-        selEst.className = 'select-estado';
-        ESTADOS.forEach(e => {
-          const opt = document.createElement('option');
-          opt.value = e;
-          opt.textContent = e;
-          selEst.appendChild(opt);
-        });
-        selEst.value = fila.estado || 'P';
-
-        selEst.addEventListener('change', () => {
-          fila.estado = selEst.value;
-          setBadgeEstado(badge, selEst.value);
-          guardarEnStorage();
-        });
-
-        wrapEst.appendChild(badge);
-        wrapEst.appendChild(selEst);
-        tdEst.appendChild(wrapEst);
-        tr.appendChild(tdEst);
-
-        // fecha de termino (input date al enfoque)
-        let tdFecha = document.createElement('td');
-        tdFecha.className = 'td-fecha';
-
-        const inpFecha = document.createElement('input');
-        inpFecha.type = 'text';
-        inpFecha.className = 'td-input';
-        inpFecha.readOnly = true;
-        inpFecha.value = isoToDDMMYY(fila.fechaTermino || '');
-
-        inpFecha.addEventListener('click', () => {
-          // crear input date temporal
-          const tmp = document.createElement('input');
-          tmp.type = 'date';
-          tmp.style.position = 'absolute';
-          const rect = inpFecha.getBoundingClientRect();
-          tmp.style.left = rect.left + 'px';
-          tmp.style.top = rect.top + 'px';
-          tmp.style.zIndex = '40';
-          tmp.value = fila.fechaTermino || hoyISO();
-          document.body.appendChild(tmp);
-          tmp.focus();
-
-          tmp.addEventListener('change', () => {
-            fila.fechaTermino = tmp.value;
-            inpFecha.value = isoToDDMMYY(tmp.value);
-            guardarEnStorage();
-          });
-
-          const cleanup = () => {
-            document.body.removeChild(tmp);
-          };
-          tmp.addEventListener('blur', cleanup, { once: true });
-        });
-
-        tdFecha.appendChild(inpFecha);
-        tr.appendChild(tdFecha);
-
-        // columnas de reunión visibles
-        colsReuVisibles.forEach(col => {
-          const td = document.createElement('td');
-          const ta = document.createElement('textarea');
-          ta.className = 'td-textarea';
-          ta.value = (fila.reuniones && fila.reuniones[col.id]) || '';
-          ta.addEventListener('change', () => {
-            if (!fila.reuniones) fila.reuniones = {};
-            fila.reuniones[col.id] = ta.value;
-            guardarEnStorage();
-          });
-          td.appendChild(ta);
-          tr.appendChild(td);
+        columnasReunion.forEach(col => {
+          tr.appendChild(crearCeldaReunion(fila, col));
         });
 
         tbody.appendChild(tr);
       });
     }
 
-    function setBadgeEstado(el, estado) {
-      el.textContent = estado;
-      el.className = 'badge-estado';
-      if (estado === 'P') el.classList.add('estado-P');
-      if (estado === 'EP') el.classList.add('estado-EP');
-      if (estado === 'T') el.classList.add('estado-T');
+    function actualizarResumenEstados() {
+      const span = document.getElementById('resumenEstados');
+      const conteo = { P: 0, EP: 0, T: 0 };
+      filas.forEach(f => {
+        conteo[f.estado] = (conteo[f.estado] || 0) + 1;
+      });
+      span.innerHTML =
+        `<span><span class="badge-dot dot-pendiente"></span> P: ${conteo.P || 0}</span>
+         <span><span class="badge-dot dot-proceso"></span> EP: ${conteo.EP || 0}</span>
+         <span><span class="badge-dot dot-terminado"></span> T: ${conteo.T || 0}</span>`;
     }
 
-    /********** ACCIONES **********/
-    document.getElementById('btnAddRow').addEventListener('click', () => {
-      data.filas.push({
-        tema: '',
-        subTema: '',
-        responsable: '',
-        estado: 'P',
-        fechaTermino: '',
+    /********** FILTROS POR ENCABEZADO **********/
+    function obtenerValoresFiltros() {
+      const filtros = {
+        tema: document.querySelector('.filter-input[data-col="tema"]').value.trim().toLowerCase(),
+        subtema: document.querySelector('.filter-input[data-col="subtema"]').value.trim().toLowerCase(),
+        responsable: document.querySelector('.filter-select[data-col="responsable"]').value,
+        estado: document.querySelector('.filter-select[data-col="estado"]').value,
+        fecha: document.querySelector('.filter-input[data-col="fecha"]').value.trim().toLowerCase(),
         reuniones: {}
+      };
+
+      columnasReunion.forEach(col => {
+        const inp = document.querySelector('.filter-input[data-col="reunion:' + col + '"]');
+        filtros.reuniones[col] = inp ? inp.value.trim().toLowerCase() : '';
       });
-      guardarEnStorage();
-      renderTabla();
+
+      return filtros;
+    }
+
+    function filaCumpleFiltros(fila, filtros) {
+      if (filtros.tema && !(fila.tema || '').toLowerCase().includes(filtros.tema)) return false;
+      if (filtros.subtema && !(fila.subtema || '').toLowerCase().includes(filtros.subtema)) return false;
+      if (filtros.responsable && fila.responsable !== filtros.responsable) return false;
+      if (filtros.estado && fila.estado !== filtros.estado) return false;
+      if (filtros.fecha && !(fila.fecha || '').toLowerCase().includes(filtros.fecha)) return false;
+
+      for (const col of columnasReunion) {
+        const filtroCol = filtros.reuniones[col];
+        if (filtroCol) {
+          const valor = (fila.reuniones && fila.reuniones[col]) ? fila.reuniones[col].toLowerCase() : '';
+          if (!valor.includes(filtroCol)) return false;
+        }
+      }
+
+      return true;
+    }
+
+    function aplicarFiltros() {
+      const filtros = obtenerValoresFiltros();
+      const trs = tbody.querySelectorAll('tr');
+      trs.forEach(tr => {
+        const id = tr.dataset.id;
+        const fila = filas.find(f => f.id === id);
+        if (!fila) return;
+        tr.style.display = filaCumpleFiltros(fila, filtros) ? '' : 'none';
+      });
+      actualizarResumenEstados();
+    }
+
+    document.getElementById('filterRow').addEventListener('input', (ev) => {
+      if (ev.target.matches('.filter-input') || ev.target.matches('.filter-select')) {
+        aplicarFiltros();
+      }
     });
 
-    document.getElementById('btnAddColumn').addEventListener('click', () => {
-      const iso = hoyISO();
-      const titulo = prompt('Título de la nueva columna de reunión (ej. fecha de la junta):', iso);
-      if (!titulo) return;
-      const id = 'col_' + Date.now();
-      data.columnasReunion.push({ id, titulo, tituloISO: iso });
-      guardarEnStorage();
-      renderTabla();
-    });
+    /********** RESPONSABLES **********/
+    function poblarFiltroResponsable() {
+      const sel = document.getElementById('filtroResponsable');
+      const valorActual = sel.value;
+      sel.innerHTML = '<option value="">Todos</option>';
+      listaResponsables.forEach(r => {
+        const opt = document.createElement('option');
+        opt.value = r;
+        opt.textContent = r;
+        sel.appendChild(opt);
+      });
+      if ([...sel.options].some(o => o.value === valorActual)) {
+        sel.value = valorActual;
+      }
+    }
 
-    // exportar / importar
-    document.getElementById('btnExport').addEventListener('click', () => {
-      const blob = new Blob([JSON.stringify({ data, responsables }, null, 2)], {
+    function gestionarResponsables() {
+      const actual = listaResponsables.join('\n');
+      const texto = prompt(
+        'Edita la lista de responsables (uno por línea):',
+        actual
+      );
+      if (texto === null) return;
+      const nuevos = texto
+        .split('\n')
+        .map(t => t.trim())
+        .filter(t => t.length > 0);
+      if (nuevos.length === 0) {
+        alert('Debe haber al menos un responsable.');
+        return;
+      }
+      listaResponsables = Array.from(new Set(nuevos));
+      saveResponsables();
+      guardarEnStorage();
+      renderFilas();
+    }
+
+    /********** EXPORTAR / IMPORTAR **********/
+    document.getElementById('btnExportar').addEventListener('click', () => {
+      const data = { filas, columnasReunion, responsables: listaResponsables };
+      const blob = new Blob([JSON.stringify(data, null, 2)], {
         type: 'application/json'
       });
       const url = URL.createObjectURL(blob);
@@ -1019,91 +1027,100 @@
       a.download = 'tablero_reuniones.json';
       a.click();
       URL.revokeObjectURL(url);
-      showToast('JSON exportado', 'success');
     });
 
-    document.getElementById('btnImport').addEventListener('click', () => {
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'application/json';
-      input.addEventListener('change', e => {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = ev => {
-          try {
-            const obj = JSON.parse(ev.target.result);
-            if (obj.data) data = obj.data;
-            if (obj.responsables) responsables = obj.responsables;
-            guardarEnStorage();
-            renderTabla();
-            showToast('JSON importado', 'success');
-          } catch (err) {
-            console.error(err);
-            showToast('Error al importar', 'error');
-          }
-        };
-        reader.readAsText(file);
+    document.getElementById('btnImportar').addEventListener('click', () => {
+      document.getElementById('inputImportar').click();
+    });
+
+    document.getElementById('inputImportar').addEventListener('change', (ev) => {
+      const file = ev.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          filas = data.filas || [];
+          columnasReunion = data.columnasReunion || [];
+          listaResponsables = data.responsables || listaResponsables;
+          saveResponsables();
+          renderColumnasReunion();
+          renderFilas();
+          guardarEnStorage();
+          aplicarFiltros();
+          alert('Datos importados correctamente.');
+        } catch (err) {
+          console.error(err);
+          alert('Error al importar el archivo.');
+        }
+      };
+      reader.readAsText(file);
+      ev.target.value = '';
+    });
+
+    /********** NUEVA FILA / COLUMNA **********/
+    document.getElementById('btnNuevaFila').addEventListener('click', () => {
+      crearFilaVacia();
+      guardarEnStorage();
+      renderFilas();
+      aplicarFiltros();
+    });
+
+    document.getElementById('btnNuevaColumna').addEventListener('click', () => {
+      const nombre = prompt('Título de la nueva columna de reunión (ej. 16/11/25):', '');
+      if (!nombre) return;
+      if (columnasReunion.includes(nombre)) {
+        alert('Ya existe una columna con ese nombre.');
+        return;
+      }
+      columnasReunion.push(nombre);
+      filas.forEach(f => {
+        if (!f.reuniones) f.reuniones = {};
+        f.reuniones[nombre] = '';
       });
-      input.click();
+      renderColumnasReunion();
+      renderFilas();
+      guardarEnStorage();
+      aplicarFiltros();
     });
 
-    // scroll horizontal
-    const scrollDiv = document.getElementById('tableScroll');
-    document.getElementById('btnScrollLeft').addEventListener('click', () => {
-      scrollDiv.scrollBy({ left: -250, behavior: 'smooth' });
-    });
-    document.getElementById('btnScrollRight').addEventListener('click', () => {
-      scrollDiv.scrollBy({ left: 250, behavior: 'smooth' });
+    /********** CERRAR SESIÓN **********/
+    document.getElementById('btnCerrarSesion').addEventListener('click', () => {
+      if (!confirm('¿Cerrar sesión?')) return;
+      localStorage.removeItem('sesionActiva');
+      window.location.href = 'index.html';
     });
 
-    // filtros de columnas de reunión (Todas / Últimas 2 / Hoy)
-    const btnTodos = document.getElementById('btnFiltroTodos');
-    const btnUltimas2 = document.getElementById('btnFiltroUltimas2');
-    const btnHoy = document.getElementById('btnFiltroHoy');
-
-    function actualizarChipFechaActiva() {
-      [btnTodos, btnUltimas2, btnHoy].forEach(b => b.classList.remove('chip-toggle--active'));
-      if (filtroFechaModo === 'todas') btnTodos.classList.add('chip-toggle--active');
-      if (filtroFechaModo === 'ultimas2') btnUltimas2.classList.add('chip-toggle--active');
-      if (filtroFechaModo === 'hoy') btnHoy.classList.add('chip-toggle--active');
-    }
-
-    btnTodos.addEventListener('click', () => {
-      filtroFechaModo = 'todas';
-      actualizarChipFechaActiva();
-      renderTabla();
-    });
-
-    btnUltimas2.addEventListener('click', () => {
-      filtroFechaModo = 'ultimas2';
-      actualizarChipFechaActiva();
-      renderTabla();
-    });
-
-    btnHoy.addEventListener('click', () => {
-      filtroFechaModo = 'hoy';
-      actualizarChipFechaActiva();
-      renderTabla();
-    });
-
-    /********** MODAL DE AYUDA **********/
-    const helpBackdrop = document.getElementById('helpBackdrop');
+    /********** AYUDA (MODAL) **********/
+    const helpBackdrop = document.getElementById('helpModalBackdrop');
     document.getElementById('btnHelp').addEventListener('click', () => {
       helpBackdrop.style.display = 'flex';
     });
-    document.getElementById('btnHelpClose').addEventListener('click', () => {
+    document.getElementById('helpModalClose').addEventListener('click', () => {
       helpBackdrop.style.display = 'none';
     });
-    helpBackdrop.addEventListener('click', (e) => {
-      if (e.target === helpBackdrop) helpBackdrop.style.display = 'none';
+    helpBackdrop.addEventListener('click', (ev) => {
+      if (ev.target === helpBackdrop) {
+        helpBackdrop.style.display = 'none';
+      }
     });
 
-    /********** INICIO **********/
-    cargarDesdeStorage();
-    actualizarChipFechaActiva();
-    renderTabla();
+    /********** INICIALIZACIÓN **********/
+    function init() {
+      poblarFiltroResponsable();
+      cargarDesdeStorage();
+      renderColumnasReunion();
+      if (filas.length === 0) {
+        crearFilaVacia();
+      }
+      renderFilas();
+      guardarEnStorage();
+      aplicarFiltros();
+    }
+
+    document.getElementById('btnGestionResponsables').addEventListener('click', gestionarResponsables);
+
+    init();
   </script>
 </body>
-
 </html>

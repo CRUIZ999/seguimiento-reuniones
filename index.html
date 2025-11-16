@@ -1,317 +1,135 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Seguimiento de reuniones – Inicio de sesión</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Seguimiento de reuniones</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
     body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #f4f5fb;
-      color: #111827;
+        margin: 0;
+        background: #f3f4f6;
+        font-family: 'Inter', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
     }
-
     .card {
-      background: #ffffff;
-      border-radius: 18px;
-      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
-      padding: 32px 32px 28px;
-      width: 100%;
-      max-width: 420px;
+        background: white;
+        padding: 35px;
+        border-radius: 18px;
+        width: 360px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
     }
-
-    h1 {
-      margin: 0 0 4px;
-      font-size: 22px;
-      font-weight: 600;
-      color: #111827;
+    h2 {
+        margin-top: 0;
+        font-weight: 600;
+        color: #111827;
+        text-align: center;
     }
-
-    .subtitle {
-      font-size: 13px;
-      color: #6b7280;
-      margin-bottom: 20px;
-    }
-
-    label {
-      display: block;
-      font-size: 13px;
-      font-weight: 500;
-      color: #374151;
-      margin-bottom: 4px;
-    }
-
     input {
-      width: 100%;
-      padding: 9px 11px;
-      border-radius: 9px;
-      border: 1px solid #d1d5db;
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.18s, box-shadow 0.18s;
-      background: #f9fafb;
+        width: 100%;
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+        margin-bottom: 15px;
+        font-size: 14px;
     }
-
-    input:focus {
-      border-color: #2563eb;
-      box-shadow: 0 0 0 1px rgba(37, 99, 235, .35);
-      background: #ffffff;
-    }
-
-    .field {
-      margin-bottom: 14px;
-    }
-
-    .actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
     button {
-      border-radius: 999px;
-      border: none;
-      padding: 9px 18px;
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.15s;
+        width: 100%;
+        padding: 10px 14px;
+        background: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        cursor: pointer;
+        margin-top: 5px;
     }
-
-    button:active {
-      transform: translateY(1px);
-      box-shadow: none;
+    button:hover { background:#1e40af; }
+    .secondary {
+        background: #e5e7eb;
+        color: #111827;
     }
-
-    .btn-primary {
-      background: #2563eb;
-      color: #ffffff;
-      box-shadow: 0 10px 24px rgba(37, 99, 235, .35);
-      flex: 1;
+    .secondary:hover { background:#d1d5db; }
+    #msg {
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        display: none;
+        font-size: 14px;
     }
-
-    .btn-primary:hover {
-      background: #1d4ed8;
-    }
-
-    .btn-secondary {
-      background: #f3f4f6;
-      color: #111827;
-      flex: 1;
-    }
-
-    .btn-secondary:hover {
-      background: #e5e7eb;
-    }
-
-    .hint {
-      margin-top: 12px;
-      font-size: 11px;
-      color: #6b7280;
-      line-height: 1.4;
-    }
-
-    .alert {
-      margin-bottom: 16px;
-      padding: 8px 10px;
-      border-radius: 10px;
-      font-size: 12px;
-      line-height: 1.4;
-      display: none;
-    }
-
-    .alert-success {
-      background: #ecfdf3;
-      border: 1px solid #6ee7b7;
-      color: #166534;
-    }
-
-    .alert-error {
-      background: #fef2f2;
-      border: 1px solid #fecaca;
-      color: #b91c1c;
-    }
-
-    .small {
-      font-size: 11px;
-      color: #9ca3af;
-      margin-top: 16px;
-      text-align: center;
-    }
-  </style>
+</style>
 </head>
+
 <body>
-  <div class="card">
-    <h1>Seguimiento de reuniones</h1>
-    <p class="subtitle">Inicia sesión con tu correo y contraseña para acceder al tablero.</p>
 
-    <div id="alert" class="alert"></div>
+<div class="card">
+    <h2>Seguimiento de reuniones</h2>
 
-    <div class="field">
-      <label for="email">Correo</label>
-      <input id="email" type="email" placeholder="tucorreo@ejemplo.com" autocomplete="email" />
-    </div>
+    <div id="msg"></div>
 
-    <div class="field">
-      <label for="password">Contraseña</label>
-      <input id="password" type="password" placeholder="••••••••" autocomplete="current-password" />
-    </div>
+    <input type="email" id="email" placeholder="correo@ejemplo.com" />
+    <input type="password" id="password" placeholder="Contraseña" />
 
-    <div class="actions">
-      <button id="btnLogin" type="button" class="btn-primary">Entrar</button>
-      <button id="btnSignup" type="button" class="btn-secondary">Crear cuenta</button>
-    </div>
+    <button id="btnLogin">Entrar</button>
+    <button id="btnRegister" class="secondary">Crear cuenta</button>
+</div>
 
-    <p class="hint">
-      Esta sesión se cierra automáticamente al cerrar la pestaña o recargar la página.
-      <br>
-      Tip: usa siempre el mismo correo para que tus permisos y tareas se mantengan.
-    </p>
 
-    <p class="small">
-      Si olvidaste tu contraseña, entra a Supabase para resetearla manualmente (por ahora no hay recuperación automática).
-    </p>
-  </div>
+<script>
+/* ============================
+    CONFIGURAR SUPABASE
+============================= */
+const SUPABASE_URL = "https://hrbmstaklleraiacqmky.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhyYm1zdGFrbGxlcmFpYWNxbWt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyMTA2OTQsImV4cCI6MjA3ODc4NjY5NH0.tN00tAjMJpJK_8gnerocbOSzHp93N5yc9KohTBpMeZc";
 
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    // ⚙️ Configuración de Supabase (tu proyecto)
-    const SUPABASE_URL = 'https://hrbmstaklleraiacqmky.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhyYm1zdGFrbGxlcmFpYWNxbWt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyMTA2OTQsImV4cCI6MjA3ODc4NjY5NH0.tN00tAjMJpJK_8gnerocbOSzHp93N5yc9KohTBpMeZc';
+const supa = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const email = document.getElementById("email");
+const password = document.getElementById("password");
+const msg = document.getElementById("msg");
+const btnLogin = document.getElementById("btnLogin");
+const btnRegister = document.getElementById("btnRegister");
 
-    const emailInput = document.getElementById('email');
-    const passwordInput = document.getElementById('password');
-    const btnLogin = document.getElementById('btnLogin');
-    const btnSignup = document.getElementById('btnSignup');
-    const alertBox = document.getElementById('alert');
+function showMsg(text, ok = false) {
+    msg.style.display = "block";
+    msg.style.background = ok ? "#d1fae5" : "#fee2e2";
+    msg.style.color = ok ? "#065f46" : "#991b1b";
+    msg.textContent = text;
+}
 
-    function showAlert(message, type = 'success') {
-      alertBox.textContent = message;
-      alertBox.className = 'alert ' + (type === 'success' ? 'alert-success' : 'alert-error');
-      alertBox.style.display = 'block';
-    }
-
-    function clearAlert() {
-      alertBox.style.display = 'none';
-      alertBox.textContent = '';
-    }
-
-    function setLoading(isLoading) {
-      btnLogin.disabled = isLoading;
-      btnSignup.disabled = isLoading;
-      btnLogin.textContent = isLoading ? 'Procesando...' : 'Entrar';
-      btnSignup.textContent = isLoading ? 'Procesando...' : 'Crear cuenta';
-    }
-
-    // Para que SIEMPRE pida login al entrar a la página
-    document.addEventListener('DOMContentLoaded', async () => {
-      try {
-        await supabaseClient.auth.signOut(); // limpia cualquier sesión previa
-      } catch (e) {
-        console.warn('No se pudo cerrar sesión previa (no es grave).', e);
-      }
+/* ========= LOGIN ========= */
+btnLogin.addEventListener("click", async () => {
+    msg.style.display = "none";
+    const { data, error } = await supa.auth.signInWithPassword({
+        email: email.value,
+        password: password.value
     });
 
-    async function handleLogin() {
-      clearAlert();
-      const email = emailInput.value.trim();
-      const password = passwordInput.value.trim();
+    if (error) return showMsg("Error: " + error.message);
 
-      if (!email || !password) {
-        showAlert('Escribe correo y contraseña.', 'error');
-        return;
-      }
+    showMsg("Inicio de sesión exitoso.", true);
+    setTimeout(() => { window.location.href = "tablero.html"; }, 600);
+});
 
-      try {
-        setLoading(true);
-        const { data, error } = await supabaseClient.auth.signInWithPassword({
-          email,
-          password
-        });
-
-        if (error) {
-          console.error(error);
-          showAlert('Error al iniciar sesión: ' + error.message, 'error');
-          return;
-        }
-
-        showAlert('Inicio de sesión exitoso. Redirigiendo…', 'success');
-
-        // Pequeña pausa para que se vea el mensaje
-        setTimeout(() => {
-          // En GitHub Pages ambos archivos están en la misma carpeta
-          window.location.href = 'tablero.html';
-        }, 700);
-
-      } catch (err) {
-        console.error(err);
-        showAlert('Error inesperado al iniciar sesión.', 'error');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    async function handleSignup() {
-      clearAlert();
-      const email = emailInput.value.trim();
-      const password = passwordInput.value.trim();
-
-      if (!email || !password) {
-        showAlert('Escribe correo y contraseña para crear la cuenta.', 'error');
-        return;
-      }
-
-      try {
-        setLoading(true);
-        const { data, error } = await supabaseClient.auth.signUp({
-          email,
-          password
-        });
-
-        if (error) {
-          console.error(error);
-          showAlert('Error al crear cuenta: ' + error.message, 'error');
-          return;
-        }
-
-        showAlert('Cuenta creada. Revisa tu correo si Supabase te pidió confirmación. Ahora puedes iniciar sesión.', 'success');
-      } catch (err) {
-        console.error(err);
-        showAlert('Error inesperado al crear la cuenta.', 'error');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    btnLogin.addEventListener('click', handleLogin);
-    btnSignup.addEventListener('click', handleSignup);
-
-    // Enter = login
-    passwordInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        handleLogin();
-      }
+/* ======== REGISTRO ======== */
+btnRegister.addEventListener("click", async () => {
+    msg.style.display = "none";
+    const { data, error } = await supa.auth.signUp({
+        email: email.value,
+        password: password.value
     });
-  </script>
+
+    if (error) return showMsg("Error al crear cuenta: " + error.message);
+    showMsg("Cuenta creada. Ahora inicia sesión.", true);
+});
+</script>
+
 </body>
 </html>

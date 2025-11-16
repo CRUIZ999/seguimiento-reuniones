@@ -3,152 +3,282 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Seguimiento de reuniones – Tablero</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <title>Seguimiento de tareas y reuniones</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
   <style>
+    :root {
+      --azul: #2563eb;
+      --azul-oscuro: #1e40af;
+      --gris-fondo: #f3f4f6;
+      --gris-borde: #e5e7eb;
+      --texto: #111827;
+      --verde: #16a34a;
+      --amarillo: #facc15;
+      --rojo: #dc2626;
+    }
+
     * {
       box-sizing: border-box;
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
     body {
       margin: 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      background: #f4f5fb;
-      color: #111827;
+      font-family: "Inter", sans-serif;
+      background: var(--gris-fondo);
+      color: var(--texto);
     }
 
-    header {
-      padding: 12px 20px 8px;
-      background: #ffffff;
-      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12);
+    .page {
+      max-width: 1300px;
+      margin: 16px auto 32px auto;
+      padding: 0 16px;
+    }
+
+    header.header-main {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      position: sticky;
-      top: 0;
-      z-index: 40;
+      margin-bottom: 10px;
     }
 
-    .title {
-      font-size: 18px;
-      font-weight: 600;
+    .title-block {
       display: flex;
-      flex-direction: column;
-      gap: 2px;
+      align-items: center;
+      gap: 10px;
     }
 
-    .title span {
-      font-size: 11px;
+    .title-text h1 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .title-text .subtitle {
+      margin: 2px 0 0 0;
+      font-size: 12px;
       color: #6b7280;
-      font-weight: 400;
+    }
+
+    #userLabel {
+      font-weight: 500;
+      color: #111827;
+    }
+
+    /* Icono de ayuda */
+    #helpIcon {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 18px;
+      cursor: pointer;
+      background: #f9fafb;
+      color: #111827;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.12);
+      user-select: none;
+    }
+
+    #helpIcon:hover {
+      background: #e5e7eb;
     }
 
     .toolbar {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      align-items: center;
+      justify-content: flex-end;
     }
 
-    button {
+    button.btn {
       border-radius: 999px;
-      border: none;
-      padding: 6px 11px;
+      border: 1px solid #d1d5db;
+      padding: 7px 12px;
       font-size: 13px;
-      font-weight: 500;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
       gap: 6px;
-      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.15s;
-      white-space: nowrap;
+      background: #f3f4f6;
+      color: #111827;
+      font-weight: 500;
     }
 
-    button:active {
-      transform: translateY(1px);
-      box-shadow: none;
-    }
-
-    .btn-main {
-      background: #2563eb;
+    button.btn-primary {
+      background: var(--azul);
+      border-color: var(--azul);
       color: #ffffff;
-      box-shadow: 0 8px 18px rgba(37, 99, 235, .35);
     }
 
-    .btn-ghost {
+    button.btn-danger {
+      background: #fee2e2;
+      border-color: #fecaca;
+      color: #b91c1c;
+    }
+
+    button.btn:hover {
+      background: #e5e7eb;
+    }
+
+    button.btn-primary:hover {
+      background: var(--azul-oscuro);
+    }
+
+    button.btn-danger:hover {
+      background: #fecaca;
+    }
+
+    .card-main {
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow:
+        0 12px 25px rgba(15, 23, 42, 0.12),
+        0 1px 2px rgba(15, 23, 42, 0.06);
+      padding: 14px 14px 10px 14px;
+    }
+
+    /* Resumen y filtros */
+    .summary-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #4b5563;
+      margin-bottom: 8px;
+    }
+
+    .summary-left span {
+      margin-right: 10px;
+    }
+
+    .summary-left b {
+      color: #111827;
+    }
+
+    .summary-right {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
       background: #f3f4f6;
       color: #111827;
     }
 
-    .btn-danger {
-      background: #fee2e2;
-      color: #b91c1c;
+    .chip:hover {
+      background: #e5e7eb;
     }
 
-    .user-info {
-      font-size: 11px;
-      color: #6b7280;
+    .chip.active-chip {
+      background: var(--azul);
+      border-color: var(--azul);
+      color: #ffffff;
     }
 
-    .container {
-      padding: 12px 16px 18px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .info-row {
-      font-size: 11px;
-      color: #6b7280;
+    .filters-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
       align-items: center;
-    }
-
-    .info-row strong {
-      color: #111827;
-      font-weight: 600;
-    }
-
-    .search-row {
-      margin-top: 6px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
       font-size: 13px;
     }
 
-    select, input[type="text"], input[type="date"] {
+    .filters-left {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .filters-left label {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: #4b5563;
+    }
+
+    .filters-left input[type="text"],
+    .filters-left select {
       border-radius: 999px;
       border: 1px solid #d1d5db;
-      padding: 6px 9px;
+      padding: 5px 10px;
       font-size: 13px;
-      outline: none;
       background: #ffffff;
     }
 
-    select:focus, input[type="text"]:focus {
-      border-color: #2563eb;
-      box-shadow: 0 0 0 1px rgba(37, 99, 235, .25);
+    .filters-left input[type="text"] {
+      min-width: 200px;
     }
 
+    .filters-left .checkbox-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .filters-right {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .btn-filter {
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      padding: 6px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .btn-filter.primary {
+      background: var(--azul);
+      border-color: var(--azul);
+      color: #ffffff;
+    }
+
+    .btn-filter.primary:hover {
+      background: var(--azul-oscuro);
+    }
+
+    .btn-filter.secondary:hover {
+      background: #d1d5db;
+    }
+
+    /* Tabla */
     .table-wrapper {
-      margin-top: 8px;
-      flex: 1;
-      border-radius: 14px;
-      overflow: auto;
-      border: 1px solid #e5e7eb;
-      background: #ffffff;
+      margin-top: 6px;
+      border-radius: 12px;
+      border: 1px solid var(--gris-borde);
+      overflow: hidden;
+      background: #f9fafb;
+    }
+
+    .table-scroll {
+      overflow-x: auto;
+      overflow-y: auto;
+      max-height: 520px;
     }
 
     table {
@@ -161,14 +291,14 @@
       background: #f3f4f6;
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 5;
     }
 
     th, td {
       border-bottom: 1px solid #e5e7eb;
       padding: 6px 8px;
       text-align: left;
-      min-width: 135px;
+      min-width: 140px;
       background: #ffffff;
     }
 
@@ -176,17 +306,14 @@
       font-weight: 600;
       font-size: 12px;
       color: #374151;
-      position: sticky;
-      top: 0;
-      background: #f3f4f6;
-      z-index: 11;
     }
 
     /* Fijar primeras 5 columnas */
-    th.sticky, td.sticky {
+    th.sticky,
+    td.sticky {
       position: sticky;
       left: 0;
-      z-index: 9;
+      z-index: 4;
       background: #ffffff;
     }
 
@@ -197,7 +324,11 @@
     th.sticky:nth-child(5), td.sticky:nth-child(5) { left: 560px; }
 
     tr:nth-child(even) td {
-      background: #fafafb;
+      background: #f9fafb;
+    }
+
+    tr.hidden-by-filter {
+      display: none;
     }
 
     td[contenteditable="true"] {
@@ -205,10 +336,11 @@
     }
 
     td:focus-visible {
-      outline: 2px solid #2563eb;
+      outline: 2px solid var(--azul);
       outline-offset: -2px;
     }
 
+    /* Estado pill */
     .estado-pill {
       padding: 2px 7px;
       border-radius: 999px;
@@ -216,6 +348,7 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      margin-left: 4px;
     }
 
     .estado-P  { background: #fee2e2; color: #b91c1c; }
@@ -225,22 +358,15 @@
     .estado-select {
       border-radius: 999px;
       border: 1px solid #d1d5db;
-      padding: 3px 6px;
+      padding: 2px 6px;
       font-size: 11px;
     }
 
-    .responsable-select {
-      width: 100%;
-      border-radius: 999px;
-      border: 1px solid #d1d5db;
-      padding: 3px 6px;
-      font-size: 11px;
-    }
-
-    /* Comentarios: triangulito amarillo */
+    /* Comentarios triangulito amarillo */
     td[data-has-comment="1"] {
       position: relative;
     }
+
     td[data-has-comment="1"]::after {
       content: "";
       position: absolute;
@@ -248,8 +374,8 @@
       top: 0;
       width: 0;
       height: 0;
-      border-top: 11px solid #facc15;
-      border-left: 11px solid transparent;
+      border-top: 10px solid var(--amarillo);
+      border-left: 10px solid transparent;
     }
 
     .footer-note {
@@ -258,78 +384,327 @@
       margin-top: 6px;
     }
 
+    /* Modal genérico (ayuda y responsables) */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .modal {
+      background: #ffffff;
+      border-radius: 16px;
+      max-width: 720px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 20px 24px 16px 24px;
+      box-shadow:
+        0 20px 25px -5px rgba(15, 23, 42, 0.25),
+        0 8px 10px -6px rgba(15, 23, 42, 0.2);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      font-size: 20px;
+      padding: 0 4px;
+    }
+
+    .modal-body p {
+      margin: 4px 0;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .modal-body hr {
+      border: none;
+      border-top: 1px solid #e5e7eb;
+      margin: 8px 0;
+    }
+
+    /* Menú flotante responsables */
+    .responsable-menu {
+      position: absolute;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.25);
+      padding: 6px 0 4px 0;
+      min-width: 180px;
+      z-index: 998;
+      display: none;
+    }
+
+    .responsable-menu-item {
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .responsable-menu-item:hover {
+      background: #f3f4f6;
+    }
+
+    .responsable-menu-footer {
+      border-top: 1px solid #e5e7eb;
+      margin-top: 4px;
+      padding: 4px 6px;
+      display: flex;
+      gap: 4px;
+    }
+
+    .responsable-menu-footer button {
+      flex: 1;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      padding: 3px 6px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .responsable-menu-footer button:hover {
+      background: #eef2ff;
+    }
+
+    .responsables-list-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .responsables-list-row input {
+      flex: 1;
+      padding: 5px 7px;
+      font-size: 13px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+    }
+
+    .responsables-list-row button {
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      padding: 4px 8px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .responsables-list-row button:hover {
+      background: #fee2e2;
+    }
+
+    .responsables-modal-footer {
+      margin-top: 10px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .responsables-modal-footer button {
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      padding: 6px 10px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .responsables-modal-footer button.primary {
+      background: var(--azul);
+      color: #ffffff;
+      border-color: var(--azul);
+    }
+
+    .responsables-modal-footer button.primary:hover {
+      background: var(--azul-oscuro);
+    }
+
     @media (max-width: 768px) {
-      header {
+      header.header-main {
         flex-direction: column;
         align-items: flex-start;
       }
       .toolbar {
-        width: 100%;
         justify-content: flex-start;
       }
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="title">
-      Seguimiento de tareas y reuniones
-      <span id="userLabel">Cargando usuario…</span>
-    </div>
-    <div class="toolbar">
-      <button id="btnAddRow" class="btn-main">+ Fila</button>
-      <button id="btnAddColumn" class="btn-ghost">+ Columna</button>
-      <button id="btnEditResponsables" class="btn-ghost">Responsables</button>
-      <button id="btnExport" class="btn-ghost">⬇ Exportar JSON</button>
-      <button id="btnImport" class="btn-ghost">⬆ Importar JSON</button>
-      <button id="btnLogout" class="btn-danger">Cerrar sesión</button>
-    </div>
-  </header>
+  <div class="page">
+    <header class="header-main">
+      <div class="title-block">
+        <div class="title-text">
+          <h1>Seguimiento de tareas y reuniones</h1>
+          <div class="subtitle">
+            Usuario: <span id="userLabel">Cargando…</span>
+          </div>
+        </div>
+        <div id="helpIcon" title="Doble clic para ver ayuda">?</div>
+      </div>
 
-  <div class="container">
-    <div class="info-row">
-      <span>Columnas base: <strong>tema, sub tema, responsable, estado, fecha de término</strong>.</span>
-      <span>➕ Cada nueva reunión agrega una columna con la fecha del día.</span>
-      <span>🖱 Clic derecho en cualquier celda para agregar un comentario (triángulo amarillo).</span>
-    </div>
+      <div class="toolbar">
+        <button id="btnAddRow" class="btn btn-primary">+ Fila</button>
+        <button id="btnAddColumn" class="btn">+ Columna</button>
+        <button id="btnExport" class="btn">⬇ Exportar JSON</button>
+        <button id="btnImport" class="btn">⬆ Importar JSON</button>
+        <button id="btnLogout" class="btn btn-danger">Cerrar sesión</button>
+      </div>
+    </header>
 
-    <div class="search-row">
-      <span>Buscar:</span>
-      <select id="searchColumn">
-        <option value="all">Todas las columnas</option>
-        <option value="tema">tema</option>
-        <option value="subTema">sub tema</option>
-        <option value="responsable">responsable</option>
-        <option value="estado">estado</option>
-        <option value="fechaTermino">fecha de término</option>
-      </select>
-      <input id="searchText" type="text" placeholder="Escribe una palabra o frase" />
-      <button id="btnApplyFilter" class="btn-ghost">Filtro</button>
-      <button id="btnClearFilter" class="btn-ghost">Quitar filtro</button>
-    </div>
+    <div class="card-main">
+      <!-- Contadores -->
+      <div class="summary-row">
+        <div class="summary-left">
+          <span>Pendientes: <b id="countPendientes">0</b></span>
+          <span>En proceso: <b id="countEnProceso">0</b></span>
+          <span>Terminados: <b id="countTerminados">0</b></span>
+        </div>
+        <div class="summary-right">
+          <button id="btnSoloHoy" class="chip">Solo hoy</button>
+        </div>
+      </div>
 
-    <div class="table-wrapper">
-      <table id="tabla">
-        <thead>
-          <tr id="headerRow"></tr>
-        </thead>
-        <tbody id="bodyRows"></tbody>
-      </table>
-    </div>
+      <!-- Filtros en una sola fila -->
+      <div class="filters-row">
+        <div class="filters-left">
+          <label>
+            Buscar:
+            <input id="filtroTexto" type="text" placeholder="Palabra o frase..." />
+          </label>
 
-    <div class="footer-note">
-      ✔ Los datos (incluyendo comentarios y lista de responsables) se guardan en este navegador, por usuario.
+          <label>
+            Estado:
+            <select id="filtroEstado">
+              <option value="todos">Todos</option>
+              <option value="P">Pendiente</option>
+              <option value="EP">En proceso</option>
+              <option value="T">Terminado</option>
+            </select>
+          </label>
+
+          <label>
+            Responsable:
+            <select id="filtroResponsable">
+              <option value="todos">Todos</option>
+            </select>
+          </label>
+
+          <label class="checkbox-inline">
+            <input type="checkbox" id="chkOcultarTerminados" />
+            Ocultar terminados
+          </label>
+        </div>
+
+        <div class="filters-right">
+          <button id="btnAplicarFiltros" class="btn-filter primary">Filtro</button>
+          <button id="btnQuitarFiltros" class="btn-filter secondary">Quitar filtro</button>
+        </div>
+      </div>
+
+      <!-- Tabla -->
+      <div class="table-wrapper">
+        <div class="table-scroll">
+          <table id="tabla">
+            <thead>
+              <tr id="headerRow"></tr>
+            </thead>
+            <tbody id="bodyRows"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="footer-note">
+        ✔ Los datos (incluyendo comentarios y lista de responsables) se guardan en este navegador, por usuario.
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Ayuda -->
+  <div id="helpModalBackdrop" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Ayuda rápida</div>
+        <button id="helpModalClose" class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Columnas base:</strong> <em>tema</em>, <em>sub tema</em>, <em>responsable</em>, <em>estado</em>, <em>fecha de término</em>.</p>
+        <p><strong>estado</strong> usa: <strong>P</strong> (Pendiente), <strong>EP</strong> (En proceso), <strong>T</strong> (Terminado).</p>
+
+        <p>👉 En <strong>sub tema</strong> puedes pegar un link de Google Drive; si la celda sólo tiene la URL, con <strong>doble clic</strong> se abre en otra pestaña.</p>
+        <p>👉 Clic derecho en cualquier celda (excepto responsable) para agregar comentario (triángulo amarillo).</p>
+        <p>👉 Clic en una celda de <strong>responsable</strong> para abrir la lista y seleccionar un nombre.</p>
+        <p>👉 Clic derecho en una celda de <strong>responsable</strong> abre el editor de la lista de responsables (agregar / quitar nombres).</p>
+
+        <hr>
+
+        <p><strong>Reuniones:</strong> cada nueva columna de reunión se crea con la fecha del día como título (puedes ajustar manualmente el texto).</p>
+        <p><strong>Filtros rápidos:</strong> puedes filtrar por texto, estado, responsable y ocultar tareas terminadas. El botón "Solo hoy" filtra por fecha de término igual a la fecha actual.</p>
+
+        <hr>
+
+        <p><strong>Datos:</strong> todas las tareas y comentarios se guardan en <em>localStorage</em> por usuario (usando la sesión de Supabase).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menú flotante de responsables -->
+  <div id="responsableMenu" class="responsable-menu">
+    <div id="responsableMenuList"></div>
+    <div class="responsable-menu-footer">
+      <button id="responsableMenuAdd">+ Agregar</button>
+      <button id="responsableMenuEdit">Editar lista</button>
+    </div>
+  </div>
+
+  <!-- Modal editar responsables -->
+  <div id="responsablesModalBackdrop" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Editar responsables</div>
+        <button id="responsablesModalClose" class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>Puedes agregar o quitar nombres. Esta lista se guarda en este navegador.</p>
+        <div id="responsablesEditList"></div>
+        <button id="responsablesAddRow" style="margin-top:6px;">+ Agregar responsable</button>
+
+        <div class="responsables-modal-footer">
+          <button id="responsablesCancel">Cancelar</button>
+          <button id="responsablesSave" class="primary">Guardar</button>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // ⚙️ Configuración Supabase
+    // ===========================
+    // CONFIGURACIÓN SUPABASE
+    // ===========================
     const SUPABASE_URL = 'https://hrbmstaklleraiacqmky.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhyYm1zdGFrbGxlcmFpYWNxbWt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyMTA2OTQsImV4cCI6MjA3ODc4NjY5NH0.tN00tAjMJpJK_8gnerocbOSzHp93N5yc9KohTBpMeZc';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhyYm1zdGFrbGxlcmFpYWNxbWt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyMTA2OTQsImV4cCI6MjA3ODc4NjY5NH0.tN00tAjMJpJK_8gnerocbOSzHp93N5yc9KohTBpMeZc';
 
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const BASE_COLUMNS = ['tema', 'subTema', 'responsable', 'estado', 'fechaTermino'];
     const BASE_HEADERS = {
@@ -344,37 +719,66 @@
     let storageKey = null;
 
     const state = {
-      responsables: [''],      // se ajusta luego
-      meetings: [],            // array de fechas (strings)
-      rows: [],                // datos de filas
-      comments: {},            // "rowIndex|colKey": texto
-      filter: { column: 'all', text: '' }
+      responsables: [],
+      meetings: [],
+      rows: [],
+      comments: {},
     };
 
     const headerRow = document.getElementById('headerRow');
     const bodyRows = document.getElementById('bodyRows');
 
+    const userLabel = document.getElementById('userLabel');
+
     const btnAddRow = document.getElementById('btnAddRow');
     const btnAddColumn = document.getElementById('btnAddColumn');
-    const btnEditResponsables = document.getElementById('btnEditResponsables');
     const btnExport = document.getElementById('btnExport');
     const btnImport = document.getElementById('btnImport');
     const btnLogout = document.getElementById('btnLogout');
 
-    const searchColumn = document.getElementById('searchColumn');
-    const searchText = document.getElementById('searchText');
-    const btnApplyFilter = document.getElementById('btnApplyFilter');
-    const btnClearFilter = document.getElementById('btnClearFilter');
+    const filtroTexto = document.getElementById('filtroTexto');
+    const filtroEstado = document.getElementById('filtroEstado');
+    const filtroResponsable = document.getElementById('filtroResponsable');
+    const chkOcultarTerminados = document.getElementById('chkOcultarTerminados');
+    const btnAplicarFiltros = document.getElementById('btnAplicarFiltros');
+    const btnQuitarFiltros = document.getElementById('btnQuitarFiltros');
+    const btnSoloHoy = document.getElementById('btnSoloHoy');
 
-    const userLabel = document.getElementById('userLabel');
+    const spanPend = document.getElementById('countPendientes');
+    const spanEP = document.getElementById('countEnProceso');
+    const spanT = document.getElementById('countTerminados');
 
-    // ---------- UTILIDADES ----------
+    const helpIcon = document.getElementById('helpIcon');
+    const helpModalBackdrop = document.getElementById('helpModalBackdrop');
+    const helpModalClose = document.getElementById('helpModalClose');
+
+    const responsableMenu = document.getElementById('responsableMenu');
+    const responsableMenuList = document.getElementById('responsableMenuList');
+    const responsableMenuAdd = document.getElementById('responsableMenuAdd');
+    const responsableMenuEdit = document.getElementById('responsableMenuEdit');
+
+    const responsablesModalBackdrop = document.getElementById('responsablesModalBackdrop');
+    const responsablesModalClose = document.getElementById('responsablesModalClose');
+    const responsablesEditList = document.getElementById('responsablesEditList');
+    const responsablesAddRow = document.getElementById('responsablesAddRow');
+    const responsablesCancel = document.getElementById('responsablesCancel');
+    const responsablesSave = document.getElementById('responsablesSave');
+
+    let filtroSoloHoy = false;
+
+    // ===========================
+    // UTILIDADES
+    // ===========================
     function todayString() {
       const d = new Date();
       const dd = String(d.getDate()).padStart(2, '0');
       const mm = String(d.getMonth() + 1).padStart(2, '0');
-      const yy = String(d.getFullYear()).slice(-2);
-      return `${dd}/${mm}/${yy}`;
+      const yyyy = d.getFullYear();
+      return `${dd}/${mm}/${yyyy}`;
+    }
+
+    function getCommentKey(rowIndex, colKey) {
+      return rowIndex + '|' + colKey;
     }
 
     function saveState() {
@@ -386,7 +790,6 @@
       if (!storageKey) return;
       const raw = localStorage.getItem(storageKey);
       if (!raw) {
-        // Estado inicial vacío
         state.responsables = [''];
         state.meetings = [];
         state.rows = [];
@@ -397,15 +800,13 @@
         const parsed = JSON.parse(raw);
         Object.assign(state, parsed);
       } catch (e) {
-        console.error('Error al leer estado guardado', e);
+        console.error('Error leyendo estado guardado', e);
       }
     }
 
-    function getCommentKey(rowIndex, colKey) {
-      return rowIndex + '|' + colKey;
-    }
-
-    // ---------- RENDER TABLA ----------
+    // ===========================
+    // RENDER TABLA
+    // ===========================
     function renderHeader() {
       headerRow.innerHTML = '';
       BASE_COLUMNS.forEach((colName, index) => {
@@ -426,41 +827,12 @@
       bodyRows.innerHTML = '';
 
       state.rows.forEach((row, rowIndex) => {
-        // aplicar filtro
-        if (state.filter.text.trim() !== '') {
-          const txt = state.filter.text.toLowerCase();
-          let match = false;
-
-          const checkValue = (val) => {
-            if (typeof val === 'string' && val.toLowerCase().includes(txt)) match = true;
-          };
-
-          if (state.filter.column === 'all') {
-            checkValue(row.tema);
-            checkValue(row.subTema);
-            checkValue(row.responsable);
-            checkValue(row.estado);
-            checkValue(row.fechaTermino);
-            state.meetings.forEach(m => {
-              checkValue((row.reuniones || {})[m]);
-            });
-          } else {
-            if (BASE_COLUMNS.includes(state.filter.column)) {
-              checkValue(row[state.filter.column]);
-            } else {
-              // podría ser columna de reunión
-              checkValue((row.reuniones || {})[state.filter.column]);
-            }
-          }
-
-          if (!match) return; // no se muestra esta fila
-        }
-
         const tr = document.createElement('tr');
+        tr.dataset.index = rowIndex;
 
-        // --- tema ---
+        // tema
         let td = document.createElement('td');
-        td.classList.add('sticky');
+        td.classList.add('sticky', 'cell-tema');
         td.contentEditable = true;
         td.textContent = row.tema || '';
         td.dataset.row = rowIndex;
@@ -468,9 +840,9 @@
         td.addEventListener('input', handleTextEdit);
         tr.appendChild(td);
 
-        // --- sub tema ---
+        // subTema
         td = document.createElement('td');
-        td.classList.add('sticky');
+        td.classList.add('sticky', 'cell-subtema');
         td.contentEditable = true;
         td.textContent = row.subTema || '';
         td.dataset.row = rowIndex;
@@ -478,55 +850,42 @@
         td.addEventListener('input', handleTextEdit);
         tr.appendChild(td);
 
-        // --- responsable ---
+        // responsable
         td = document.createElement('td');
-        td.classList.add('sticky');
-        const selResp = document.createElement('select');
-        selResp.className = 'responsable-select';
-        state.responsables.forEach(r => {
-          const opt = document.createElement('option');
-          opt.value = r;
-          opt.textContent = r === '' ? '—' : r;
-          selResp.appendChild(opt);
-        });
-        selResp.value = row.responsable || '';
-        selResp.dataset.row = rowIndex;
-        selResp.addEventListener('change', (e) => {
-          state.rows[rowIndex].responsable = e.target.value;
-          saveState();
-        });
-        td.appendChild(selResp);
+        td.classList.add('sticky', 'cell-responsable');
+        td.dataset.row = rowIndex;
+        td.textContent = row.responsable || '';
         tr.appendChild(td);
 
-        // --- estado ---
+        // estado
         td = document.createElement('td');
-        td.classList.add('sticky');
-        const selEstado = document.createElement('select');
-        selEstado.className = 'estado-select';
-        [['P', 'P'], ['EP', 'EP'], ['T', 'T']].forEach(([val, label]) => {
+        td.classList.add('sticky', 'cell-estado');
+        const sel = document.createElement('select');
+        sel.className = 'estado-select';
+        [['P','P'], ['EP','EP'], ['T','T']].forEach(([val, label]) => {
           const opt = document.createElement('option');
           opt.value = val;
           opt.textContent = label;
-          selEstado.appendChild(opt);
+          sel.appendChild(opt);
         });
-        selEstado.value = row.estado || 'P';
-        selEstado.dataset.row = rowIndex;
-        selEstado.addEventListener('change', (e) => {
+        sel.value = row.estado || 'P';
+        sel.dataset.row = rowIndex;
+        sel.addEventListener('change', (e) => {
           state.rows[rowIndex].estado = e.target.value;
           saveState();
-          renderBody(); // para refrescar color
+          renderBody();
+          recalcularContadores();
         });
         const pill = document.createElement('span');
         pill.className = 'estado-pill estado-' + (row.estado || 'P');
         pill.textContent = row.estado || 'P';
-        selEstado.style.marginRight = '4px';
-        td.appendChild(selEstado);
+        td.appendChild(sel);
         td.appendChild(pill);
         tr.appendChild(td);
 
-        // --- fecha de termino ---
+        // fechaTermino
         td = document.createElement('td');
-        td.classList.add('sticky');
+        td.classList.add('sticky', 'cell-fecha');
         td.contentEditable = true;
         td.textContent = row.fechaTermino || '';
         td.dataset.row = rowIndex;
@@ -534,7 +893,7 @@
         td.addEventListener('input', handleTextEdit);
         tr.appendChild(td);
 
-        // --- columnas de reuniones ---
+        // columnas de reuniones
         state.meetings.forEach(dateLabel => {
           td = document.createElement('td');
           const colKey = dateLabel;
@@ -555,14 +914,11 @@
 
         bodyRows.appendChild(tr);
       });
+
+      aplicarFiltros(); // re-aplicar filtros después de render
+      recalcularContadores();
     }
 
-    function renderTable() {
-      renderHeader();
-      renderBody();
-    }
-
-    // ---------- EVENTOS EDICIÓN ----------
     function handleTextEdit(e) {
       const rowIndex = Number(e.target.dataset.row);
       const field = e.target.dataset.field;
@@ -582,16 +938,23 @@
       saveState();
     }
 
-    // Comentarios con clic derecho
+    // ===========================
+    // COMENTARIOS (clic derecho)
+    // ===========================
     document.getElementById('tabla').addEventListener('contextmenu', (e) => {
       const td = e.target.closest('td');
-      if (!td || td.parentElement.parentElement.tagName === 'THEAD') return;
-      e.preventDefault();
+      if (!td || td.closest('thead')) return;
+      // si es responsable: intercepta para abrir modal de responsables
+      if (td.classList.contains('cell-responsable')) {
+        e.preventDefault();
+        openResponsablesModal();
+        return;
+      }
 
+      e.preventDefault();
       const rowIndex = td.dataset.row;
       if (rowIndex === undefined) return;
 
-      // columna
       let colKey = td.dataset.field;
       if (td.dataset.meeting) colKey = td.dataset.meeting;
       if (!colKey) colKey = 'base-' + td.cellIndex;
@@ -600,7 +963,7 @@
       const actual = state.comments[key] || '';
 
       const nuevo = prompt('Comentario para esta celda (deja vacío para borrar):', actual);
-      if (nuevo === null) return; // cancelado
+      if (nuevo === null) return;
 
       if (nuevo.trim() === '') {
         delete state.comments[key];
@@ -612,7 +975,9 @@
       saveState();
     });
 
-    // ---------- BOTONES PRINCIPALES ----------
+    // ===========================
+    // BOTONES PRINCIPALES
+    // ===========================
     btnAddRow.addEventListener('click', () => {
       state.rows.push({
         tema: '',
@@ -623,35 +988,24 @@
         reuniones: {}
       });
       saveState();
-      renderTable();
+      renderBody();
     });
 
     btnAddColumn.addEventListener('click', () => {
       const today = todayString();
-      const label = prompt('Fecha para la nueva reunión (dd/mm/aa). Deja vacío para usar la fecha de hoy:', today) || today;
+      const label = prompt('Fecha para la nueva reunión (dd/mm/aaaa). Deja vacío para usar la fecha de hoy:', today) || today;
       if (state.meetings.includes(label)) {
         alert('Esa fecha ya existe como columna.');
         return;
       }
       state.meetings.push(label);
-      // inicializar texto de esa reunión
       state.rows.forEach(row => {
         if (!row.reuniones) row.reuniones = {};
         row.reuniones[label] = row.reuniones[label] || '';
       });
       saveState();
-      renderTable();
-    });
-
-    btnEditResponsables.addEventListener('click', () => {
-      const lista = state.responsables.join('\n');
-      const nuevo = prompt('Edita la lista de responsables (uno por línea):', lista);
-      if (nuevo === null) return;
-      const arr = nuevo.split('\n').map(x => x.trim()).filter(x => x !== '');
-      arr.unshift(''); // opción vacía
-      state.responsables = arr;
-      saveState();
-      renderTable();
+      renderHeader();
+      renderBody();
     });
 
     btnExport.addEventListener('click', () => {
@@ -678,7 +1032,9 @@
             const imported = JSON.parse(reader.result);
             Object.assign(state, imported);
             saveState();
-            renderTable();
+            renderHeader();
+            renderBody();
+            rellenarComboResponsables();
           } catch (err) {
             console.error(err);
             alert('No se pudo importar el archivo JSON.');
@@ -699,30 +1055,305 @@
       }
     });
 
-    // ---------- FILTRO ----------
-    btnApplyFilter.addEventListener('click', () => {
-      state.filter.column = searchColumn.value;
-      state.filter.text = searchText.value.trim();
-      renderTable();
+    // ===========================
+    // FILTROS Y CONTADORES
+    // ===========================
+    function rellenarComboResponsables() {
+      if (!filtroResponsable) return;
+      const valueActual = filtroResponsable.value || 'todos';
+      filtroResponsable.innerHTML = '<option value="todos">Todos</option>';
+      (responsablesList || []).forEach((name) => {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        filtroResponsable.appendChild(opt);
+      });
+      const opt = Array.from(filtroResponsable.options).find(o => o.value === valueActual);
+      if (opt) opt.selected = true;
+    }
+
+    function recalcularContadores() {
+      const rows = document.querySelectorAll('#bodyRows tr');
+      let cP = 0, cEP = 0, cT = 0;
+
+      rows.forEach(row => {
+        const cellEstado = row.querySelector('.cell-estado');
+        if (!cellEstado) return;
+        const pill = cellEstado.querySelector('.estado-pill');
+        const estado = (pill?.textContent || '').trim().toUpperCase();
+        if (estado === 'P') cP++;
+        else if (estado === 'EP') cEP++;
+        else if (estado === 'T') cT++;
+      });
+
+      spanPend.textContent = cP;
+      spanEP.textContent = cEP;
+      spanT.textContent = cT;
+    }
+
+    function aplicarFiltros() {
+      const texto = (filtroTexto.value || '').toLowerCase().trim();
+      const est = filtroEstado.value;
+      const resp = filtroResponsable.value;
+      const ocultarTerminados = chkOcultarTerminados.checked;
+
+      const hoy = new Date();
+      const hoyStr = todayString();
+
+      const rows = document.querySelectorAll('#bodyRows tr');
+
+      rows.forEach(row => {
+        let visible = true;
+
+        const cellTema = row.querySelector('.cell-tema');
+        const cellSubTema = row.querySelector('.cell-subtema');
+        const cellResp = row.querySelector('.cell-responsable');
+        const cellEstado = row.querySelector('.cell-estado');
+        const cellFecha = row.querySelector('.cell-fecha');
+
+        const txtRow = [
+          cellTema?.textContent || '',
+          cellSubTema?.textContent || '',
+          cellResp?.textContent || ''
+        ].join(' ').toLowerCase();
+
+        const pill = cellEstado?.querySelector('.estado-pill');
+        const estado = (pill?.textContent || '').trim().toUpperCase();
+        const nombreResp = (cellResp?.textContent || '').trim();
+        const fechaTexto = (cellFecha?.textContent || '').trim();
+
+        // 1) filtro de texto
+        if (texto && !txtRow.includes(texto)) {
+          visible = false;
+        }
+
+        // 2) filtro de estado
+        if (visible && est !== 'todos') {
+          if (estado !== est) visible = false;
+        }
+
+        // 3) filtro de responsable
+        if (visible && resp !== 'todos') {
+          if (nombreResp !== resp) visible = false;
+        }
+
+        // 4) ocultar terminados
+        if (visible && ocultarTerminados && estado === 'T') {
+          visible = false;
+        }
+
+        // 5) Solo hoy
+        if (visible && filtroSoloHoy) {
+          if (fechaTexto !== hoyStr) visible = false;
+        }
+
+        if (visible) {
+          row.classList.remove('hidden-by-filter');
+        } else {
+          row.classList.add('hidden-by-filter');
+        }
+      });
+    }
+
+    btnAplicarFiltros.addEventListener('click', aplicarFiltros);
+
+    btnQuitarFiltros.addEventListener('click', () => {
+      filtroTexto.value = '';
+      filtroEstado.value = 'todos';
+      filtroResponsable.value = 'todos';
+      chkOcultarTerminados.checked = false;
+      filtroSoloHoy = false;
+      btnSoloHoy.classList.remove('active-chip');
+      const rows = document.querySelectorAll('#bodyRows tr');
+      rows.forEach(r => r.classList.remove('hidden-by-filter'));
     });
 
-    btnClearFilter.addEventListener('click', () => {
-      state.filter.column = 'all';
-      state.filter.text = '';
-      searchColumn.value = 'all';
-      searchText.value = '';
-      renderTable();
+    btnSoloHoy.addEventListener('click', () => {
+      filtroSoloHoy = !filtroSoloHoy;
+      if (filtroSoloHoy) {
+        btnSoloHoy.classList.add('active-chip');
+      } else {
+        btnSoloHoy.classList.remove('active-chip');
+      }
+      aplicarFiltros();
     });
 
-    // ---------- INICIALIZACIÓN ----------
+    // ===========================
+    // AYUDA (MODAL)
+    // ===========================
+    helpIcon.addEventListener('dblclick', () => {
+      helpModalBackdrop.style.display = 'flex';
+    });
+
+    helpModalClose.addEventListener('click', () => {
+      helpModalBackdrop.style.display = 'none';
+    });
+
+    helpModalBackdrop.addEventListener('click', (e) => {
+      if (e.target === helpModalBackdrop) {
+        helpModalBackdrop.style.display = 'none';
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        helpModalBackdrop.style.display = 'none';
+        responsablesModalBackdrop.style.display = 'none';
+      }
+    });
+
+    // ===========================
+    // RESPONSABLES
+    // ===========================
+    const RESPONSABLES_KEY = 'responsables_lista_v1';
+    function loadResponsablesLocal() {
+      try {
+        const raw = localStorage.getItem(RESPONSABLES_KEY);
+        if (!raw) return [];
+        const arr = JSON.parse(raw);
+        if (Array.isArray(arr)) return arr;
+        return [];
+      } catch (e) {
+        return [];
+      }
+    }
+    function saveResponsablesLocal() {
+      localStorage.setItem(RESPONSABLES_KEY, JSON.stringify(responsablesList));
+    }
+
+    let responsablesList = loadResponsablesLocal();
+    if (responsablesList.length === 0) {
+      responsablesList = ['Responsable 1', 'Responsable 2'];
+      saveResponsablesLocal();
+    }
+
+    function setResponsableForCell(cell, name) {
+      cell.textContent = name;
+      const rowIndex = Number(cell.dataset.row);
+      if (!Number.isFinite(rowIndex)) return;
+      state.rows[rowIndex].responsable = name;
+      saveState();
+      aplicarFiltros();
+    }
+
+    let currentResponsableCell = null;
+
+    function openResponsableMenu(cell) {
+      currentResponsableCell = cell;
+      responsableMenuList.innerHTML = '';
+
+      responsablesList.forEach((name) => {
+        const div = document.createElement('div');
+        div.className = 'responsable-menu-item';
+        div.textContent = name;
+        div.addEventListener('click', () => {
+          setResponsableForCell(cell, name);
+          hideResponsableMenu();
+        });
+        responsableMenuList.appendChild(div);
+      });
+
+      const rect = cell.getBoundingClientRect();
+      const scrollX = window.scrollX || window.pageXOffset;
+      const scrollY = window.scrollY || window.pageYOffset;
+      responsableMenu.style.left = (rect.left + scrollX) + 'px';
+      responsableMenu.style.top = (rect.bottom + scrollY + 4) + 'px';
+      responsableMenu.style.display = 'block';
+    }
+
+    function hideResponsableMenu() {
+      responsableMenu.style.display = 'none';
+      currentResponsableCell = null;
+    }
+
+    document.addEventListener('click', (e) => {
+      const cell = e.target.closest('td.cell-responsable');
+      if (cell) {
+        openResponsableMenu(cell);
+      } else if (!e.target.closest('#responsableMenu')) {
+        hideResponsableMenu();
+      }
+    });
+
+    responsableMenuEdit.addEventListener('click', () => {
+      hideResponsableMenu();
+      openResponsablesModal();
+    });
+
+    responsableMenuAdd.addEventListener('click', () => {
+      hideResponsableMenu();
+      responsablesList.push('');
+      openResponsablesModal();
+    });
+
+    function renderResponsablesEditList() {
+      responsablesEditList.innerHTML = '';
+      responsablesList.forEach((name, idx) => {
+        const row = document.createElement('div');
+        row.className = 'responsables-list-row';
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = name;
+
+        const delBtn = document.createElement('button');
+        delBtn.textContent = 'Eliminar';
+        delBtn.addEventListener('click', () => {
+          responsablesList.splice(idx, 1);
+          renderResponsablesEditList();
+        });
+
+        row.appendChild(input);
+        row.appendChild(delBtn);
+        responsablesEditList.appendChild(row);
+      });
+    }
+
+    function openResponsablesModal() {
+      renderResponsablesEditList();
+      responsablesModalBackdrop.style.display = 'flex';
+    }
+
+    function closeResponsablesModal() {
+      responsablesModalBackdrop.style.display = 'none';
+    }
+
+    responsablesModalClose.addEventListener('click', closeResponsablesModal);
+    responsablesCancel.addEventListener('click', closeResponsablesModal);
+
+    responsablesAddRow.addEventListener('click', () => {
+      responsablesList.push('');
+      renderResponsablesEditList();
+    });
+
+    responsablesSave.addEventListener('click', () => {
+      const inputs = responsablesEditList.querySelectorAll('input');
+      const nueva = [];
+      inputs.forEach((inp) => {
+        const val = inp.value.trim();
+        if (val) nueva.push(val);
+      });
+      responsablesList = nueva;
+      saveResponsablesLocal();
+      rellenarComboResponsables();
+      closeResponsablesModal();
+    });
+
+    responsablesModalBackdrop.addEventListener('click', (e) => {
+      if (e.target === responsablesModalBackdrop) {
+        closeResponsablesModal();
+      }
+    });
+
+    // ===========================
+    // INICIALIZACIÓN
+    // ===========================
     async function init() {
-      // Checar sesión
       const { data, error } = await supabaseClient.auth.getSession();
       if (error) {
         console.error(error);
       }
       if (!data || !data.session) {
-        // Sin sesión => regresar al login
         window.location.href = 'index.html';
         return;
       }
@@ -730,24 +1361,20 @@
       currentUser = data.session.user;
       storageKey = 'seguimiento_reuniones_' + currentUser.id;
 
-      userLabel.textContent = currentUser.email || 'Usuario sin correo';
+      userLabel.textContent = currentUser.email || 'Usuario';
 
       loadState();
 
       if (!Array.isArray(state.responsables) || state.responsables.length === 0) {
-        state.responsables = ['', 'responsable 1', 'responsable 2'];
+        state.responsables = [];
       }
-      if (!Array.isArray(state.rows)) {
-        state.rows = [];
-      }
-      if (!Array.isArray(state.meetings)) {
-        state.meetings = [];
-      }
-      if (!state.comments) {
-        state.comments = {};
-      }
+      if (!Array.isArray(state.rows)) state.rows = [];
+      if (!Array.isArray(state.meetings)) state.meetings = [];
+      if (!state.comments) state.comments = {};
 
-      renderTable();
+      renderHeader();
+      renderBody();
+      rellenarComboResponsables();
     }
 
     init();

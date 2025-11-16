@@ -225,7 +225,8 @@
       statusBox.className = "status " + (ok ? "status-ok" : "status-error");
     }
 
-    async function gotoTablero() {
+    function gotoTablero() {
+      // relativo al repositorio de GitHub Pages
       window.location.href = "tablero.html";
     }
 
@@ -282,18 +283,10 @@
     btnLogin.addEventListener("click", handleLogin);
     btnSignup.addEventListener("click", handleSignup);
 
-    // Enter para enviar
+    // Enter en contraseña = iniciar sesión
     passInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") handleLogin();
     });
-
-    // Si ya hay sesión activa, vamos directo al tablero
-    (async () => {
-      const { data } = await supabaseClient.auth.getSession();
-      if (data.session) {
-        gotoTablero();
-      }
-    })();
   </script>
 </body>
 </html>

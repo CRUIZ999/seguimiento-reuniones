@@ -36,9 +36,9 @@
     }
 
     .app-shell {
-      max-width: 1480px;
-      margin: 32px auto 40px;
-      padding: 0 24px 32px;
+      max-width: 100%;
+      margin: 24px 0 40px;
+      padding: 0 16px 32px;
     }
 
     /* HEADER */
@@ -140,6 +140,8 @@
       border-radius: var(--radius-xl);
       box-shadow: var(--shadow-soft);
       padding: 16px 18px 18px;
+      max-width: 1600px;
+      margin: 0 auto;
     }
 
     .top-row {
@@ -187,6 +189,21 @@
 
     .btn-primary:hover {
       background: #0b63ca;
+    }
+
+    .btn-primary.btn-icon {
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      justify-content: center;
+      box-shadow: none;
+      background: #eff3ff;
+      color: #1d4ed8;
+      border: 1px solid #d9e2ff;
+    }
+
+    .btn-primary.btn-icon:hover {
+      background: #e1e8ff;
     }
 
     .btn-small {
@@ -341,23 +358,24 @@
       background: #f9fafb;
     }
 
-    /* Estado badges */
+    /* Estado select con color */
 
-    .estado-badge {
-      border-radius: 999px;
-      padding: 3px 10px;
-      font-size: 12px;
-      border: none;
+    .estado-select {
+      font-weight: 500;
       color: #111827;
+      border: none;
     }
+
     .estado-p {
       background: #fee2e2;
       color: #b91c1c;
     }
+
     .estado-ep {
       background: #fef3c7;
       color: #92400e;
     }
+
     .estado-t {
       background: #dcfce7;
       color: #166534;
@@ -377,6 +395,27 @@
       border-width: 0 0 8px 8px;
       border-style: solid;
       border-color: transparent transparent #facc15 transparent;
+    }
+
+    /* Fecha textarea */
+
+    .fecha-textarea {
+      width: 100%;
+      max-width: 40ch;
+      min-height: 26px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      padding: 4px 6px;
+      font-size: 13px;
+      resize: vertical;
+      font-family: inherit;
+      white-space: normal;
+    }
+
+    .fecha-textarea:focus {
+      border-color: var(--primary);
+      background: #fff;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2);
     }
 
     /* FOOTER */
@@ -494,13 +533,6 @@
       gap: 6px;
     }
 
-    .chip {
-      border-radius: 999px;
-      border: 1px solid #e5e7eb;
-      padding: 3px 8px;
-      font-size: 11px;
-    }
-
     .btn-xs {
       border-radius: 999px;
       border: 1px solid #e5e7eb;
@@ -580,13 +612,13 @@
 
     <div class="header-right">
       <div class="counter-pill counter-p">
-        P: <span class="value" id="countP">0</span>
+        Pendientes: <span class="value" id="countP">0</span>
       </div>
       <div class="counter-pill counter-ep">
-        EP: <span class="value" id="countEP">0</span>
+        En proceso: <span class="value" id="countEP">0</span>
       </div>
       <div class="counter-pill counter-t">
-        T: <span class="value" id="countT">0</span>
+        Terminados: <span class="value" id="countT">0</span>
       </div>
       <button class="btn-ghost" id="btnLogout">Cerrar sesión</button>
     </div>
@@ -608,8 +640,8 @@
         </button>
       </div>
       <div class="top-row-right">
-        <button class="btn-primary btn-small secondary" id="btnExport">⬇ Exp</button>
-        <button class="btn-primary btn-small secondary" id="btnImport">⬆ Imp</button>
+        <button class="btn-primary btn-icon" id="btnExport" title="Exportar JSON">⬇</button>
+        <button class="btn-primary btn-icon" id="btnImport" title="Importar JSON">⬆</button>
         <input type="file" id="importFileInput" accept="application/json" style="display:none" />
       </div>
     </div>
@@ -627,7 +659,7 @@
           <option value="estado">estado</option>
           <option value="fechaTermino">fecha de término</option>
         </select>
-        <input type="text" id="searchText" placeholder="Escribe una palabra o frase" />
+        <input type="text" id="searchText" placeholder="Palabra o frase..." />
       </div>
 
       <div class="filters-row">
@@ -646,10 +678,12 @@
 
         <label class="checkbox-label">
           <input type="checkbox" id="chkOcultarTerminados" />
-          Ocultar T
+          Ocultar terminados
         </label>
 
         <button class="btn-pill" id="btnSoloHoy">Solo hoy</button>
+        <button class="btn-pill" id="btnUltimas2">Últimas 2</button>
+        <button class="btn-pill" id="btnTodasFechas">Todas</button>
 
         <button class="btn-pill primary" id="btnAplicarFiltro">Filtro</button>
         <button class="btn-pill" id="btnQuitarFiltro">Quitar filtro</button>
@@ -665,7 +699,7 @@
           <th style="min-width:160px;">sub tema</th>
           <th style="min-width:140px;">responsable</th>
           <th style="min-width:90px;">estado</th>
-          <th style="min-width:120px;">fecha de termino</th>
+          <th style="min-width:160px;">fecha de termino</th>
           <!-- columnas de reuniones dinámicas se agregan aquí -->
         </tr>
         </thead>
@@ -707,14 +741,14 @@
       <ul>
         <li>Cada vez que des clic en <strong>+ Columna</strong> se agrega una columna nueva con la fecha del día (puedes cambiarla).</li>
         <li>Úsalas para escribir comentarios o acuerdos específicos de cada reunión.</li>
-        <li>El botón <strong>Solo hoy</strong> oculta todas las demás reuniones y deja visible sólo la columna con la fecha de hoy (si existe).</li>
+        <li>Los botones <strong>Solo hoy</strong>, <strong>Últimas 2</strong> y <strong>Todas</strong> controlan qué columnas de reunión se ven en la tabla.</li>
       </ul>
 
       <h4>Estados y contadores</h4>
       <ul>
         <li>El color de la columna estado cambia según P, EP o T.</li>
         <li>Los chips de la parte superior se actualizan automáticamente con el número de tareas en cada estado.</li>
-        <li>Si marcas <strong>Ocultar T</strong>, las tareas terminadas se ocultan de la vista, pero siguen guardadas.</li>
+        <li>Si marcas <strong>Ocultar terminados</strong>, las tareas T se ocultan de la vista, pero siguen guardadas.</li>
       </ul>
 
       <h4>Responsables</h4>
@@ -732,12 +766,11 @@
 
       <h4>Exportar e importar</h4>
       <ul>
-        <li>El botón <strong>⬇ Exp</strong> descarga un archivo JSON con todas las tareas de este usuario.</li>
-        <li>El botón <strong>⬆ Imp</strong> te permite cargar un JSON exportado previamente.</li>
-        <li>Úsalo como respaldo, o para mover datos a otra computadora.</li>
+        <li>El botón con flecha <strong>⬇</strong> descarga un archivo JSON con todas las tareas de este usuario.</li>
+        <li>El botón con flecha <strong>⬆</strong> te permite cargar un JSON exportado previamente.</li>
       </ul>
 
-      <p class="badge-tip">Tip: siempre usa el mismo correo en el login para que tus tareas y responsables se mantengan juntos.</p>
+      <p class="badge-tip">Tip: usa siempre el mismo correo en el login para que tus tareas y responsables se mantengan juntos.</p>
     </div>
   </div>
 </div>
@@ -772,7 +805,6 @@
   const RESPONSABLES_KEY_BASE = "sr_responsables_";
 
   function getUserEmail() {
-    // guardado por index.html en sessionStorage
     const email = sessionStorage.getItem("sr_user_email") || "";
     return email;
   }
@@ -823,8 +855,9 @@
   }
 
   /************ ESTADO EN MEMORIA ************/
-  let meetingColumns = []; // array de strings (fechas)
-  let tableRows = [];      // [{tema, subTema, responsable, estado, fechaTermino, reuniones:{colFecha: texto}, comments:{celdaId: texto}}]
+  let meetingColumns = [];          // todas las fechas de reuniones
+  let visibleMeetingColumns = [];   // columnas visibles en la tabla
+  let tableRows = [];               // [{tema,subTema,responsable,estado,fechaTermino,reuniones:{},comments:{}}]
   let responsables = [];
 
   // filtros
@@ -833,8 +866,7 @@
     column: "all",
     estado: "todos",
     responsable: "todos",
-    ocultarT: false,
-    soloHoy: false
+    ocultarT: false
   };
 
   /************ INICIALIZACIÓN ************/
@@ -842,9 +874,8 @@
     const email = getUserEmail();
     const label = document.getElementById("userEmailLabel");
     if (email) {
-      label.textContent = email;
+      label.textContent = "Usuario: " + email;
     } else {
-      label.textContent = "";
       alert("No hay sesión activa, vuelve a iniciar desde el login.");
       window.location.href = "index.html";
       return;
@@ -854,6 +885,7 @@
     const data = loadData();
     meetingColumns = data.columns || [];
     tableRows = data.rows || [];
+    visibleMeetingColumns = [...meetingColumns];
 
     // Responsables
     responsables = loadResponsables();
@@ -889,10 +921,11 @@
     // Filtros
     document.getElementById("btnAplicarFiltro").addEventListener("click", applyFilterFromUI);
     document.getElementById("btnQuitarFiltro").addEventListener("click", clearFilterUI);
-    document.getElementById("btnSoloHoy").addEventListener("click", () => {
-      currentFilter.soloHoy = true;
-      applyFilterFromUI();
-    });
+
+    // Botones de fechas
+    document.getElementById("btnSoloHoy").addEventListener("click", mostrarSoloHoy);
+    document.getElementById("btnUltimas2").addEventListener("click", mostrarUltimas2);
+    document.getElementById("btnTodasFechas").addEventListener("click", mostrarTodasFechas);
 
     document.getElementById("btnLogout").addEventListener("click", () => {
       sessionStorage.removeItem("sr_user_email");
@@ -911,7 +944,8 @@
     while (headerRow.children.length > 5) {
       headerRow.removeChild(headerRow.lastChild);
     }
-    meetingColumns.forEach(dateStr => {
+    const cols = visibleMeetingColumns.length ? visibleMeetingColumns : meetingColumns;
+    cols.forEach(dateStr => {
       const th = document.createElement("th");
       th.textContent = dateStr;
       th.dataset.meeting = dateStr;
@@ -924,10 +958,9 @@
     const tbody = document.getElementById("tableBody");
     tbody.innerHTML = "";
 
-    const hoy = new Date().toISOString().slice(0,10);
+    const cols = visibleMeetingColumns.length ? visibleMeetingColumns : meetingColumns;
 
     tableRows.forEach((row, rowIndex) => {
-
       // aplicar filtros por fila
       if (!passesRowFilters(row)) return;
 
@@ -986,6 +1019,7 @@
       // estado
       const tdEstado = document.createElement("td");
       const selEstado = document.createElement("select");
+      selEstado.className = "estado-select";
       ["P","EP","T"].forEach(e => {
         const opt = document.createElement("option");
         opt.value = e;
@@ -994,8 +1028,10 @@
       });
       if (!row.estado) row.estado = "P";
       selEstado.value = row.estado;
+      applyEstadoSelectStyle(selEstado);
       selEstado.addEventListener("change", () => {
         row.estado = selEstado.value;
+        applyEstadoSelectStyle(selEstado);
         saveData();
         updateCounters();
         renderTable(); // para ocultar T si el filtro está activo
@@ -1003,24 +1039,24 @@
       tdEstado.appendChild(selEstado);
       tr.appendChild(tdEstado);
 
-      // fecha termino
+      // fecha termino (textarea)
       const tdFecha = document.createElement("td");
       tdFecha.classList.add("cell-comment");
       tdFecha.dataset.col = "fechaTermino";
-      const inputFecha = document.createElement("input");
-      inputFecha.type = "text";
-      inputFecha.placeholder = "dd/mm/aa";
-      inputFecha.value = row.fechaTermino || "";
-      inputFecha.addEventListener("input", () => {
-        row.fechaTermino = inputFecha.value;
+      const textareaFecha = document.createElement("textarea");
+      textareaFecha.className = "fecha-textarea";
+      textareaFecha.placeholder = "Ej. 15/11/25 o notas de fecha…";
+      textareaFecha.value = row.fechaTermino || "";
+      textareaFecha.addEventListener("input", () => {
+        row.fechaTermino = textareaFecha.value;
         saveData();
       });
-      tdFecha.appendChild(inputFecha);
+      tdFecha.appendChild(textareaFecha);
       markCommentTriangle(row, tdFecha, rowIndex, "fechaTermino");
       tr.appendChild(tdFecha);
 
-      // columnas de reuniones
-      meetingColumns.forEach(colDate => {
+      // columnas de reuniones visibles
+      cols.forEach(colDate => {
         const td = document.createElement("td");
         td.classList.add("cell-comment");
         td.dataset.col = `reunion_${colDate}`;
@@ -1038,23 +1074,17 @@
         tr.appendChild(td);
       });
 
-      // Colorear fila según estado
-      const estado = row.estado || "P";
-      if (estado === "P") {
-        tr.classList.remove("estado-ep", "estado-t");
-        tr.classList.add("estado-p");
-      } else if (estado === "EP") {
-        tr.classList.remove("estado-p", "estado-t");
-        tr.classList.add("estado-ep");
-      } else if (estado === "T") {
-        tr.classList.remove("estado-p", "estado-ep");
-        tr.classList.add("estado-t");
-      }
-
       tbody.appendChild(tr);
     });
 
     updateCounters();
+  }
+
+  function applyEstadoSelectStyle(sel) {
+    sel.classList.remove("estado-p", "estado-ep", "estado-t");
+    if (sel.value === "P") sel.classList.add("estado-p");
+    else if (sel.value === "EP") sel.classList.add("estado-ep");
+    else if (sel.value === "T") sel.classList.add("estado-t");
   }
 
   /************ FILTROS ************/
@@ -1114,8 +1144,7 @@
       column: "all",
       estado: "todos",
       responsable: "todos",
-      ocultarT: false,
-      soloHoy: false
+      ocultarT: false
     };
     renderTable();
   }
@@ -1159,7 +1188,36 @@
       return;
     }
     meetingColumns.push(fecha);
+    visibleMeetingColumns = [...meetingColumns];
     saveData();
+    buildHeader();
+    renderTable();
+  }
+
+  function mostrarSoloHoy() {
+    const hoy = new Date().toISOString().slice(0, 10);
+    if (!meetingColumns.includes(hoy)) {
+      alert("No existe una columna de reunión con la fecha de hoy (" + hoy + ").");
+      visibleMeetingColumns = [...meetingColumns];
+    } else {
+      visibleMeetingColumns = [hoy];
+    }
+    buildHeader();
+    renderTable();
+  }
+
+  function mostrarUltimas2() {
+    if (meetingColumns.length <= 2) {
+      visibleMeetingColumns = [...meetingColumns];
+    } else {
+      visibleMeetingColumns = meetingColumns.slice(-2);
+    }
+    buildHeader();
+    renderTable();
+  }
+
+  function mostrarTodasFechas() {
+    visibleMeetingColumns = [...meetingColumns];
     buildHeader();
     renderTable();
   }
@@ -1190,6 +1248,7 @@
       try {
         const data = JSON.parse(e.target.result);
         meetingColumns = data.columns || [];
+        visibleMeetingColumns = [...meetingColumns];
         tableRows = data.rows || [];
         responsables = data.responsables && data.responsables.length ? data.responsables : responsables;
         saveData();
@@ -1254,9 +1313,7 @@
         if (!nuevo) return;
         const newName = nuevo.trim();
         if (!newName) return;
-        // actualizar lista
         responsables[idx] = newName;
-        // actualizar filas
         tableRows.forEach(row => {
           if (row.responsable === r) row.responsable = newName;
         });
@@ -1308,7 +1365,7 @@
     if (!cell) return;
 
     const colId = cell.dataset.col;
-    if (!colId) return; // no comments for responsable/estado
+    if (!colId) return; // no comments para responsable/estado
 
     e.preventDefault();
 

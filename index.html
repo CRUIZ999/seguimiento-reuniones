@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Seguimiento de tareas y reuniones</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Supabase JS -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+  <style>
+    :root {
+      --bg: #f3f4f6;
+      --panel-bg: #ffffff;
+      --primary: #2563eb;
+      --primary-soft: #dbeafe;
+      --border: #e5e7eb;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --danger: #dc2626;
+      --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.18);
+      --radius-lg: 12px;
+      --radius-md: 8px;
+      --radius-pill: 999px;
+      --estado-p: #facc15;
+      --estado-ep: #fb923c;
+      --estado-t: #22c55e;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text-main);
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 24px 12px;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 1280px;
+      background: var(--panel-bg);
+      border-radius: 18px;
+      box-shadow: var(--shadow-soft);
+      padding: 18px 20px 16px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ======== AUTH ========= */
+
+    #authContainer {
+      margin: auto;
+      max-width: 420px;
+      width: 100%;
+    }
+
+    .auth-card {
+      background: var(--panel-bg);
+      border-radius: 16px;
+      padding: 20px 22px 18px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border);
+    }
+
+    .auth-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .auth-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .auth-field {
+      margin-bottom: 10px;
+    }
+
+    .auth-field label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .auth-field input {
+      width: 100%;
+      padding: 8px 9px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .auth-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border-radius: 999px;
+      border: none;
+      padding: 7px 14px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      background: var(--primary);
+      color: #fff;
+      transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+    }
+    .btn:hover {
+      background: #1d4ed8;
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: #e5e7eb;
+      color: var(--text-main);
+    }
+    .btn-secondary:hover {
+      background: #d1d5db;
+      box-shadow: 0 4px 12px rgba(148, 163, 184, 0.4);
+    }
+
+    .auth-toggle {
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .auth-toggle span {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .auth-error {
+      color: var(--danger);
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
+    /* ======== APP HEADER ========= */
+
+    #appContainer {
+      display: none;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .app-header-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .app-title {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .help-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      margin-left: 4px;
+      border-radius: 999px;
+      border: 1px solid #9ca3af;
+      font-size: 13px;
+      font-weight: 700;
+      background: #f9fafb;
+      color: #374151;
+      cursor: pointer;
+      user-select: none;
+    }
+    .help-icon:hover {
+      background: #e5e7eb;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .top-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+      flex-wrap: wrap;
+    }
+
+    .pill-btn {
+      border-radius: 999px;
+      border: none;
+      padding: 7px 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      background: var(--primary);
+      color: #fff;
+    }
+    .pill-btn.secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+    .icon-only {
+      padding: 7px 9px;
+      width: 32px;
+      justify-content: center;
+    }
+
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mini-label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ======== FILTER BAR (UNA SOLA FILA) ========= */
+
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+      flex-wrap: wrap;
+      font-size: 13px;
+    }
+
+    .filter-bar select,
+    .filter-bar input[type="text"] {
+      font-size: 13px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #f9fafb;
+    }
+    .filter-bar input[type="checkbox"] {
+      margin-right: 2px;
+    }
+
+    /* ======== RESUMEN ESTADOS ========= */
+
+    .summary-row {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .summary-row span strong {
+      color: var(--text-main);
+    }
+
+    /* ======== TABLE ========= */
+
+    .table-wrapper {
+      position: relative;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .table-scroll {
+      overflow: auto;
+      max-height: 520px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 900px;
+      font-size: 13px;
+    }
+
+    thead {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background: #f9fafb;
+      box-shadow: 0 2px 0 rgba(148, 163, 184, 0.25);
+    }
+
+    th, td {
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      position: relative;
+      white-space: nowrap;
+    }
+
+    th {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: #f9fafb;
+    }
+
+    tr:nth-child(even) td {
+      background: #fafafa;
+    }
+
+    tr.prioritario td {
+      background: #fef2f2 !important;
+    }
+
+    td input.cell-input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      outline: none;
+      font-size: 13px;
+    }
+
+    td.has-comment::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 0;
+      height: 0;
+      border-top: 8px solid #facc15;
+      border-left: 8px solid transparent;
+      pointer-events: none;
+    }
+
+    /* Estado pill */
+    .estado-pill {
+      min-width: 38px;
+      padding: 2px 10px;
+      border-radius: var(--radius-pill);
+      font-size: 12px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      color: #111827;
+    }
+    .estado-pill span.arrow {
+      font-size: 11px;
+    }
+    .estado-P {
+      background: #fef9c3;
+    }
+    .estado-EP {
+      background: #ffedd5;
+    }
+    .estado-T {
+      background: #dcfce7;
+    }
+
+    /* ======== OVERLAYS & PANELS ======== */
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+
+    .modal {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 16px 18px;
+      max-width: 520px;
+      width: 92%;
+      box-shadow: var(--shadow-soft);
+      font-size: 13px;
+    }
+
+    .modal h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+
+    .modal textarea {
+      width: 100%;
+      min-height: 110px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      padding: 8px 9px;
+      resize: vertical;
+      font-size: 13px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .small-btn {
+      padding: 5px 10px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .small-btn.primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .small-btn.secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    /* Panel reuniones (más angosto) */
+    #meetingsPanel {
+      position: absolute;
+      top: 72px;
+      left: 220px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 10px 12px 12px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border);
+      min-width: 260px;
+      max-width: 320px;
+      z-index: 40;
+      display: none;
+    }
+
+    #meetingsPanel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .meetings-sort-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .meetings-sort-row button {
+      border-radius: 999px;
+      border: none;
+      padding: 4px 8px;
+      font-size: 12px;
+      background: #f3f4f6;
+      cursor: pointer;
+    }
+
+    .meeting-list {
+      max-height: 220px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .meeting-item {
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      margin-bottom: 4px;
+      border: 1px solid #e5e7eb;
+      cursor: pointer;
+      background: #f9fafb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+    .meeting-item.active {
+      background: #1d4ed8;
+      color: #fff;
+      border-color: #1d4ed8;
+    }
+
+    /* Panel responsables */
+    #respPanel {
+      position: absolute;
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 8px 10px 10px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border);
+      width: 210px;
+      display: none;
+      z-index: 40;
+      font-size: 13px;
+    }
+
+    #respList {
+      max-height: 160px;
+      overflow-y: auto;
+      margin-bottom: 6px;
+    }
+
+    .resp-item {
+      padding: 4px 6px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .resp-item:hover {
+      background: #f3f4f6;
+    }
+    .resp-remove {
+      color: #9ca3af;
+      margin-left: 8px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    #respPanel input {
+      width: 100%;
+      padding: 5px 6px;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    /* Panel estado */
+    #estadoPanel {
+      position: absolute;
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 4px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border);
+      width: 80px;
+      display: none;
+      z-index: 40;
+      font-size: 13px;
+    }
+    #estadoPanel button {
+      width: 100%;
+      border-radius: 6px;
+      padding: 4px 0;
+      border: none;
+      cursor: pointer;
+      background: #f9fafb;
+      margin-bottom: 2px;
+      font-size: 12px;
+    }
+    #estadoPanel button:hover {
+      background: #e5e7eb;
+    }
+
+    /* Panel fila (duplicar / eliminar / prioritario) */
+    #rowPanel {
+      position: absolute;
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 6px 8px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--border);
+      width: 180px;
+      display: none;
+      z-index: 40;
+      font-size: 13px;
+    }
+    #rowPanel button {
+      width: 100%;
+      text-align: left;
+      padding: 4px 4px;
+      border-radius: 6px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    #rowPanel button:hover {
+      background: #f3f4f6;
+    }
+    #rowPanel button.danger {
+      color: var(--danger);
+    }
+
+    /* Help modal */
+    .help-modal {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 16px 18px;
+      max-width: 640px;
+      width: 92%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.6);
+      font-size: 13px;
+    }
+    .help-modal h2 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+    .help-modal h3 {
+      margin-top: 12px;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+    .help-modal p {
+      margin: 4px 0;
+      line-height: 1.4;
+    }
+    .help-modal ul {
+      margin: 4px 0 4px 18px;
+      padding: 0;
+    }
+    .help-modal li {
+      margin-bottom: 3px;
+    }
+    .help-close-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+    .help-close-row button {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .help-close-row .secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .footer-note {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: #eef2ff;
+      color: #3730a3;
+    }
+
+    .btn-logout {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: none;
+      background: #fee2e2;
+      color: #b91c1c;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <!-- AUTH -->
+  <div id="authContainer">
+    <div class="auth-card">
+      <div class="auth-title">
+        Seguimiento de reuniones
+      </div>
+      <div class="auth-subtitle">
+        Inicia sesión con tu correo y contraseña para acceder al tablero.
+      </div>
+
+      <div class="auth-field">
+        <label for="authEmail">Correo</label>
+        <input type="email" id="authEmail" placeholder="tucorreo@ejemplo.com" />
+      </div>
+      <div class="auth-field">
+        <label for="authPassword">Contraseña</label>
+        <input type="password" id="authPassword" placeholder="********" />
+      </div>
+
+      <div class="auth-error" id="authError"></div>
+
+      <div class="auth-actions">
+        <button class="btn" id="btnLogin">Entrar</button>
+        <button class="btn btn-secondary" id="btnRegister">Crear cuenta</button>
+      </div>
+
+      <div class="auth-toggle" style="margin-top:10px;">
+        Esta sesión se cierra automáticamente al cerrar la pestaña o recargar la página.
+      </div>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div id="appContainer" class="app-shell" style="display:none;">
+    <div class="app-header-line">
+      <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
+        <h1 class="app-title" style="margin-bottom:0;">Seguimiento de tareas y reuniones</h1>
+        <button id="helpIcon" class="help-icon" title="Doble clic para ver ayuda">?</button>
+        <span class="tag" id="userEmailTag"></span>
+      </div>
+      <button id="btnLogout" class="btn-logout">Salir</button>
+    </div>
+
+    <div class="subtitle">
+      Doble clic en el botón <b>?</b> para ver la guía de uso. Datos guardados localmente en este navegador.
+    </div>
+
+    <!-- BARRA SUPERIOR BOTONES -->
+    <div class="top-toolbar">
+      <button id="btnNuevaFila" class="pill-btn">+ Fila</button>
+      <button id="btnNuevaColumna" class="pill-btn secondary">+ Columna</button>
+
+      <div class="toolbar-right" style="margin-left:auto;">
+        <button id="btnGuardar" class="pill-btn icon-only" title="Guardar (local)">
+          💾
+        </button>
+        <button id="btnExport" class="pill-btn secondary icon-only" title="Exportar JSON">
+          ⬇️
+        </button>
+        <button id="btnImport" class="pill-btn secondary icon-only" title="Importar JSON">
+          ⬆️
+        </button>
+      </div>
+    </div>
+
+    <!-- FILTROS (UNA SOLA FILA) -->
+    <div class="filter-bar">
+      <span class="mini-label">Buscar:</span>
+      <input type="text" id="searchText" placeholder="Escribe una palabra o frase" />
+
+      <select id="searchColumn">
+        <option value="all">Todas las columnas</option>
+        <option value="tema">tema</option>
+        <option value="subtema">sub tema</option>
+        <option value="responsable">responsable</option>
+        <option value="estado">estado</option>
+        <option value="fechaTermino">fecha de término</option>
+      </select>
+
+      <span class="mini-label">Estado:</span>
+      <select id="filterEstado">
+        <option value="Todos">Todos</option>
+        <option value="P">P (Pendiente)</option>
+        <option value="EP">EP (En proceso)</option>
+        <option value="T">T (Terminado)</option>
+      </select>
+
+      <span class="mini-label">Responsable:</span>
+      <select id="filterResponsable">
+        <option value="Todos">Todos</option>
+      </select>
+
+      <label style="display:flex;align-items:center;gap:2px;margin-left:4px;">
+        <input type="checkbox" id="chkOcultarTerminados" />
+        Ocultar terminados
+      </label>
+
+      <button class="pill-btn secondary" id="btnAplicarFiltro">Filtro</button>
+      <button class="pill-btn secondary" id="btnQuitarFiltro">Quitar filtro</button>
+
+      <button id="btnSoloHoy" class="pill-btn secondary" style="margin-left:auto;">Solo hoy</button>
+      <button id="btnSelectMeetings" class="pill-btn secondary">
+        Seleccionar reuniones ▾
+      </button>
+    </div>
+
+    <!-- RESUMEN -->
+    <div class="summary-row" id="summaryRow">
+      Pendientes: <span id="sumP"><strong>0</strong></span> ·
+      En proceso: <span id="sumEP"><strong>0</strong></span> ·
+      Terminados: <span id="sumT"><strong>0</strong></span>
+      <span id="unsavedLabel" style="margin-left:10px;color:#b91c1c;display:none;">Cambios sin guardar</span>
+      <span id="savedLabel" style="margin-left:10px;color:#16a34a;display:none;">Todos los cambios guardados</span>
+    </div>
+
+    <!-- TABLA -->
+    <div class="table-wrapper">
+      <div class="table-scroll" id="tableScroll">
+        <table id="mainTable">
+          <thead>
+            <tr id="headerRow"></tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      Los datos (incluyendo comentarios y lista de responsables) se guardan en este navegador (localStorage).
+    </div>
+  </div>
+
+  <!-- OVERLAY COMENTARIOS -->
+  <div id="commentOverlay" class="overlay">
+    <div class="modal">
+      <h3>Comentario</h3>
+      <textarea id="commentText" placeholder="Escribe el comentario para esta celda (deja vacío para borrar)."></textarea>
+      <div class="modal-footer">
+        <button class="small-btn secondary" id="btnCancelComment">Cancelar</button>
+        <button class="small-btn primary" id="btnSaveComment">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL REUNIONES -->
+  <div id="meetingsPanel">
+    <div id="meetingsPanel-header">
+      <span>Reuniones</span>
+      <button id="btnCloseMeetings" class="small-btn secondary" style="padding:3px 8px;">Cerrar</button>
+    </div>
+    <div class="meetings-sort-row">
+      <button id="btnSortAsc">Ascendente</button>
+      <button id="btnSortDesc">Descendente</button>
+    </div>
+    <div class="meeting-list" id="meetingList"></div>
+    <div style="font-size:11px;color:#6b7280;margin-top:4px;">
+      Haz clic en una fecha para mostrar/ocultar esa columna.
+    </div>
+  </div>
+
+  <!-- PANEL RESPONSABLES -->
+  <div id="respPanel">
+    <div style="font-size:12px;font-weight:600;margin-bottom:4px;">Responsables</div>
+    <div id="respList"></div>
+    <input type="text" id="respNewInput" placeholder="Nuevo responsable" />
+    <button id="btnAddResp" class="small-btn primary" style="width:100%;">Agregar</button>
+  </div>
+
+  <!-- PANEL ESTADO -->
+  <div id="estadoPanel">
+    <button data-estado="P">P</button>
+    <button data-estado="EP">EP</button>
+    <button data-estado="T">T</button>
+  </div>
+
+  <!-- PANEL FILA -->
+  <div id="rowPanel">
+    <button id="btnDupRow">Duplicar fila</button>
+    <button id="btnPriorityRow">Marcar / quitar prioritario</button>
+    <button id="btnDeleteRow" class="danger">Eliminar fila</button>
+  </div>
+
+  <!-- AYUDA -->
+  <div id="helpOverlay" class="overlay">
+    <div class="help-modal">
+      <h2>Ayuda y atajos de uso</h2>
+
+      <p style="margin-bottom:8px;">
+        Esta página está pensada para llevar el <b>seguimiento de acuerdos y tareas</b> de tus reuniones.
+        Aquí tienes un resumen de cómo funciona:
+      </p>
+
+      <h3>Columnas base</h3>
+      <ul>
+        <li><b>tema</b>: asunto principal o punto de agenda.</li>
+        <li><b>sub tema</b>: detalle del acuerdo o tarea. Puedes pegar aquí un <b>link de Google Drive</b>.</li>
+        <li><b>responsable</b>: persona encargada. Se elige desde un menú de lista editable.</li>
+        <li><b>estado</b>: P (Pendiente), EP (En proceso), T (Terminado).</li>
+        <li><b>fecha de término</b>: fecha compromiso para cerrar la tarea.</li>
+      </ul>
+
+      <h3>Columnas de reuniones</h3>
+      <ul>
+        <li>Cada vez que presionas <b>+ Columna</b> se crea una columna nueva con la <b>fecha del día</b>.</li>
+        <li>En cada fila puedes escribir comentarios o avances de esa reunión.</li>
+        <li>En el botón <b>Seleccionar reuniones ▾</b> puedes:
+          <ul>
+            <li>Mostrar/ocultar columnas por fecha.</li>
+            <li>Ordenarlas ascendente o descendente.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>Comentarios en celdas</h3>
+      <ul>
+        <li><b>Clic derecho</b> en cualquier celda (excepto responsable) abre el cuadro para escribir un comentario.</li>
+        <li>Las celdas con comentario muestran un <b>triángulo amarillo</b> en la esquina superior derecha.</li>
+        <li>Los comentarios permiten escribir texto largo y saltos de línea.</li>
+      </ul>
+
+      <h3>Responsables</h3>
+      <ul>
+        <li>Haz clic en una celda de <b>responsable</b> para abrir el panel de lista.</li>
+        <li>Desde ese panel puedes:
+          <ul>
+            <li>Seleccionar un responsable existente (se asigna a la celda).</li>
+            <li>Agregar nuevos nombres.</li>
+            <li>Eliminar responsables de la lista.</li>
+          </ul>
+        </li>
+        <li>El filtro “Responsable” de arriba te permite ver solo las tareas de una persona.</li>
+      </ul>
+
+      <h3>Estados y colores</h3>
+      <ul>
+        <li><b>P</b> (Pendiente): amarillo claro.</li>
+        <li><b>EP</b> (En proceso): naranja.</li>
+        <li><b>T</b> (Terminado): verde.</li>
+        <li>El resumen superior muestra cuántas tareas hay en cada estado.</li>
+        <li>El filtro “Ocultar terminados” es útil para revisar solo lo pendiente.</li>
+      </ul>
+
+      <h3>Opciones de fila</h3>
+      <ul>
+        <li><b>Clic derecho</b> en la celda <b>tema</b> abre un menú con:
+          <ul>
+            <li>Duplicar fila.</li>
+            <li>Eliminar fila.</li>
+            <li>Marcar / quitar prioritario (la fila se pinta de rojo suave).</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>Filtros y orden</h3>
+      <ul>
+        <li>La barra superior permite filtrar por:
+          <ul>
+            <li>Texto (en todas las columnas base o en una columna específica).</li>
+            <li>Estado.</li>
+            <li>Responsable.</li>
+            <li>Ocultar tareas terminadas.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>Google Drive y enlaces</h3>
+      <ul>
+        <li>Si en <b>sub tema</b> dejas únicamente un <b>link de Google Drive</b>, con <b>doble clic</b> se abre en otra pestaña.</li>
+      </ul>
+
+      <h3>Guardado y seguridad</h3>
+      <ul>
+        <li>Los datos se guardan en este navegador (<b>localStorage</b>).</li>
+        <li>El botón con el ícono <b>💾</b> guarda manualmente los cambios.</li>
+        <li>La leyenda “Cambios sin guardar / Todos los cambios guardados” te indica el estado actual.</li>
+        <li>Desde <b>⬇️</b> puedes exportar un respaldo en JSON, y con <b>⬆️</b> importarlo de nuevo.</li>
+      </ul>
+
+      <h3>Atajos rápidos</h3>
+      <ul>
+        <li><b>+ Fila</b>: agrega una nueva tarea vacía.</li>
+        <li><b>+ Columna</b>: agrega una nueva reunión con la fecha actual.</li>
+        <li><b>Esc</b>: cierra paneles flotantes (ayuda, comentarios, reuniones, responsables, etc.).</li>
+      </ul>
+
+      <div class="help-close-row">
+        <button class="secondary" onclick="closeHelp()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ========= SUPABASE CONFIG =========
+  const SUPABASE_URL = "https://hrbmstaklleraiacqmky.supabase.co";
+  const SUPABASE_ANON_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhyYm1zdGFrbGxlcmFpYWNxbWt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyMTA2OTQsImV4cCI6MjA3ODc4NjY5NH0.tN00tAjMJpJK_8gnerocbOSzHp93N5yc9Koh_

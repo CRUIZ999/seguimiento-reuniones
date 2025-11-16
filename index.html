@@ -2,996 +2,1281 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Seguimiento de tareas y reuniones</title>
+  <title>Seguimiento de reuniones</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- Supabase JS -->
-  <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+  />
   <style>
     :root {
-      --bg: #f3f4f6;
-      --panel-bg: #ffffff;
+      --bg: #f4f4f7;
+      --card-bg: #ffffff;
+      --border: #e1e4ea;
       --primary: #2563eb;
       --primary-soft: #dbeafe;
-      --border: #e5e7eb;
+      --danger: #ef4444;
       --text-main: #111827;
-      --text-muted: #6b7280;
-      --danger: #dc2626;
-      --shadow-soft: 0 10px 30px rgba(15, 23, 42, 0.18);
-      --radius-lg: 12px;
-      --radius-md: 8px;
-      --radius-pill: 999px;
-      --estado-p: #facc15;
-      --estado-ep: #fb923c;
-      --estado-t: #22c55e;
+      --text-soft: #6b7280;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --radius-sm: 6px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.12);
+      --shadow-table: 0 10px 30px rgba(15, 23, 42, 0.06);
+      --yellow: #facc15;
     }
 
     * {
       box-sizing: border-box;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     body {
       margin: 0;
-      background: var(--bg);
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #e5edff 0, #f9fafb 45%, #f4f4f7 100%);
       color: var(--text-main);
     }
 
-    .page {
+    button {
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    input,
+    select {
+      font-family: inherit;
+    }
+
+    /* ===== LOGIN ===== */
+
+    #login-root {
       min-height: 100vh;
       display: flex;
-      align-items: stretch;
-      justify-content: center;
-      padding: 24px 12px;
-    }
-
-    .app-shell {
-      width: 100%;
-      max-width: 1280px;
-      background: var(--panel-bg);
-      border-radius: 18px;
-      box-shadow: var(--shadow-soft);
-      padding: 18px 20px 16px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* ======== AUTH ========= */
-
-    #authContainer {
-      margin: auto;
-      max-width: 420px;
-      width: 100%;
-    }
-
-    .auth-card {
-      background: var(--panel-bg);
-      border-radius: 16px;
-      padding: 20px 22px 18px;
-      box-shadow: var(--shadow-soft);
-      border: 1px solid var(--border);
-    }
-
-    .auth-title {
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: 6px;
-      display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: center;
+      padding: 40px 16px;
     }
 
-    .auth-subtitle {
+    #login-card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 32px 32px 28px;
+    }
+
+    #login-card h1 {
+      margin: 0 0 4px;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    #login-card p.subtitle {
+      margin: 0 0 24px;
       font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 16px;
+      color: var(--text-soft);
     }
 
-    .auth-field {
-      margin-bottom: 10px;
-    }
-
-    .auth-field label {
-      display: block;
+    .field-label {
       font-size: 13px;
+      font-weight: 500;
       margin-bottom: 4px;
     }
 
-    .auth-field input {
-      width: 100%;
-      padding: 8px 9px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      font-size: 14px;
+    .field {
+      margin-bottom: 16px;
     }
 
-    .auth-actions {
+    .field input {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 9px 14px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .field input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2);
+    }
+
+    .login-actions {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 10px;
       gap: 10px;
+      margin-top: 6px;
     }
 
     .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 18px;
+      font-size: 14px;
+      font-weight: 500;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      border-radius: 999px;
-      border: none;
-      padding: 7px 14px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 500;
+      transition: background 0.15s, box-shadow 0.15s, transform 0.05s;
+    }
+
+    .btn-primary {
       background: var(--primary);
-      color: #fff;
-      transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+      color: white;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.35);
     }
-    .btn:hover {
+
+    .btn-primary:hover {
       background: #1d4ed8;
-      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
-      transform: translateY(-1px);
+      transform: translateY(-0.5px);
+      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.45);
     }
+
     .btn-secondary {
       background: #e5e7eb;
-      color: var(--text-main);
+      color: #111827;
     }
+
     .btn-secondary:hover {
       background: #d1d5db;
-      box-shadow: 0 4px 12px rgba(148, 163, 184, 0.4);
     }
 
-    .auth-toggle {
+    .login-note {
+      margin-top: 14px;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .error-banner {
+      margin-bottom: 10px;
+      border-radius: 8px;
+      padding: 8px 10px;
       font-size: 12px;
-      color: var(--text-muted);
-      cursor: pointer;
-    }
-    .auth-toggle span {
-      color: var(--primary);
-      font-weight: 600;
-    }
-
-    .auth-error {
-      color: var(--danger);
-      font-size: 12px;
-      margin-top: 6px;
-    }
-
-    /* ======== APP HEADER ========= */
-
-    #appContainer {
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
       display: none;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
     }
 
-    .app-header-line {
+    /* ===== APP (TABLERO) ===== */
+
+    #app-root {
+      min-height: 100vh;
+      padding: 24px 20px 26px;
+      display: none;
+    }
+
+    .app-shell {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .app-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 4px;
+      margin-bottom: 12px;
     }
 
     .app-title {
       font-size: 20px;
-      font-weight: 700;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .app-subtitle {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-top: 3px;
     }
 
     .help-icon {
-      display: inline-flex;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: white;
+      display: flex;
       align-items: center;
       justify-content: center;
-      width: 22px;
-      height: 22px;
-      margin-left: 4px;
-      border-radius: 999px;
-      border: 1px solid #9ca3af;
-      font-size: 13px;
-      font-weight: 700;
-      background: #f9fafb;
-      color: #374151;
+      font-size: 17px;
+      color: var(--text-soft);
       cursor: pointer;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.1);
       user-select: none;
     }
+
     .help-icon:hover {
-      background: #e5e7eb;
+      background: #f9fafb;
     }
 
-    .subtitle {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 4px;
+    .toolbar {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-table);
+      padding: 10px 14px 12px;
+      margin-bottom: 14px;
     }
 
-    .top-toolbar {
+    .toolbar-row {
       display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 4px;
       flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 6px;
     }
 
-    .pill-btn {
+    .toolbar-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .toolbar-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .btn-ghost {
       border-radius: 999px;
-      border: none;
-      padding: 7px 12px;
+      border: 1px solid var(--border);
+      background: #f9fafb;
+      padding: 6px 12px;
+      font-size: 13px;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 500;
-      background: var(--primary);
-      color: #fff;
     }
-    .pill-btn.secondary {
-      background: #e5e7eb;
-      color: #111827;
+
+    .btn-ghost:hover {
+      background: #eef2ff;
+      border-color: #c7d2fe;
     }
-    .icon-only {
-      padding: 7px 9px;
+
+    .btn-icon-only {
       width: 32px;
+      height: 32px;
+      padding: 0;
       justify-content: center;
     }
 
-    .toolbar-right {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .mini-label {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    /* ======== FILTER BAR (UNA SOLA FILA) ========= */
-
-    .filter-bar {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 4px;
-      flex-wrap: wrap;
-      font-size: 13px;
-    }
-
-    .filter-bar select,
-    .filter-bar input[type="text"] {
-      font-size: 13px;
-      padding: 6px 8px;
-      border-radius: 8px;
+    .toolbar select,
+    .toolbar input[type="text"] {
+      border-radius: 999px;
       border: 1px solid var(--border);
-      background: #f9fafb;
-    }
-    .filter-bar input[type="checkbox"] {
-      margin-right: 2px;
+      padding: 6px 12px;
+      font-size: 13px;
+      background: white;
+      min-width: 120px;
     }
 
-    /* ======== RESUMEN ESTADOS ========= */
+    .toolbar input[type="checkbox"] {
+      margin-right: 4px;
+    }
 
-    .summary-row {
+    .toolbar label {
       font-size: 12px;
-      color: var(--text-muted);
-      display: flex;
+      color: var(--text-soft);
+      display: inline-flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 4px;
-    }
-    .summary-row span strong {
-      color: var(--text-main);
     }
 
-    /* ======== TABLE ========= */
+    /* ===== TABLE ===== */
+
+    .table-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-table);
+      overflow: hidden;
+    }
 
     .table-wrapper {
-      position: relative;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      overflow: hidden;
-      background: #fff;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .table-scroll {
+      max-height: calc(100vh - 220px);
       overflow: auto;
-      max-height: 520px;
     }
 
     table {
-      border-collapse: collapse;
       width: 100%;
-      min-width: 900px;
+      border-collapse: collapse;
+      table-layout: fixed;
       font-size: 13px;
     }
 
     thead {
+      background: #f9fafb;
       position: sticky;
       top: 0;
-      z-index: 5;
-      background: #f9fafb;
-      box-shadow: 0 2px 0 rgba(148, 163, 184, 0.25);
+      z-index: 2;
     }
 
-    th, td {
+    th,
+    td {
+      border-bottom: 1px solid #eef0f4;
       padding: 6px 8px;
-      border-bottom: 1px solid var(--border);
       text-align: left;
       position: relative;
-      white-space: nowrap;
     }
 
     th {
       font-size: 12px;
       font-weight: 600;
-      color: var(--text-muted);
-      background: #f9fafb;
+      color: #4b5563;
+      white-space: nowrap;
+    }
+
+    td {
+      background: #ffffff;
+      vertical-align: top;
     }
 
     tr:nth-child(even) td {
-      background: #fafafa;
+      background: #fbfdff;
     }
 
-    tr.prioritario td {
-      background: #fef2f2 !important;
+    td.editable {
+      cursor: text;
     }
 
-    td input.cell-input {
-      width: 100%;
-      border: none;
-      background: transparent;
+    td.editable:focus-within {
+      outline: 2px solid #bfdbfe;
+      outline-offset: -2px;
+    }
+
+    td > div.cell-input {
+      min-height: 20px;
+      padding: 1px 0;
       outline: none;
-      font-size: 13px;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
 
-    td.has-comment::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 0;
-      height: 0;
-      border-top: 8px solid #facc15;
-      border-left: 8px solid transparent;
-      pointer-events: none;
+    /* sticky primeras 5 columnas */
+    th.sticky-0,
+    td.sticky-0 {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      background: inherit;
+    }
+    th.sticky-1,
+    td.sticky-1 {
+      position: sticky;
+      left: 140px;
+      z-index: 1;
+      background: inherit;
+    }
+    th.sticky-2,
+    td.sticky-2 {
+      position: sticky;
+      left: 360px;
+      z-index: 1;
+      background: inherit;
+    }
+    th.sticky-3,
+    td.sticky-3 {
+      position: sticky;
+      left: 540px;
+      z-index: 1;
+      background: inherit;
+    }
+    th.sticky-4,
+    td.sticky-4 {
+      position: sticky;
+      left: 650px;
+      z-index: 1;
+      background: inherit;
     }
 
-    /* Estado pill */
-    .estado-pill {
-      min-width: 38px;
-      padding: 2px 10px;
-      border-radius: var(--radius-pill);
+    th.sticky-0,
+    th.sticky-1,
+    th.sticky-2,
+    th.sticky-3,
+    th.sticky-4 {
+      z-index: 3;
+    }
+    td.sticky-0,
+    td.sticky-1,
+    td.sticky-2,
+    td.sticky-3,
+    td.sticky-4 {
+      z-index: 2;
+    }
+
+    /* ESTADO */
+    select.estado-select {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 3px 8px;
       font-size: 12px;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 3px;
       color: #111827;
     }
-    .estado-pill span.arrow {
-      font-size: 11px;
-    }
+
     .estado-P {
-      background: #fef9c3;
+      background: #fee2e2;
+      border-color: #fecaca;
     }
     .estado-EP {
-      background: #ffedd5;
+      background: #fef9c3;
+      border-color: #facc15;
     }
     .estado-T {
       background: #dcfce7;
+      border-color: #4ade80;
     }
 
-    /* ======== OVERLAYS & PANELS ======== */
+    /* RESPONSABLE */
+    select.resp-select {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      padding: 3px 8px;
+      font-size: 12px;
+    }
 
-    .overlay {
+    /* COMENTARIOS */
+    td.has-comment::after {
+      content: "";
+      position: absolute;
+      right: 2px;
+      top: 2px;
+      border-width: 6px 6px 0 0;
+      border-style: solid;
+      border-color: var(--yellow) transparent transparent transparent;
+    }
+
+    /* FOOTER NOTE */
+    .footer-note {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--text-soft);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .footer-note span {
+      white-space: nowrap;
+    }
+
+    /* HELP MODAL */
+    .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.45);
+      background: rgba(15, 23, 42, 0.35);
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 50;
+      z-index: 40;
     }
 
     .modal {
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 16px 18px;
-      max-width: 520px;
-      width: 92%;
-      box-shadow: var(--shadow-soft);
-      font-size: 13px;
-    }
-
-    .modal h3 {
-      margin: 0 0 8px;
-      font-size: 16px;
-    }
-
-    .modal textarea {
+      background: white;
+      border-radius: 18px;
+      max-width: 640px;
       width: 100%;
-      min-height: 110px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      padding: 8px 9px;
-      resize: vertical;
-      font-size: 13px;
+      padding: 18px 20px 18px;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25);
+      max-height: 80vh;
+      overflow: auto;
     }
 
-    .modal-footer {
+    .modal-header {
       display: flex;
-      justify-content: flex-end;
-      gap: 6px;
-      margin-top: 8px;
-    }
-
-    .small-btn {
-      padding: 5px 10px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      font-size: 12px;
-    }
-
-    .small-btn.primary {
-      background: var(--primary);
-      color: #fff;
-    }
-
-    .small-btn.secondary {
-      background: #e5e7eb;
-      color: #111827;
-    }
-
-    /* Panel reuniones (más angosto) */
-    #meetingsPanel {
-      position: absolute;
-      top: 72px;
-      left: 220px;
-      background: #fff;
-      border-radius: 12px;
-      padding: 10px 12px 12px;
-      box-shadow: var(--shadow-soft);
-      border: 1px solid var(--border);
-      min-width: 260px;
-      max-width: 320px;
-      z-index: 40;
-      display: none;
-    }
-
-    #meetingsPanel-header {
-      display: flex;
-      justify-content: space-between;
       align-items: center;
-      font-size: 13px;
+      justify-content: space-between;
       margin-bottom: 6px;
+    }
+
+    .modal-title {
+      font-size: 16px;
       font-weight: 600;
     }
 
-    .meetings-sort-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      margin-bottom: 6px;
-    }
-
-    .meetings-sort-row button {
+    .modal-close {
       border-radius: 999px;
-      border: none;
-      padding: 4px 8px;
-      font-size: 12px;
-      background: #f3f4f6;
-      cursor: pointer;
-    }
-
-    .meeting-list {
-      max-height: 220px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .meeting-item {
-      padding: 4px 8px;
-      border-radius: 999px;
-      font-size: 12px;
-      margin-bottom: 4px;
       border: 1px solid #e5e7eb;
-      cursor: pointer;
       background: #f9fafb;
+      width: 26px;
+      height: 26px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 6px;
-    }
-    .meeting-item.active {
-      background: #1d4ed8;
-      color: #fff;
-      border-color: #1d4ed8;
-    }
-
-    /* Panel responsables */
-    #respPanel {
-      position: absolute;
-      background: #ffffff;
-      border-radius: 10px;
-      padding: 8px 10px 10px;
-      box-shadow: var(--shadow-soft);
-      border: 1px solid var(--border);
-      width: 210px;
-      display: none;
-      z-index: 40;
-      font-size: 13px;
-    }
-
-    #respList {
-      max-height: 160px;
-      overflow-y: auto;
-      margin-bottom: 6px;
-    }
-
-    .resp-item {
-      padding: 4px 6px;
-      border-radius: 6px;
+      justify-content: center;
       cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .resp-item:hover {
-      background: #f3f4f6;
-    }
-    .resp-remove {
-      color: #9ca3af;
-      margin-left: 8px;
-      font-size: 11px;
-      cursor: pointer;
+      font-size: 15px;
     }
 
-    #respPanel input {
-      width: 100%;
-      padding: 5px 6px;
-      border-radius: 7px;
-      border: 1px solid var(--border);
-      font-size: 12px;
-      margin-bottom: 4px;
-    }
-
-    /* Panel estado */
-    #estadoPanel {
-      position: absolute;
-      background: #ffffff;
-      border-radius: 10px;
-      padding: 4px;
-      box-shadow: var(--shadow-soft);
-      border: 1px solid var(--border);
-      width: 80px;
-      display: none;
-      z-index: 40;
+    .modal-content {
       font-size: 13px;
-    }
-    #estadoPanel button {
-      width: 100%;
-      border-radius: 6px;
-      padding: 4px 0;
-      border: none;
-      cursor: pointer;
-      background: #f9fafb;
-      margin-bottom: 2px;
-      font-size: 12px;
-    }
-    #estadoPanel button:hover {
-      background: #e5e7eb;
+      color: #374151;
     }
 
-    /* Panel fila (duplicar / eliminar / prioritario) */
-    #rowPanel {
-      position: absolute;
-      background: #ffffff;
-      border-radius: 10px;
-      padding: 6px 8px;
-      box-shadow: var(--shadow-soft);
-      border: 1px solid var(--border);
-      width: 180px;
-      display: none;
-      z-index: 40;
+    .modal-content h4 {
+      margin: 12px 0 4px;
       font-size: 13px;
-    }
-    #rowPanel button {
-      width: 100%;
-      text-align: left;
-      padding: 4px 4px;
-      border-radius: 6px;
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      font-size: 12px;
-    }
-    #rowPanel button:hover {
-      background: #f3f4f6;
-    }
-    #rowPanel button.danger {
-      color: var(--danger);
+      font-weight: 600;
     }
 
-    /* Help modal */
-    .help-modal {
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 16px 18px;
-      max-width: 640px;
-      width: 92%;
-      max-height: 80vh;
-      overflow-y: auto;
-      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.6);
-      font-size: 13px;
+    .modal-content ul {
+      margin: 4px 0 8px 16px;
+      padding-left: 0;
     }
-    .help-modal h2 {
-      margin-top: 0;
-      margin-bottom: 8px;
-      font-size: 18px;
-    }
-    .help-modal h3 {
-      margin-top: 12px;
-      margin-bottom: 4px;
-      font-size: 14px;
-    }
-    .help-modal p {
-      margin: 4px 0;
-      line-height: 1.4;
-    }
-    .help-modal ul {
-      margin: 4px 0 4px 18px;
-      padding: 0;
-    }
-    .help-modal li {
+
+    .modal-content li {
       margin-bottom: 3px;
-    }
-    .help-close-row {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 10px;
-    }
-    .help-close-row button {
-      padding: 6px 12px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      font-size: 13px;
-    }
-    .help-close-row .secondary {
-      background: #e5e7eb;
-      color: #111827;
-    }
-
-    .footer-note {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    .tag {
-      font-size: 11px;
-      padding: 2px 6px;
-      border-radius: 999px;
-      background: #eef2ff;
-      color: #3730a3;
-    }
-
-    .btn-logout {
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 999px;
-      border: none;
-      background: #fee2e2;
-      color: #b91c1c;
-      cursor: pointer;
     }
   </style>
 </head>
 <body>
-<div class="page">
-  <!-- AUTH -->
-  <div id="authContainer">
-    <div class="auth-card">
-      <div class="auth-title">
-        Seguimiento de reuniones
-      </div>
-      <div class="auth-subtitle">
+  <!-- LOGIN -->
+  <div id="login-root">
+    <div id="login-card">
+      <div id="error-banner" class="error-banner"></div>
+      <h1>Seguimiento de reuniones</h1>
+      <p class="subtitle">
         Inicia sesión con tu correo y contraseña para acceder al tablero.
-      </div>
+      </p>
 
-      <div class="auth-field">
-        <label for="authEmail">Correo</label>
-        <input type="email" id="authEmail" placeholder="tucorreo@ejemplo.com" />
-      </div>
-      <div class="auth-field">
-        <label for="authPassword">Contraseña</label>
-        <input type="password" id="authPassword" placeholder="********" />
-      </div>
+      <form id="login-form">
+        <div class="field">
+          <div class="field-label">Correo</div>
+          <input
+            id="email"
+            type="email"
+            placeholder="tucorreo@ejemplo.com"
+            autocomplete="email"
+            required
+          />
+        </div>
 
-      <div class="auth-error" id="authError"></div>
+        <div class="field">
+          <div class="field-label">Contraseña</div>
+          <input
+            id="password"
+            type="password"
+            autocomplete="current-password"
+            required
+          />
+        </div>
 
-      <div class="auth-actions">
-        <button class="btn" id="btnLogin">Entrar</button>
-        <button class="btn btn-secondary" id="btnRegister">Crear cuenta</button>
-      </div>
+        <div class="login-actions">
+          <button type="submit" class="btn btn-primary">
+            Entrar
+          </button>
+          <button type="button" id="btn-signup" class="btn btn-secondary">
+            Crear cuenta
+          </button>
+        </div>
+      </form>
 
-      <div class="auth-toggle" style="margin-top:10px;">
-        Esta sesión se cierra automáticamente al cerrar la pestaña o recargar la página.
-      </div>
+      <p class="login-note">
+        Esta sesión se cierra automáticamente al cerrar la pestaña o recargar la
+        página.
+      </p>
     </div>
   </div>
 
   <!-- APP -->
-  <div id="appContainer" class="app-shell" style="display:none;">
-    <div class="app-header-line">
-      <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
-        <h1 class="app-title" style="margin-bottom:0;">Seguimiento de tareas y reuniones</h1>
-        <button id="helpIcon" class="help-icon" title="Doble clic para ver ayuda">?</button>
-        <span class="tag" id="userEmailTag"></span>
+  <div id="app-root">
+    <div class="app-shell">
+      <div class="app-header">
+        <div>
+          <div class="app-title">Seguimiento de tareas y reuniones</div>
+          <div class="app-subtitle">
+            Columnas base: tema, sub tema, responsable, estado, fecha de término.
+          </div>
+        </div>
+        <div id="help-icon" class="help-icon" title="Doble clic para ver ayuda">?</div>
       </div>
-      <button id="btnLogout" class="btn-logout">Salir</button>
-    </div>
 
-    <div class="subtitle">
-      Doble clic en el botón <b>?</b> para ver la guía de uso. Datos guardados localmente en este navegador.
-    </div>
+      <div class="toolbar">
+        <div class="toolbar-row">
+          <div class="toolbar-group">
+            <button id="btn-add-row" class="btn btn-primary">
+              + Fila
+            </button>
+            <button id="btn-add-meeting" class="btn btn-ghost">
+              + Columna
+            </button>
+            <button id="btn-save" class="btn btn-ghost btn-icon-only" title="Guardar en este navegador">
+              💾
+            </button>
+            <button id="btn-export" class="btn btn-ghost" title="Exportar JSON">
+              ⬇️ Exp
+            </button>
+            <button id="btn-import" class="btn btn-ghost" title="Importar JSON">
+              ⬆️ Imp
+            </button>
+          </div>
 
-    <!-- BARRA SUPERIOR BOTONES -->
-    <div class="top-toolbar">
-      <button id="btnNuevaFila" class="pill-btn">+ Fila</button>
-      <button id="btnNuevaColumna" class="pill-btn secondary">+ Columna</button>
+          <div class="toolbar-group" style="margin-left:auto;">
+            <label>
+              Estado:
+              <select id="filter-estado">
+                <option value="todos">Todos</option>
+                <option value="P">P</option>
+                <option value="EP">EP</option>
+                <option value="T">T</option>
+              </select>
+            </label>
+            <label>
+              Ocultar terminados
+              <input type="checkbox" id="chk-hide-done" />
+            </label>
+          </div>
+        </div>
 
-      <div class="toolbar-right" style="margin-left:auto;">
-        <button id="btnGuardar" class="pill-btn icon-only" title="Guardar (local)">
-          💾
-        </button>
-        <button id="btnExport" class="pill-btn secondary icon-only" title="Exportar JSON">
-          ⬇️
-        </button>
-        <button id="btnImport" class="pill-btn secondary icon-only" title="Importar JSON">
-          ⬆️
-        </button>
+        <div class="toolbar-row">
+          <div class="toolbar-group">
+            <select id="search-column">
+              <option value="all">Todas las columnas</option>
+              <option value="tema">tema</option>
+              <option value="subtema">sub tema</option>
+              <option value="responsable">responsable</option>
+              <option value="estado">estado</option>
+              <option value="fechaTermino">fecha de término</option>
+            </select>
+            <input
+              type="text"
+              id="search-text"
+              placeholder="Escribe una palabra o frase"
+            />
+            <button id="btn-apply-filter" class="btn btn-ghost">
+              Filtro
+            </button>
+            <button id="btn-clear-filter" class="btn btn-ghost">
+              Quitar filtro
+            </button>
+          </div>
+
+          <div class="toolbar-group" style="margin-left:auto;">
+            <span style="font-size:12px;color:var(--text-soft);">
+              Columnas de reuniones:
+            </span>
+            <button id="btn-last-two" class="btn btn-ghost">
+              Últimas 2
+            </button>
+            <button id="btn-today-only" class="btn btn-ghost">
+              Solo hoy
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <!-- FILTROS (UNA SOLA FILA) -->
-    <div class="filter-bar">
-      <span class="mini-label">Buscar:</span>
-      <input type="text" id="searchText" placeholder="Escribe una palabra o frase" />
-
-      <select id="searchColumn">
-        <option value="all">Todas las columnas</option>
-        <option value="tema">tema</option>
-        <option value="subtema">sub tema</option>
-        <option value="responsable">responsable</option>
-        <option value="estado">estado</option>
-        <option value="fechaTermino">fecha de término</option>
-      </select>
-
-      <span class="mini-label">Estado:</span>
-      <select id="filterEstado">
-        <option value="Todos">Todos</option>
-        <option value="P">P (Pendiente)</option>
-        <option value="EP">EP (En proceso)</option>
-        <option value="T">T (Terminado)</option>
-      </select>
-
-      <span class="mini-label">Responsable:</span>
-      <select id="filterResponsable">
-        <option value="Todos">Todos</option>
-      </select>
-
-      <label style="display:flex;align-items:center;gap:2px;margin-left:4px;">
-        <input type="checkbox" id="chkOcultarTerminados" />
-        Ocultar terminados
-      </label>
-
-      <button class="pill-btn secondary" id="btnAplicarFiltro">Filtro</button>
-      <button class="pill-btn secondary" id="btnQuitarFiltro">Quitar filtro</button>
-
-      <button id="btnSoloHoy" class="pill-btn secondary" style="margin-left:auto;">Solo hoy</button>
-      <button id="btnSelectMeetings" class="pill-btn secondary">
-        Seleccionar reuniones ▾
-      </button>
-    </div>
-
-    <!-- RESUMEN -->
-    <div class="summary-row" id="summaryRow">
-      Pendientes: <span id="sumP"><strong>0</strong></span> ·
-      En proceso: <span id="sumEP"><strong>0</strong></span> ·
-      Terminados: <span id="sumT"><strong>0</strong></span>
-      <span id="unsavedLabel" style="margin-left:10px;color:#b91c1c;display:none;">Cambios sin guardar</span>
-      <span id="savedLabel" style="margin-left:10px;color:#16a34a;display:none;">Todos los cambios guardados</span>
-    </div>
-
-    <!-- TABLA -->
-    <div class="table-wrapper">
-      <div class="table-scroll" id="tableScroll">
-        <table id="mainTable">
-          <thead>
-            <tr id="headerRow"></tr>
-          </thead>
-          <tbody id="tableBody"></tbody>
-        </table>
+      <div class="table-card">
+        <div id="table-wrapper" class="table-wrapper">
+          <table id="main-table">
+            <thead>
+              <tr id="header-row"></tr>
+            </thead>
+            <tbody id="body-rows"></tbody>
+          </table>
+        </div>
       </div>
-    </div>
 
-    <div class="footer-note">
-      Los datos (incluyendo comentarios y lista de responsables) se guardan en este navegador (localStorage).
+      <div class="footer-note">
+        <span>✅ Los datos (incluyendo comentarios) se guardan en este navegador.</span>
+        <span>⬇️ Exporta el JSON para usarlo en otra computadora; luego ⬆️ impórtalo.</span>
+        <span>💬 Clic derecho en una celda para agregar o borrar comentario.</span>
+        <span>🔗 Si una celda de "sub tema" solo tiene un link de Google Drive, doble clic lo abrirá.</span>
+      </div>
     </div>
   </div>
 
-  <!-- OVERLAY COMENTARIOS -->
-  <div id="commentOverlay" class="overlay">
+  <!-- MODAL DE AYUDA -->
+  <div id="help-backdrop" class="modal-backdrop">
     <div class="modal">
-      <h3>Comentario</h3>
-      <textarea id="commentText" placeholder="Escribe el comentario para esta celda (deja vacío para borrar)."></textarea>
-      <div class="modal-footer">
-        <button class="small-btn secondary" id="btnCancelComment">Cancelar</button>
-        <button class="small-btn primary" id="btnSaveComment">Guardar</button>
+      <div class="modal-header">
+        <div class="modal-title">Ayuda rápida</div>
+        <button id="help-close" class="modal-close">✕</button>
+      </div>
+      <div class="modal-content">
+        <h4>Estructura básica</h4>
+        <ul>
+          <li><strong>Columnas base:</strong> tema, sub tema, responsable, estado, fecha de término.</li>
+          <li>Cada nueva reunión agrega una columna con la fecha del día.</li>
+        </ul>
+
+        <h4>Edición</h4>
+        <ul>
+          <li>Haz clic en las celdas para escribir y editar texto.</li>
+          <li>En <strong>estado</strong> usa P (Pendiente), EP (En proceso), T (Terminado).</li>
+          <li>En <strong>sub tema</strong>, si la celda sólo tiene una URL de Google Drive, con doble clic se abrirá en una pestaña nueva.</li>
+        </ul>
+
+        <h4>Comentarios</h4>
+        <ul>
+          <li>Clic derecho en cualquier celda para agregar o editar un comentario.</li>
+          <li>Si dejas el comentario vacío, se elimina.</li>
+          <li>Las celdas con comentario muestran un triángulo amarillo pequeño en la esquina superior derecha.</li>
+        </ul>
+
+        <h4>Filtros</h4>
+        <ul>
+          <li>Usa la barra de búsqueda para filtrar por texto en todas las columnas o sólo en una.</li>
+          <li>Filtra por <strong>estado</strong> y puedes elegir ocultar las filas terminadas (T).</li>
+          <li>Los botones “Últimas 2” y “Solo hoy” ocultan/ muestran columnas de reuniones según la fecha.</li>
+        </ul>
+
+        <h4>Guardado y portabilidad</h4>
+        <ul>
+          <li>La información se guarda automáticamente en tu navegador usando localStorage.</li>
+          <li>Con <strong>💾</strong> fuerzas un guardado manual inmediato.</li>
+          <li>Con <strong>⬇️ Exp</strong> descargas un JSON con tus datos.</li>
+          <li>Con <strong>⬆️ Imp</strong> puedes importar ese JSON en otra computadora o navegador.</li>
+        </ul>
+
+        <h4>Cuentas de acceso</h4>
+        <ul>
+          <li>El acceso al tablero está protegido con usuario y contraseña (Supabase Auth).</li>
+          <li>Cada vez que abras la página deberás iniciar sesión de nuevo.</li>
+        </ul>
       </div>
     </div>
   </div>
 
-  <!-- PANEL REUNIONES -->
-  <div id="meetingsPanel">
-    <div id="meetingsPanel-header">
-      <span>Reuniones</span>
-      <button id="btnCloseMeetings" class="small-btn secondary" style="padding:3px 8px;">Cerrar</button>
-    </div>
-    <div class="meetings-sort-row">
-      <button id="btnSortAsc">Ascendente</button>
-      <button id="btnSortDesc">Descendente</button>
-    </div>
-    <div class="meeting-list" id="meetingList"></div>
-    <div style="font-size:11px;color:#6b7280;margin-top:4px;">
-      Haz clic en una fecha para mostrar/ocultar esa columna.
-    </div>
-  </div>
+  <!-- LÓGICA: LOGIN + TABLERO -->
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/esm/supabase.js";
 
-  <!-- PANEL RESPONSABLES -->
-  <div id="respPanel">
-    <div style="font-size:12px;font-weight:600;margin-bottom:4px;">Responsables</div>
-    <div id="respList"></div>
-    <input type="text" id="respNewInput" placeholder="Nuevo responsable" />
-    <button id="btnAddResp" class="small-btn primary" style="width:100%;">Agregar</button>
-  </div>
+    /********** SUPABASE: LOGIN **********/
+    const supabaseUrl =
+      "https://hrbmstaklleraiacqmky.supabase.co";
+    const supabaseKey =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhyYm1zdGFrbGxlcmFpYWNxbWt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyMTA2OTQsImV4cCI6MjA3ODc4NjY5NH0.tN00tAjMJpJK_8gnerocbOSzHp93N5yc9KohTBpMeZc";
 
-  <!-- PANEL ESTADO -->
-  <div id="estadoPanel">
-    <button data-estado="P">P</button>
-    <button data-estado="EP">EP</button>
-    <button data-estado="T">T</button>
-  </div>
+    const supabase = createClient(supabaseUrl, supabaseKey, {
+      auth: {
+        persistSession: false, // siempre pedirá login al recargar
+      },
+    });
 
-  <!-- PANEL FILA -->
-  <div id="rowPanel">
-    <button id="btnDupRow">Duplicar fila</button>
-    <button id="btnPriorityRow">Marcar / quitar prioritario</button>
-    <button id="btnDeleteRow" class="danger">Eliminar fila</button>
-  </div>
+    const loginRoot = document.getElementById("login-root");
+    const appRoot = document.getElementById("app-root");
+    const loginForm = document.getElementById("login-form");
+    const signupBtn = document.getElementById("btn-signup");
+    const errorBanner = document.getElementById("error-banner");
 
-  <!-- AYUDA -->
-  <div id="helpOverlay" class="overlay">
-    <div class="help-modal">
-      <h2>Ayuda y atajos de uso</h2>
+    function showError(message) {
+      errorBanner.textContent = message;
+      errorBanner.style.display = "block";
+    }
 
-      <p style="margin-bottom:8px;">
-        Esta página está pensada para llevar el <b>seguimiento de acuerdos y tareas</b> de tus reuniones.
-        Aquí tienes un resumen de cómo funciona:
-      </p>
+    function clearError() {
+      errorBanner.textContent = "";
+      errorBanner.style.display = "none";
+    }
 
-      <h3>Columnas base</h3>
-      <ul>
-        <li><b>tema</b>: asunto principal o punto de agenda.</li>
-        <li><b>sub tema</b>: detalle del acuerdo o tarea. Puedes pegar aquí un <b>link de Google Drive</b>.</li>
-        <li><b>responsable</b>: persona encargada. Se elige desde un menú de lista editable.</li>
-        <li><b>estado</b>: P (Pendiente), EP (En proceso), T (Terminado).</li>
-        <li><b>fecha de término</b>: fecha compromiso para cerrar la tarea.</li>
-      </ul>
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      clearError();
 
-      <h3>Columnas de reuniones</h3>
-      <ul>
-        <li>Cada vez que presionas <b>+ Columna</b> se crea una columna nueva con la <b>fecha del día</b>.</li>
-        <li>En cada fila puedes escribir comentarios o avances de esa reunión.</li>
-        <li>En el botón <b>Seleccionar reuniones ▾</b> puedes:
-          <ul>
-            <li>Mostrar/ocultar columnas por fecha.</li>
-            <li>Ordenarlas ascendente o descendente.</li>
-          </ul>
-        </li>
-      </ul>
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
 
-      <h3>Comentarios en celdas</h3>
-      <ul>
-        <li><b>Clic derecho</b> en cualquier celda (excepto responsable) abre el cuadro para escribir un comentario.</li>
-        <li>Las celdas con comentario muestran un <b>triángulo amarillo</b> en la esquina superior derecha.</li>
-        <li>Los comentarios permiten escribir texto largo y saltos de línea.</li>
-      </ul>
+      if (!email || !password) {
+        showError("Escribe tu correo y contraseña.");
+        return;
+      }
 
-      <h3>Responsables</h3>
-      <ul>
-        <li>Haz clic en una celda de <b>responsable</b> para abrir el panel de lista.</li>
-        <li>Desde ese panel puedes:
-          <ul>
-            <li>Seleccionar un responsable existente (se asigna a la celda).</li>
-            <li>Agregar nuevos nombres.</li>
-            <li>Eliminar responsables de la lista.</li>
-          </ul>
-        </li>
-        <li>El filtro “Responsable” de arriba te permite ver solo las tareas de una persona.</li>
-      </ul>
+      try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
 
-      <h3>Estados y colores</h3>
-      <ul>
-        <li><b>P</b> (Pendiente): amarillo claro.</li>
-        <li><b>EP</b> (En proceso): naranja.</li>
-        <li><b>T</b> (Terminado): verde.</li>
-        <li>El resumen superior muestra cuántas tareas hay en cada estado.</li>
-        <li>El filtro “Ocultar terminados” es útil para revisar solo lo pendiente.</li>
-      </ul>
+        if (error) {
+          console.error(error);
+          showError("Error al iniciar sesión: " + error.message);
+          return;
+        }
 
-      <h3>Opciones de fila</h3>
-      <ul>
-        <li><b>Clic derecho</b> en la celda <b>tema</b> abre un menú con:
-          <ul>
-            <li>Duplicar fila.</li>
-            <li>Eliminar fila.</li>
-            <li>Marcar / quitar prioritario (la fila se pinta de rojo suave).</li>
-          </ul>
-        </li>
-      </ul>
+        // login OK
+        loginRoot.style.display = "none";
+        appRoot.style.display = "block";
+      } catch (err) {
+        console.error(err);
+        showError("Error inesperado al iniciar sesión.");
+      }
+    });
 
-      <h3>Filtros y orden</h3>
-      <ul>
-        <li>La barra superior permite filtrar por:
-          <ul>
-            <li>Texto (en todas las columnas base o en una columna específica).</li>
-            <li>Estado.</li>
-            <li>Responsable.</li>
-            <li>Ocultar tareas terminadas.</li>
-          </ul>
-        </li>
-      </ul>
+    signupBtn.addEventListener("click", async () => {
+      clearError();
+      const email = prompt("Correo del nuevo usuario:");
+      if (!email) return;
+      const password = prompt(
+        "Contraseña para este usuario (mínimo 6 caracteres):"
+      );
+      if (!password) return;
 
-      <h3>Google Drive y enlaces</h3>
-      <ul>
-        <li>Si en <b>sub tema</b> dejas únicamente un <b>link de Google Drive</b>, con <b>doble clic</b> se abre en otra pestaña.</li>
-      </ul>
+      try {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+        });
 
-      <h3>Guardado y seguridad</h3>
-      <ul>
-        <li>Los datos se guardan en este navegador (<b>localStorage</b>).</li>
-        <li>El botón con el ícono <b>💾</b> guarda manualmente los cambios.</li>
-        <li>La leyenda “Cambios sin guardar / Todos los cambios guardados” te indica el estado actual.</li>
-        <li>Desde <b>⬇️</b> puedes exportar un respaldo en JSON, y con <b>⬆️</b> importarlo de nuevo.</li>
-      </ul>
+        if (error) {
+          console.error(error);
+          showError("Error al crear cuenta: " + error.message);
+          return;
+        }
 
-      <h3>Atajos rápidos</h3>
-      <ul>
-        <li><b>+ Fila</b>: agrega una nueva tarea vacía.</li>
-        <li><b>+ Columna</b>: agrega una nueva reunión con la fecha actual.</li>
-        <li><b>Esc</b>: cierra paneles flotantes (ayuda, comentarios, reuniones, responsables, etc.).</li>
-      </ul>
+        alert(
+          "Cuenta creada correctamente. El usuario ya puede iniciar sesión con ese correo y contraseña."
+        );
+      } catch (err) {
+        console.error(err);
+        showError("Error inesperado al crear la cuenta.");
+      }
+    });
 
-      <div class="help-close-row">
-        <button class="secondary" onclick="closeHelp()">Cerrar</button>
-      </div>
-    </div>
-  </div>
-</div>
+    /********** TABLERO EN LOCALSTORAGE **********/
+    const STORAGE_KEY = "seguimiento_reuniones_v1";
 
-<script>
-  // ========= SUPABASE CONFIG =========
-  const SUPABASE_URL = "https://hrbmstaklleraiacqmky.supabase.co";
-  const SUPABASE_ANON_KEY =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhyYm1zdGFrbGxlcmFpYWNxbWt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyMTA2OTQsImV4cCI6MjA3ODc4NjY5NH0.tN00tAjMJpJK_8gnerocbOSzHp93N5yc9Koh_
+    const baseColumns = [
+      { id: "tema", label: "tema", sticky: 0, width: 140 },
+      { id: "subtema", label: "sub tema", sticky: 1, width: 220 },
+      { id: "responsable", label: "responsable", sticky: 2, width: 180 },
+      { id: "estado", label: "estado", sticky: 3, width: 110 },
+      { id: "fechaTermino", label: "fecha de termino", sticky: 4, width: 120 },
+    ];
+
+    let meetingColumns = []; // {id,label,dateISO}
+    let rows = []; // {id, tema, subtema, responsable, estado, fechaTermino, reuniones:{colId: texto}}
+    let comments = {}; // key: rowId|colId => texto
+
+    const headerRow = document.getElementById("header-row");
+    const bodyRows = document.getElementById("body-rows");
+
+    const filterEstado = document.getElementById("filter-estado");
+    const hideDone = document.getElementById("chk-hide-done");
+    const searchColumn = document.getElementById("search-column");
+    const searchText = document.getElementById("search-text");
+
+    const btnAddRow = document.getElementById("btn-add-row");
+    const btnAddMeeting = document.getElementById("btn-add-meeting");
+    const btnSave = document.getElementById("btn-save");
+    const btnExport = document.getElementById("btn-export");
+    const btnImport = document.getElementById("btn-import");
+    const btnApplyFilter = document.getElementById("btn-apply-filter");
+    const btnClearFilter = document.getElementById("btn-clear-filter");
+    const btnLastTwo = document.getElementById("btn-last-two");
+    const btnTodayOnly = document.getElementById("btn-today-only");
+
+    /***** helpers *****/
+    function createId() {
+      return (
+        Date.now().toString(36) + Math.random().toString(36).substring(2, 8)
+      );
+    }
+
+    function formatDateLabel(d) {
+      const dd = String(d.getDate()).padStart(2, "0");
+      const mm = String(d.getMonth() + 1).padStart(2, "0");
+      const yy = String(d.getFullYear()).slice(-2);
+      return `${dd}/${mm}/${yy}`;
+    }
+
+    function saveAll() {
+      const payload = {
+        baseColumns,
+        meetingColumns,
+        rows,
+        comments,
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    }
+
+    function loadAll() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        // datos iniciales
+        rows = [
+          {
+            id: createId(),
+            tema: "",
+            subtema: "",
+            responsable: "",
+            estado: "P",
+            fechaTermino: "",
+            reuniones: {},
+          },
+        ];
+        meetingColumns = [];
+        comments = {};
+        return;
+      }
+      try {
+        const parsed = JSON.parse(raw);
+        meetingColumns = parsed.meetingColumns || [];
+        rows = parsed.rows || [];
+        comments = parsed.comments || {};
+      } catch (e) {
+        console.error("Error al leer localStorage", e);
+        rows = [];
+        meetingColumns = [];
+        comments = {};
+      }
+    }
+
+    /***** renderizado *****/
+    function renderHeader() {
+      headerRow.innerHTML = "";
+      [...baseColumns, ...meetingColumns].forEach((col, index) => {
+        const th = document.createElement("th");
+        th.textContent = col.label;
+        if (typeof col.width === "number") {
+          th.style.minWidth = col.width + "px";
+        }
+        if (col.sticky != null) {
+          th.classList.add(`sticky-${col.sticky}`);
+        }
+        headerRow.appendChild(th);
+      });
+    }
+
+    function getComment(rowId, colId) {
+      return comments[`${rowId}|${colId}`] || "";
+    }
+
+    function setComment(rowId, colId, texto) {
+      const key = `${rowId}|${colId}`;
+      if (!texto) {
+        delete comments[key];
+      } else {
+        comments[key] = texto;
+      }
+      saveAll();
+      renderBody();
+    }
+
+    function cellMatchesFilter(row, col) {
+      const text = (row[col.id] || "").toString().toLowerCase();
+      const search = searchText.value.trim().toLowerCase();
+      if (!search) return true;
+      return text.includes(search);
+    }
+
+    function rowVisible(row) {
+      // filtro estado
+      const est = filterEstado.value;
+      if (est !== "todos" && row.estado !== est) return false;
+      if (hideDone.checked && row.estado === "T") return false;
+
+      // filtro de texto
+      const search = searchText.value.trim().toLowerCase();
+      if (!search) return true;
+
+      const colSel = searchColumn.value;
+      if (colSel === "all") {
+        // revisar base + reuniones
+        for (const col of baseColumns) {
+          const value = (row[col.id] || "").toString().toLowerCase();
+          if (value.includes(search)) return true;
+        }
+        for (const col of meetingColumns) {
+          const value = (row.reuniones?.[col.id] || "")
+            .toString()
+            .toLowerCase();
+          if (value.includes(search)) return true;
+        }
+        return false;
+      } else if (colSel === "tema" || colSel === "subtema" || colSel === "responsable" || colSel === "estado" || colSel === "fechaTermino") {
+        const val = (row[colSel] || "").toString().toLowerCase();
+        return val.includes(search);
+      } else {
+        return true;
+      }
+    }
+
+    function renderBody() {
+      bodyRows.innerHTML = "";
+
+      rows.forEach((row) => {
+        const tr = document.createElement("tr");
+        if (!rowVisible(row)) {
+          tr.style.display = "none";
+        }
+
+        [...baseColumns, ...meetingColumns].forEach((col) => {
+          const td = document.createElement("td");
+
+          if (col.sticky != null) {
+            td.classList.add(`sticky-${col.sticky}`);
+          }
+
+          // comentario
+          if (getComment(row.id, col.id)) {
+            td.classList.add("has-comment");
+          }
+
+          if (col.id === "estado") {
+            const select = document.createElement("select");
+            select.className = "estado-select";
+            ["P", "EP", "T"].forEach((opt) => {
+              const o = document.createElement("option");
+              o.value = opt;
+              o.textContent = opt;
+              if (row.estado === opt) o.selected = true;
+              select.appendChild(o);
+            });
+            function applyEstadoClass() {
+              select.classList.remove("estado-P", "estado-EP", "estado-T");
+              if (select.value === "P") select.classList.add("estado-P");
+              if (select.value === "EP") select.classList.add("estado-EP");
+              if (select.value === "T") select.classList.add("estado-T");
+            }
+            applyEstadoClass();
+            select.addEventListener("change", () => {
+              row.estado = select.value;
+              applyEstadoClass();
+              saveAll();
+              renderBody();
+            });
+            td.appendChild(select);
+          } else if (col.id === "responsable") {
+            const select = document.createElement("select");
+            select.className = "resp-select";
+            const responsables = [
+              "",
+              "carlos",
+              "deniss",
+              "fernando",
+              "jose",
+              "otro",
+            ];
+            responsables.forEach((name) => {
+              const o = document.createElement("option");
+              o.value = name;
+              o.textContent = name || "(sin responsable)";
+              if (row.responsable === name) o.selected = true;
+              select.appendChild(o);
+            });
+            select.addEventListener("change", () => {
+              row.responsable = select.value;
+              saveAll();
+            });
+            td.appendChild(select);
+          } else if (col.id === "fechaTermino") {
+            const div = document.createElement("div");
+            div.className = "cell-input";
+            div.contentEditable = "true";
+            div.textContent = row.fechaTermino || "";
+            div.addEventListener("blur", () => {
+              row.fechaTermino = div.textContent.trim();
+              saveAll();
+            });
+            td.classList.add("editable");
+            td.appendChild(div);
+          } else if (col.id === "tema" || col.id === "subtema") {
+            const div = document.createElement("div");
+            div.className = "cell-input";
+            div.contentEditable = "true";
+            div.textContent = row[col.id] || "";
+            div.addEventListener("blur", () => {
+              row[col.id] = div.textContent.trim();
+              saveAll();
+            });
+
+            if (col.id === "subtema") {
+              // doble clic: si es sólo un link de drive, abrir
+              div.addEventListener("dblclick", () => {
+                const text = div.textContent.trim();
+                if (
+                  /^https?:\/\/(drive\.google\.com|docs\.google\.com)/i.test(
+                    text
+                  )
+                ) {
+                  window.open(text, "_blank");
+                }
+              });
+            }
+
+            td.classList.add("editable");
+            td.appendChild(div);
+          } else {
+            // reuniones
+            const div = document.createElement("div");
+            div.className = "cell-input";
+            div.contentEditable = "true";
+            const value = row.reuniones?.[col.id] || "";
+            div.textContent = value;
+            div.addEventListener("blur", () => {
+              if (!row.reuniones) row.reuniones = {};
+              row.reuniones[col.id] = div.textContent.trim();
+              saveAll();
+            });
+            td.classList.add("editable");
+            td.appendChild(div);
+          }
+
+          // comentario con clic derecho
+          td.addEventListener("contextmenu", (ev) => {
+            ev.preventDefault();
+            const actual = getComment(row.id, col.id);
+            const nuevo = prompt(
+              "Comentario para esta celda (déjalo vacío para borrar):",
+              actual
+            );
+            if (nuevo === null) return;
+            setComment(row.id, col.id, nuevo.trim());
+          });
+
+          tr.appendChild(td);
+        });
+
+        bodyRows.appendChild(tr);
+      });
+    }
+
+    /***** acciones *****/
+    btnAddRow.addEventListener("click", () => {
+      rows.push({
+        id: createId(),
+        tema: "",
+        subtema: "",
+        responsable: "",
+        estado: "P",
+        fechaTermino: "",
+        reuniones: {},
+      });
+      saveAll();
+      renderBody();
+    });
+
+    btnAddMeeting.addEventListener("click", () => {
+      const now = new Date();
+      const id = now.toISOString().slice(0, 10); // YYYY-MM-DD
+      const label = formatDateLabel(now);
+      meetingColumns.push({ id, label });
+      saveAll();
+      renderHeader();
+      renderBody();
+    });
+
+    btnSave.addEventListener("click", () => {
+      saveAll();
+      alert("Datos guardados en este navegador.");
+    });
+
+    btnExport.addEventListener("click", () => {
+      const payload = {
+        meetingColumns,
+        rows,
+        comments,
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "seguimiento_reuniones.json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    });
+
+    btnImport.addEventListener("click", () => {
+      const inp = document.createElement("input");
+      inp.type = "file";
+      inp.accept = "application/json";
+      inp.addEventListener("change", () => {
+        const file = inp.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const parsed = JSON.parse(reader.result);
+            meetingColumns = parsed.meetingColumns || [];
+            rows = parsed.rows || [];
+            comments = parsed.comments || {};
+            saveAll();
+            renderHeader();
+            renderBody();
+          } catch (e) {
+            alert("Archivo JSON no válido");
+          }
+        };
+        reader.readAsText(file);
+      });
+      inp.click();
+    });
+
+    btnApplyFilter.addEventListener("click", () => {
+      renderBody();
+    });
+
+    btnClearFilter.addEventListener("click", () => {
+      searchText.value = "";
+      searchColumn.value = "all";
+      filterEstado.value = "todos";
+      hideDone.checked = false;
+      renderBody();
+    });
+
+    filterEstado.addEventListener("change", renderBody);
+    hideDone.addEventListener("change", renderBody);
+
+    btnLastTwo.addEventListener("click", () => {
+      if (meetingColumns.length <= 2) {
+        renderHeader();
+        renderBody();
+        return;
+      }
+      const lastTwoIds = meetingColumns
+        .slice(-2)
+        .map((c) => c.id);
+      meetingColumns.forEach((col) => {
+        col.hidden = !lastTwoIds.includes(col.id);
+      });
+      // filtramos sólo para vista
+      const visible = meetingColumns.filter((c) => !c.hidden);
+      const hidden = meetingColumns.filter((c) => c.hidden);
+      meetingColumns = [...visible, ...hidden]; // reordenamos: primero visibles
+      renderHeader();
+      renderBody();
+    });
+
+    btnTodayOnly.addEventListener("click", () => {
+      const todayISO = new Date().toISOString().slice(0, 10);
+      meetingColumns.forEach((col) => {
+        col.hidden = col.id !== todayISO;
+      });
+      const visible = meetingColumns.filter((c) => !c.hidden);
+      const hidden = meetingColumns.filter((c) => c.hidden);
+      meetingColumns = [...visible, ...hidden];
+      renderHeader();
+      renderBody();
+    });
+
+    /***** ayuda modal *****/
+    const helpIcon = document.getElementById("help-icon");
+    const helpBackdrop = document.getElementById("help-backdrop");
+    const helpClose = document.getElementById("help-close");
+
+    function openHelp() {
+      helpBackdrop.style.display = "flex";
+    }
+    function closeHelp() {
+      helpBackdrop.style.display = "none";
+    }
+
+    helpIcon.addEventListener("dblclick", openHelp);
+    helpClose.addEventListener("click", closeHelp);
+    helpBackdrop.addEventListener("click", (e) => {
+      if (e.target === helpBackdrop) closeHelp();
+    });
+
+    /***** inicio *****/
+    loadAll();
+    renderHeader();
+    renderBody();
+  </script>
+</body>
+</html>

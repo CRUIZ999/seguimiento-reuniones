@@ -2,290 +2,421 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Seguimiento de reuniones - Login</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- Fuente -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
 
   <style>
     :root {
-      --primary: #2563eb;
-      --primary-soft: #e0ecff;
       --bg: #f3f4f6;
       --card-bg: #ffffff;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --danger: #ef4444;
+      --success: #16a34a;
+      --text: #111827;
+      --muted: #6b7280;
       --border: #e5e7eb;
-      --text-main: #111827;
-      --text-muted: #6b7280;
-      --danger: #dc2626;
+      --shadow-soft: 0 20px 45px rgba(15, 23, 42, 0.12);
+      --radius-lg: 16px;
+      --radius-full: 999px;
     }
 
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
       font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
         sans-serif;
     }
 
     body {
-      margin: 0;
-      background: radial-gradient(circle at top, #eef2ff 0, #f9fafb 45%, #e5e7eb 100%);
+      background: radial-gradient(circle at top, #e0edff 0, #f3f4f6 45%, #f9fafb 100%);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      color: var(--text);
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 440px;
+      padding: 24px;
     }
 
     .card {
       background: var(--card-bg);
-      border-radius: 24px;
-      box-shadow:
-        0 40px 80px rgba(15, 23, 42, 0.18),
-        0 0 0 1px rgba(148, 163, 184, 0.2);
-      padding: 32px 32px 28px;
-      max-width: 420px;
-      width: 100%;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 28px 28px 24px;
+      position: relative;
+      overflow: hidden;
     }
 
-    .title {
-      font-size: 22px;
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, #dbeafe 0, transparent 60%);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      font-size: 1.4rem;
       font-weight: 700;
-      margin-bottom: 4px;
-      color: var(--text-main);
-      text-align: center;
+      margin-bottom: 0.25rem;
     }
 
     .subtitle {
-      font-size: 13px;
-      color: var(--text-muted);
-      margin-bottom: 24px;
-      text-align: center;
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-bottom: 1.75rem;
     }
 
     label {
       display: block;
-      font-size: 12px;
+      font-size: 0.8rem;
       font-weight: 500;
+      color: var(--muted);
       margin-bottom: 4px;
-      color: #374151;
     }
 
-    input[type="email"],
-    input[type="password"] {
+    input {
       width: 100%;
-      padding: 10px 11px;
-      border-radius: 999px;
+      border-radius: 10px;
       border: 1px solid var(--border);
-      font-size: 13px;
+      padding: 10px 12px;
+      font-size: 0.9rem;
       outline: none;
-      transition: border 0.15s, box-shadow 0.15s;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+      background: #f9fafb;
     }
 
-    input[type="email"]:focus,
-    input[type="password"]:focus {
+    input:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2);
+      background: #ffffff;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.4);
     }
 
     .field {
-      margin-bottom: 14px;
+      margin-bottom: 1rem;
     }
 
-    .btn-row {
+    .actions {
       display: flex;
       gap: 8px;
-      margin-top: 12px;
+      margin-top: 0.75rem;
     }
 
-    .btn {
-      flex: 1 1 0;
-      border-radius: 999px;
+    button {
       border: none;
-      padding: 10px 0;
-      font-size: 13px;
-      font-weight: 600;
       cursor: pointer;
-      transition: background 0.15s, box-shadow 0.15s, transform 0.05s;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 10px;
+      padding: 10px 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.18s ease, transform 0.1s ease, box-shadow 0.18s ease;
+    }
+
+    button:active {
+      transform: translateY(1px);
+      box-shadow: none;
     }
 
     .btn-primary {
       background: var(--primary);
-      color: white;
-      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.35);
+      color: #fff;
+      flex: 1;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
     }
 
     .btn-primary:hover {
-      background: #1d4ed8;
-      transform: translateY(-1px);
+      background: var(--primary-hover);
     }
 
-    .btn-secondary {
-      background: #f3f4f6;
+    .btn-outline {
+      background: #f9fafb;
       color: #111827;
+      border: 1px solid var(--border);
+      flex: 1;
     }
 
-    .btn-secondary:hover {
-      background: #e5e7eb;
-      transform: translateY(-1px);
+    .btn-outline:hover {
+      background: #eef2ff;
+      border-color: #c7d2fe;
     }
 
-    .info {
-      margin-top: 12px;
-      font-size: 11px;
-      color: var(--text-muted);
-      text-align: center;
+    .helper {
+      margin-top: 1rem;
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.5;
     }
 
-    .status {
-      margin-bottom: 12px;
-      font-size: 12px;
-      border-radius: 999px;
-      padding: 8px 11px;
+    .helper strong {
+      color: #4b5563;
+    }
+
+    .message {
+      font-size: 0.8rem;
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-bottom: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .message.hidden {
       display: none;
     }
 
-    .status-ok {
-      background: #dcfce7;
+    .message-info {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+
+    .message-success {
+      background: #ecfdf3;
       color: #166534;
       border: 1px solid #bbf7d0;
     }
 
-    .status-error {
-      background: #fee2e2;
+    .message-error {
+      background: #fef2f2;
       color: #b91c1c;
       border: 1px solid #fecaca;
     }
+
+    .message span.icon {
+      font-size: 1rem;
+    }
+
+    .top-chip {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .top-chip span {
+      background: rgba(15, 23, 42, 0.04);
+      padding: 4px 8px;
+      border-radius: 999px;
+    }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 24px 20px 20px;
+      }
+    }
   </style>
 </head>
-
 <body>
-  <div class="card">
-    <div class="title">Seguimiento de reuniones</div>
-    <div class="subtitle">
-      Inicia sesión con tu correo y contraseña para acceder al tablero.
-    </div>
+  <div class="wrapper">
+    <div class="card">
+      <div class="card-inner">
+        <div class="top-chip">
+          <span>Seguimiento de reuniones · v1</span>
+        </div>
 
-    <div id="status" class="status"></div>
+        <h1>Seguimiento de reuniones</h1>
+        <p class="subtitle">
+          Inicia sesión con tu correo y contraseña para acceder al tablero.
+        </p>
 
-    <div class="field">
-      <label for="email">Correo</label>
-      <input
-        id="email"
-        type="email"
-        autocomplete="email"
-        placeholder="tucorreo@ejemplo.com"
-      />
-    </div>
+        <!-- Mensajes -->
+        <div id="msg" class="message hidden"></div>
 
-    <div class="field">
-      <label for="password">Contraseña</label>
-      <input
-        id="password"
-        type="password"
-        autocomplete="current-password"
-        placeholder="********"
-      />
-    </div>
+        <!-- Formulario -->
+        <form id="login-form">
+          <div class="field">
+            <label for="email">Correo</label>
+            <input
+              id="email"
+              type="email"
+              autocomplete="email"
+              placeholder="tucorreo@ejemplo.com"
+              required
+            />
+          </div>
 
-    <div class="btn-row">
-      <button id="btnLogin" class="btn btn-primary">Entrar</button>
-      <button id="btnSignup" class="btn btn-secondary">Crear cuenta</button>
-    </div>
+          <div class="field">
+            <label for="password">Contraseña</label>
+            <input
+              id="password"
+              type="password"
+              autocomplete="current-password"
+              placeholder="********"
+              required
+            />
+          </div>
 
-    <div class="info">
-      Esta sesión se cierra automáticamente al cerrar la pestaña o recargar la
-      página.
-      <br />
-      <span style="font-weight: 600">Tip:</span> usa siempre el mismo correo para que tus permisos y tareas se
-      mantengan.
+          <div class="actions">
+            <button type="submit" class="btn-primary" id="btn-login">
+              Entrar
+            </button>
+            <button type="button" class="btn-outline" id="btn-signup">
+              Crear cuenta
+            </button>
+          </div>
+        </form>
+
+        <p class="helper">
+          Esta sesión se cierra automáticamente al cerrar la pestaña o recargar la
+          página. <br />
+          <strong>Tip:</strong> usa siempre el mismo correo para que tus permisos y
+          tareas se mantengan.
+        </p>
+      </div>
     </div>
   </div>
 
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script>
+  <!-- Supabase JS v2 (módulo ESM) -->
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+    // 🔐 Tus credenciales de Supabase (las que ya me compartiste)
     const SUPABASE_URL = "https://hrbmstaklleraiacqmky.supabase.co";
-    const SUPABASE_ANON_KEY =
+    const SUPABASE_KEY =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhyYm1zdGFrbGxlcmFpYWNxbWt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyMTA2OTQsImV4cCI6MjA3ODc4NjY5NH0.tN00tAjMJpJK_8gnerocbOSzHp93N5yc9KohTBpMeZc";
 
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: {
-        persistSession: true,
-      },
-    });
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    const form = document.getElementById("login-form");
     const emailInput = document.getElementById("email");
-    const passInput = document.getElementById("password");
-    const btnLogin = document.getElementById("btnLogin");
-    const btnSignup = document.getElementById("btnSignup");
-    const statusBox = document.getElementById("status");
+    const passwordInput = document.getElementById("password");
+    const btnLogin = document.getElementById("btn-login");
+    const btnSignup = document.getElementById("btn-signup");
+    const msgBox = document.getElementById("msg");
 
-    function showStatus(message, ok = true) {
-      statusBox.style.display = "block";
-      statusBox.textContent = message;
-      statusBox.className = "status " + (ok ? "status-ok" : "status-error");
+    function showMessage(type, text) {
+      if (!text) {
+        msgBox.className = "message hidden";
+        msgBox.textContent = "";
+        return;
+      }
+
+      msgBox.className = "message";
+      if (type === "error") msgBox.classList.add("message-error");
+      if (type === "success") msgBox.classList.add("message-success");
+      if (type === "info") msgBox.classList.add("message-info");
+
+      msgBox.innerHTML = `<span class="icon">${
+        type === "error" ? "⚠️" : type === "success" ? "✅" : "ℹ️"
+      }</span><span>${text}</span>`;
     }
 
-    function gotoTablero() {
-      // relativo al repositorio de GitHub Pages
-      window.location.href = "tablero.html";
+    function setLoading(isLoading) {
+      btnLogin.disabled = isLoading;
+      btnSignup.disabled = isLoading;
+      btnLogin.textContent = isLoading ? "Procesando..." : "Entrar";
     }
 
     async function handleLogin() {
-      const email = emailInput.value.trim();
-      const password = passInput.value;
+      const email = emailInput.value.trim().toLowerCase();
+      const password = passwordInput.value;
 
       if (!email || !password) {
-        showStatus("Escribe tu correo y contraseña.", false);
+        showMessage("error", "Ingresa correo y contraseña.");
         return;
       }
 
-      const { data, error } = await supabaseClient.auth.signInWithPassword({
+      setLoading(true);
+      showMessage("info", "Verificando credenciales...");
+
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
         console.error(error);
-        showStatus("Error al iniciar sesión: " + error.message, false);
+        showMessage(
+          "error",
+          "Error al iniciar sesión: " + (error.message ?? "Revisa tus datos.")
+        );
+        setLoading(false);
         return;
       }
 
-      showStatus("Inicio de sesión exitoso.", true);
-      setTimeout(gotoTablero, 600);
+      // ✅ Login OK
+      showMessage("success", "Inicio de sesión exitoso.");
+
+      // Guardamos el correo SOLO en esta pestaña
+      sessionStorage.setItem("sr_user_email", email);
+
+      // Pequeño delay para que se vea el mensaje
+      setTimeout(() => {
+        window.location.href = "tablero.html";
+      }, 600);
     }
 
     async function handleSignup() {
-      const email = emailInput.value.trim();
-      const password = passInput.value;
+      const email = emailInput.value.trim().toLowerCase();
+      const password = passwordInput.value;
 
       if (!email || !password) {
-        showStatus("Escribe tu correo y contraseña.", false);
+        showMessage(
+          "error",
+          "Para crear cuenta, ingresa un correo y una contraseña."
+        );
         return;
       }
 
-      const { data, error } = await supabaseClient.auth.signUp({
+      setLoading(true);
+      showMessage("info", "Creando cuenta...");
+
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
       });
 
       if (error) {
         console.error(error);
-        showStatus("Error al crear cuenta: " + error.message, false);
+        showMessage(
+          "error",
+          "Error al crear cuenta: " + (error.message ?? "Inténtalo de nuevo.")
+        );
+        setLoading(false);
         return;
       }
 
-      showStatus(
-        "Cuenta creada. Revisa tu correo si se requiere confirmación y vuelve a iniciar sesión.",
-        true
+      showMessage(
+        "success",
+        "Cuenta creada. Revisa tu correo para confirmar si es necesario, luego inicia sesión."
       );
+      setLoading(false);
     }
 
-    btnLogin.addEventListener("click", handleLogin);
-    btnSignup.addEventListener("click", handleSignup);
+    // Eventos
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      handleLogin();
+    });
 
-    // Enter en contraseña = iniciar sesión
-    passInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") handleLogin();
+    btnSignup.addEventListener("click", () => {
+      handleSignup();
     });
   </script>
 </body>

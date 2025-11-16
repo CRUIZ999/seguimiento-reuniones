@@ -3,1343 +3,1107 @@
 <head>
   <meta charset="UTF-8" />
   <title>Seguimiento de tareas y reuniones</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- Fuente -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: #f5f7fb;
-      --card-bg: #ffffff;
-      --primary: #0f72e5;
-      --primary-soft: #e5f0ff;
-      --danger: #f05252;
-      --text-main: #111827;
-      --text-soft: #6b7280;
-      --border-soft: #e5e7eb;
-      --success: #16a34a;
-      --warning: #f97316;
-      --shadow-soft: 0 16px 40px rgba(15, 35, 52, 0.08);
-      --radius-xl: 18px;
-      --radius-md: 10px;
+      --azul: #0f6cf5;
+      --azul-claro: #e7f1ff;
+      --gris-borde: #e1e4e8;
+      --gris-fondo: #f6f8fa;
+      --gris-texto: #586069;
+      --rojo: #ff4b4b;
+      --verde: #1f883d;
+      --amarillo: #f5b800;
     }
 
     * {
       box-sizing: border-box;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        sans-serif;
     }
+
     body {
       margin: 0;
-      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #e7f0ff 0, #f6f7fb 45%, #f5f5f5 100%);
-      color: var(--text-main);
+      background: #ffffff;
+      color: #111827;
     }
 
-    .app-shell {
-      max-width: 1480px;
-      margin: 32px auto 40px;
-      padding: 0 24px 32px;
-    }
-
-    /* HEADER */
-
-    .header {
+    .page {
+      min-height: 100vh;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 18px;
-      gap: 16px;
+      flex-direction: column;
+      background: var(--gris-fondo);
     }
 
-    .header-left {
+    header {
+      padding: 16px 24px 8px;
+      background: #ffffff;
+      border-bottom: 1px solid var(--gris-borde);
       display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .app-title {
-      font-size: 24px;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      display: flex;
-      align-items: center;
+      flex-direction: column;
       gap: 8px;
     }
 
-    .help-icon {
-      width: 22px;
-      height: 22px;
-      border-radius: 999px;
-      border: none;
-      background: #e5efff;
-      color: #2563eb;
-      font-weight: 700;
-      display: inline-flex;
+    .header-top {
+      display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 14px;
     }
 
-    .help-icon:hover {
-      background: #d6e4ff;
+    .title {
+      font-size: 20px;
+      font-weight: 600;
     }
 
     .user-info {
       font-size: 13px;
-      color: var(--text-soft);
+      color: var(--gris-texto);
     }
 
-    .header-right {
+    .header-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .btn-group {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
-    .counter-pill {
-      padding: 6px 12px;
+    button {
       border-radius: 999px;
-      font-size: 12px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-    }
-
-    .counter-pill span.value {
-      font-weight: 600;
-    }
-
-    .counter-p { color: var(--danger); }
-    .counter-ep { color: var(--warning); }
-    .counter-t { color: var(--success); }
-
-    .btn-ghost {
-      background: transparent;
-      border-radius: 999px;
-      border: 1px solid #e5e7eb;
+      border: 1px solid var(--gris-borde);
+      background: #ffffff;
       padding: 6px 14px;
       font-size: 13px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      color: var(--text-soft);
+      transition: background 0.12s ease, border-color 0.12s ease,
+        box-shadow 0.12s ease, transform 0.06s ease;
+    }
+
+    button svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    button:hover {
+      background: #f3f4f6;
+      border-color: #cbd5e1;
+    }
+
+    button:active {
+      transform: translateY(1px);
+      box-shadow: inset 0 0 0 1px #e5e7eb;
+    }
+
+    .btn-primary {
+      background: var(--azul);
+      border-color: var(--azul);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: #0c58c4;
+      border-color: #0c58c4;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border-color: transparent;
     }
 
     .btn-ghost:hover {
       background: #f3f4f6;
+      border-color: transparent;
     }
 
-    /* TOP CONTROLS */
-
-    .card {
-      background: var(--card-bg);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-soft);
-      padding: 16px 18px 18px;
-    }
-
-    .top-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
-    .top-row-left,
-    .top-row-right {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .btn-primary {
-      border-radius: 999px;
-      border: none;
-      background: var(--primary);
-      color: white;
-      font-size: 13px;
-      font-weight: 500;
-      padding: 8px 16px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      box-shadow: 0 10px 18px rgba(37, 99, 235, 0.28);
-    }
-
-    .btn-primary.secondary {
-      background: #eff3ff;
-      color: #1d4ed8;
-      box-shadow: none;
-      border: 1px solid #d9e2ff;
-    }
-
-    .btn-primary.secondary:hover {
-      background: #e1e8ff;
-    }
-
-    .btn-primary:hover {
-      background: #0b63ca;
-    }
-
-    .btn-small {
-      padding: 6px 12px;
+    .chip-toggle {
       font-size: 12px;
-      box-shadow: none;
+      padding: 5px 12px;
     }
 
-    .icon-circle {
-      width: 18px;
-      height: 18px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.2);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size: 12px;
+    .chip-toggle--active {
+      background: var(--azul);
+      border-color: var(--azul);
+      color: #ffffff;
     }
 
-    /* Filters row */
-
-    .filters-row {
+    .toolbar-filters {
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
       align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .filters-row label {
-      font-size: 12px;
-      color: var(--text-soft);
-      margin-right: 4px;
-    }
-
-    .select, .input, .checkbox-label {
+      gap: 12px;
+      flex-wrap: wrap;
       font-size: 13px;
     }
 
-    select, input[type="text"], input[type="date"] {
+    .toolbar-filters span {
+      color: var(--gris-texto);
+    }
+
+    .filter-select {
       border-radius: 999px;
-      border: 1px solid var(--border-soft);
-      background: #f9fafb;
-      padding: 7px 12px;
+      border: 1px solid var(--gris-borde);
+      padding: 4px 10px;
       font-size: 13px;
-      outline: none;
+      background: #ffffff;
+      min-width: 120px;
     }
 
-    select:focus, input[type="text"]:focus {
-      border-color: var(--primary);
-      background: #fff;
-      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+    main {
+      flex: 1;
+      padding: 12px 16px 20px;
+      overflow: hidden;
     }
-
-    .checkbox-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
-    }
-
-    .checkbox-label input {
-      margin: 0;
-    }
-
-    .btn-pill {
-      border-radius: 999px;
-      border: 1px solid #e5e7eb;
-      background: #f9fafb;
-      padding: 6px 14px;
-      font-size: 12px;
-      cursor: pointer;
-    }
-
-    .btn-pill:hover {
-      background: #eef2ff;
-      border-color: #d4d4ff;
-    }
-
-    .btn-pill.primary {
-      border-color: var(--primary);
-      color: var(--primary);
-      background: #eef3ff;
-    }
-
-    /* TABLE */
 
     .table-wrapper {
+      background: #ffffff;
       border-radius: 14px;
-      border: 1px solid var(--border-soft);
+      border: 1px solid var(--gris-borde);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 150px);
+      min-height: 360px;
+    }
+
+    .table-scroll {
+      flex: 1;
       overflow: auto;
-      background: #fcfcff;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 13px;
+      table-layout: fixed;
     }
 
     thead {
-      background: linear-gradient(to right, #eef2ff, #e5f0ff);
+      background: #f9fafb;
+      position: sticky;
+      top: 0;
+      z-index: 2;
     }
 
-    th, td {
-      padding: 6px 10px;
-      border-bottom: 1px solid #e5e7eb;
-      white-space: nowrap;
+    th,
+    td {
+      border-bottom: 1px solid #edf1f5;
+      padding: 6px 8px;
+      text-align: left;
+      vertical-align: middle;
     }
 
     th {
-      text-align: left;
-      font-weight: 600;
-      color: #374151;
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
-
-    tbody tr:nth-child(even) {
-      background: #f9fafb;
-    }
-
-    tbody tr:hover {
-      background: #eef2ff;
-    }
-
-    td input[type="text"] {
-      width: 100%;
-      border-radius: 6px;
-      border: 1px solid transparent;
-      padding: 4px 6px;
-      background: transparent;
-      font-size: 13px;
-    }
-
-    td input[type="text"]:focus {
-      border-color: var(--primary);
-      background: #fff;
-      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2);
-    }
-
-    td select {
-      width: 100%;
-      border-radius: 999px;
-      padding: 3px 10px;
-      border: 1px solid #e5e7eb;
-      background: #f9fafb;
-    }
-
-    /* Estado badges */
-
-    .estado-badge {
-      border-radius: 999px;
-      padding: 3px 10px;
-      font-size: 12px;
-      border: none;
-      color: #111827;
-    }
-    .estado-p {
-      background: #fee2e2;
-      color: #b91c1c;
-    }
-    .estado-ep {
-      background: #fef3c7;
-      color: #92400e;
-    }
-    .estado-t {
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    /* Triángulo comentario */
-
-    .cell-comment {
+      font-weight: 500;
+      color: #4b5563;
       position: relative;
+      background: #f9fafb;
+      white-space: nowrap;
     }
 
-    .cell-comment.has-comment::after {
-      content: "";
-      position: absolute;
-      right: 2px;
-      top: 2px;
-      border-width: 0 0 8px 8px;
-      border-style: solid;
-      border-color: transparent transparent #facc15 transparent;
-    }
-
-    /* FOOTER */
-
-    .footer-note {
-      margin-top: 8px;
-      font-size: 11px;
-      color: var(--text-soft);
+    th .th-label {
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
-    .footer-note input[type="checkbox"] {
-      margin-right: 4px;
+    th .th-filter {
+      font-size: 11px;
+      color: var(--gris-texto);
+      cursor: pointer;
+      border-radius: 8px;
+      padding: 1px 6px;
     }
 
-    /* MODALS */
+    th .th-filter:hover {
+      background: #e5e7eb;
+    }
 
-    .modal-backdrop {
+    th:first-child {
+      padding-left: 16px;
+    }
+
+    td:first-child {
+      padding-left: 16px;
+    }
+
+    tr:nth-child(even) td {
+      background: #fafafa;
+    }
+
+    tr:hover td {
+      background: #f2f6ff;
+    }
+
+    .td-input,
+    .td-textarea {
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      padding: 3px 6px;
+      font-size: 13px;
+      font-family: inherit;
+      background: transparent;
+      resize: none;
+    }
+
+    .td-input:focus,
+    .td-textarea:focus {
+      outline: none;
+      border-color: var(--azul);
+      background: #ffffff;
+      box-shadow: 0 0 0 1px rgba(15, 108, 245, 0.08);
+    }
+
+    .td-textarea {
+      min-height: 28px;
+      max-height: none; /* sin límite hacia abajo */
+    }
+
+    .td-fecha {
+      max-width: 160px; /* limita horizontalmente ~40 caracteres aprox */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .select-estado,
+    .select-responsable {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 3px 8px;
+      font-size: 13px;
+      font-family: inherit;
+      background: #f3f4f6;
+      cursor: pointer;
+    }
+
+    .select-estado:focus,
+    .select-responsable:focus {
+      outline: none;
+      border-color: var(--azul);
+      background: #ffffff;
+      box-shadow: 0 0 0 1px rgba(15, 108, 245, 0.08);
+    }
+
+    .badge-estado {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #ffffff;
+    }
+
+    .estado-P {
+      background: var(--amarillo);
+    }
+
+    .estado-EP {
+      background: var(--azul);
+    }
+
+    .estado-T {
+      background: var(--verde);
+    }
+
+    .footer-info {
+      padding: 6px 12px 8px;
+      font-size: 11px;
+      color: var(--gris-texto);
+      border-top: 1px solid #edf1f5;
+      background: #fafafa;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .footer-info input[type='checkbox'] {
+      width: 12px;
+      height: 12px;
+    }
+
+    .info-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--verde);
+    }
+
+    .icon-only {
+      padding: 6px 8px;
+      width: 32px;
+      justify-content: center;
+    }
+
+    .icon-only svg {
+      width: 15px;
+      height: 15px;
+    }
+
+    .right-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* modal ayuda */
+    .help-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      border: 1px solid var(--gris-borde);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      cursor: pointer;
+      background: #ffffff;
+      color: var(--gris-texto);
+    }
+
+    .help-icon:hover {
+      background: #f3f4f6;
+    }
+
+    .help-modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.35);
+      background: rgba(15, 23, 42, 0.25);
       display: none;
       align-items: center;
       justify-content: center;
       z-index: 50;
     }
 
-    .modal-backdrop.active {
-      display: flex;
-    }
-
-    .modal {
+    .help-modal {
       background: #ffffff;
-      border-radius: 16px;
-      max-width: 540px;
-      width: 100%;
-      box-shadow: 0 24px 45px rgba(15, 23, 42, 0.28);
-      padding: 18px 20px 18px;
+      border-radius: 14px;
+      padding: 18px 18px 14px;
+      max-width: 640px;
+      max-height: 80vh;
+      overflow: auto;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.25);
+      font-size: 13px;
     }
 
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 4px;
-    }
-
-    .modal-title {
+    .help-modal h2 {
+      margin: 0 0 8px;
       font-size: 16px;
-      font-weight: 600;
     }
 
-    .modal-close {
+    .help-modal h3 {
+      margin: 12px 0 4px;
+      font-size: 14px;
+    }
+
+    .help-modal ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .help-modal-close {
+      float: right;
       border-radius: 999px;
       border: none;
       background: #f3f4f6;
-      width: 26px;
-      height: 26px;
-      display: inline-flex;
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      display: flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
+      font-size: 14px;
     }
 
-    .modal-close:hover {
+    .help-modal-close:hover {
       background: #e5e7eb;
     }
 
-    .modal-body {
-      font-size: 13px;
-      color: #374151;
-      max-height: 380px;
-      overflow: auto;
-    }
-
-    .modal-body h4 {
-      margin: 10px 0 4px;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .modal-body ul {
-      margin: 0 0 8px 18px;
-      padding: 0;
-    }
-
-    /* Responsables modal */
-
-    .responsables-list {
-      margin: 10px 0;
-      border-radius: 10px;
-      border: 1px solid #e5e7eb;
-      padding: 6px 8px;
-      max-height: 230px;
-      overflow: auto;
-    }
-
-    .responsable-item {
-      display: flex;
-      justify-content: space-between;
+    /* mensajes */
+    .toast {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      background: #111827;
+      color: #ffffff;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      display: none;
       align-items: center;
-      padding: 4px 4px;
-      border-radius: 6px;
-      font-size: 13px;
+      gap: 8px;
+      z-index: 60;
     }
 
-    .responsable-item:nth-child(odd) {
-      background: #f9fafb;
+    .toast.show {
+      display: inline-flex;
     }
 
-    .responsable-actions {
-      display: flex;
-      gap: 6px;
+    .toast-success {
+      background: #16a34a;
     }
 
-    .chip {
-      border-radius: 999px;
-      border: 1px solid #e5e7eb;
-      padding: 3px 8px;
-      font-size: 11px;
+    .toast-error {
+      background: #b91c1c;
     }
 
-    .btn-xs {
-      border-radius: 999px;
-      border: 1px solid #e5e7eb;
-      padding: 3px 8px;
-      font-size: 11px;
-      cursor: pointer;
-      background: #f9fafb;
-    }
-
-    .btn-xs.danger {
-      border-color: #fecaca;
-      color: #b91c1c;
-      background: #fef2f2;
-    }
-
-    .btn-xs:hover {
-      background: #eef2ff;
-    }
-
-    .btn-xs.danger:hover {
-      background: #fee2e2;
-    }
-
-    .input-inline {
-      width: 100%;
-      border-radius: 999px;
-      border: 1px solid #e5e7eb;
-      padding: 6px 10px;
-      font-size: 13px;
-      margin-top: 6px;
-    }
-
-    .badge-tip {
-      font-size: 11px;
-      color: var(--text-soft);
-      margin-top: 4px;
-    }
-
-    @media (max-width: 900px) {
-      .header {
-        flex-direction: column;
-        align-items: flex-start;
+    @media (max-width: 768px) {
+      header {
+        padding: 12px 12px 8px;
       }
-      .header-right {
-        flex-wrap: wrap;
+
+      main {
+        padding: 8px;
       }
-      .top-row {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .top-row-right {
-        align-self: stretch;
-        justify-content: flex-start;
-      }
-      .filters-row {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+
       .table-wrapper {
-        border-radius: 10px;
+        height: calc(100vh - 140px);
       }
     }
   </style>
 </head>
+
 <body>
-<div class="app-shell">
+  <div class="page">
+    <header>
+      <div class="header-top">
+        <div>
+          <div class="title">Seguimiento de tareas y reuniones</div>
+          <div class="user-info">Usuario:
+            <span id="userEmail">(sin sesión)</span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="help-icon" id="btnHelp" title="Ayuda">?</div>
+        </div>
+      </div>
 
-  <!-- HEADER -->
-  <div class="header">
-    <div class="header-left">
-      <div class="app-title">
-        Seguimiento de tareas y reuniones
-        <button class="help-icon" id="btnHelp">?</button>
-      </div>
-      <div class="user-info" id="userEmailLabel"></div>
-    </div>
+      <div class="header-actions">
+        <div class="btn-group">
+          <button id="btnAddRow" class="btn-primary">
+            + Fila
+          </button>
+          <button id="btnAddColumn">
+            + Columna
+          </button>
 
-    <div class="header-right">
-      <div class="counter-pill counter-p">
-        P: <span class="value" id="countP">0</span>
+          <!-- exportar / importar sólo iconos -->
+          <button id="btnExport" class="icon-only" title="Exportar JSON">
+            📤
+          </button>
+          <button id="btnImport" class="icon-only" title="Importar JSON">
+            📥
+          </button>
+        </div>
+
+        <div class="right-actions">
+          <!-- filtros de fechas -->
+          <div class="btn-group">
+            <button id="btnFiltroTodos" class="chip-toggle chip-toggle--active">
+              Todas
+            </button>
+            <button id="btnFiltroUltimas2" class="chip-toggle">
+              Últimas 2
+            </button>
+            <button id="btnFiltroHoy" class="chip-toggle">
+              Solo hoy
+            </button>
+          </div>
+
+          <!-- flechas + cerrar sesión -->
+          <div class="btn-group">
+            <button id="btnScrollLeft" class="icon-only" title="Desplazar columnas a la izquierda">
+              ◀
+            </button>
+            <button id="btnScrollRight" class="icon-only" title="Desplazar columnas a la derecha">
+              ▶
+            </button>
+
+            <button id="btnLogout" class="btn-ghost" style="margin-left:4px;">
+              Cerrar sesión
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="counter-pill counter-ep">
-        EP: <span class="value" id="countEP">0</span>
+    </header>
+
+    <main>
+      <div class="table-wrapper">
+        <div class="table-scroll" id="tableScroll">
+          <table id="tabla">
+            <thead>
+              <tr id="thead-row">
+                <!-- Se llena por JS -->
+              </tr>
+            </thead>
+            <tbody id="tbody">
+              <!-- Filas dinámicas -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="footer-info">
+          <div class="info-dot"></div>
+          <span>Los datos (incluyendo comentarios y lista de responsables) se guardan en este navegador, por
+            usuario.</span>
+        </div>
       </div>
-      <div class="counter-pill counter-t">
-        T: <span class="value" id="countT">0</span>
-      </div>
-      <button class="btn-ghost" id="btnLogout">Cerrar sesión</button>
+    </main>
+  </div>
+
+  <!-- modal de ayuda -->
+  <div class="help-modal-backdrop" id="helpBackdrop">
+    <div class="help-modal">
+      <button class="help-modal-close" id="btnHelpClose">×</button>
+      <h2>Ayuda - Seguimiento de tareas y reuniones</h2>
+      <p>Resumen de funciones principales del tablero.</p>
+
+      <h3>Columnas base</h3>
+      <ul>
+        <li><b>tema</b>: asunto principal a tratar.</li>
+        <li><b>sub tema</b>: detalle o tema secundario. Aquí puedes pegar un enlace de Google Drive; si la celda sólo
+          contiene una URL, al hacer doble clic se abre en otra pestaña.</li>
+        <li><b>responsable</b>: persona a cargo (desplegable). Puedes gestionar la lista de responsables desde el menú
+          “Responsables”.</li>
+        <li><b>estado</b>: P (Pendiente), EP (En proceso), T (Terminado) con colores.</li>
+        <li><b>fecha de término</b>: fecha objetivo. Haz clic para seleccionar desde un calendario.</li>
+      </ul>
+
+      <h3>Filas y columnas</h3>
+      <ul>
+        <li><b>+ Fila</b>: agrega una nueva tarea.</li>
+        <li><b>+ Columna</b>: agrega una columna de reunión (por ejemplo, una fecha de junta) al final de la tabla.</li>
+      </ul>
+
+      <h3>Filtros</h3>
+      <ul>
+        <li>En el encabezado de cada columna puedes filtrar escribiendo una palabra (la tabla se actualiza en
+          automático).</li>
+        <li>Usa los chips de fecha:
+          <ul>
+            <li><b>Todas</b>: muestra todas las columnas de reunión.</li>
+            <li><b>Últimas 2</b>: muestra sólo las dos últimas columnas de reunión.</li>
+            <li><b>Solo hoy</b>: muestra únicamente la columna de reunión correspondiente a la fecha actual (si existe).
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <h3>Exportar / Importar</h3>
+      <ul>
+        <li>📤 Exportar: descarga un archivo JSON con toda la información del tablero.</li>
+        <li>📥 Importar: puedes cargar un archivo JSON previamente exportado para restaurar o copiar información.</li>
+      </ul>
+
+      <h3>Sesión</h3>
+      <ul>
+        <li><b>Cerrar sesión</b>: termina tu sesión actual. La próxima vez que entres se te pedirá correo y contraseña.
+        </li>
+      </ul>
     </div>
   </div>
 
-  <div class="card">
+  <!-- mensajes flotantes -->
+  <div id="toast" class="toast"></div>
 
-    <!-- TOP ROW buttons -->
-    <div class="top-row">
-      <div class="top-row-left">
-        <button class="btn-primary btn-small" id="btnAddRow">
-          <span class="icon-circle">+</span>Fila
-        </button>
-        <button class="btn-primary btn-small secondary" id="btnAddMeetingCol">
-          <span class="icon-circle">+</span>Columna
-        </button>
-        <button class="btn-primary btn-small secondary" id="btnManageResponsables">
-          Responsables
-        </button>
-      </div>
-      <div class="top-row-right">
-        <button class="btn-primary btn-small secondary" id="btnExport">⬇ Exp</button>
-        <button class="btn-primary btn-small secondary" id="btnImport">⬆ Imp</button>
-        <input type="file" id="importFileInput" accept="application/json" style="display:none" />
-      </div>
-    </div>
+  <script>
+    /********** SESIÓN **********/
+    const userEmailSpan = document.getElementById('userEmail');
+    const emailSesion = localStorage.getItem('usuarioEmail') || '';
+    userEmailSpan.textContent = emailSesion || '(sin sesión)';
 
-    <!-- FILTERS ROW -->
-    <div class="filters-row">
-
-      <div class="filters-row">
-        <label for="searchColumn">Buscar:</label>
-        <select id="searchColumn">
-          <option value="all">Todas las columnas</option>
-          <option value="tema">tema</option>
-          <option value="subTema">sub tema</option>
-          <option value="responsable">responsable</option>
-          <option value="estado">estado</option>
-          <option value="fechaTermino">fecha de término</option>
-        </select>
-        <input type="text" id="searchText" placeholder="Escribe una palabra o frase" />
-      </div>
-
-      <div class="filters-row">
-        <label for="filterEstado">Estado:</label>
-        <select id="filterEstado">
-          <option value="todos">Todos</option>
-          <option value="P">P</option>
-          <option value="EP">EP</option>
-          <option value="T">T</option>
-        </select>
-
-        <label for="filterResponsable">Responsable:</label>
-        <select id="filterResponsable">
-          <option value="todos">Todos</option>
-        </select>
-
-        <label class="checkbox-label">
-          <input type="checkbox" id="chkOcultarTerminados" />
-          Ocultar T
-        </label>
-
-        <button class="btn-pill" id="btnSoloHoy">Solo hoy</button>
-
-        <button class="btn-pill primary" id="btnAplicarFiltro">Filtro</button>
-        <button class="btn-pill" id="btnQuitarFiltro">Quitar filtro</button>
-      </div>
-    </div>
-
-    <!-- TABLE -->
-    <div class="table-wrapper">
-      <table id="mainTable">
-        <thead>
-        <tr id="headerRow">
-          <th style="min-width:160px;">tema</th>
-          <th style="min-width:160px;">sub tema</th>
-          <th style="min-width:140px;">responsable</th>
-          <th style="min-width:90px;">estado</th>
-          <th style="min-width:120px;">fecha de termino</th>
-          <!-- columnas de reuniones dinámicas se agregan aquí -->
-        </tr>
-        </thead>
-        <tbody id="tableBody">
-        <!-- filas dinámicas -->
-        </tbody>
-      </table>
-    </div>
-
-    <div class="footer-note">
-      <input type="checkbox" id="chkLocal" checked disabled />
-      <span>
-        Los datos (incluyendo comentarios y lista de responsables) se guardan en este navegador, por usuario.
-      </span>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL AYUDA -->
-<div class="modal-backdrop" id="helpModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Ayuda rápida</div>
-      <button class="modal-close" data-close="helpModal">✕</button>
-    </div>
-    <div class="modal-body">
-      <p>Este tablero está pensado para llevar el <strong>seguimiento de tareas y acuerdos</strong> de tus reuniones.</p>
-
-      <h4>Columnas base</h4>
-      <ul>
-        <li><strong>tema</strong>: título corto del tema o acuerdo.</li>
-        <li><strong>sub tema</strong>: detalle, área o referencia adicional.</li>
-        <li><strong>responsable</strong>: persona dueña de la acción (elige de la lista o agrega en el botón Responsables).</li>
-        <li><strong>estado</strong>: usa P (Pendiente), EP (En proceso) o T (Terminado).</li>
-        <li><strong>fecha de término</strong>: meta de cierre de la tarea.</li>
-      </ul>
-
-      <h4>Columnas de reuniones</h4>
-      <ul>
-        <li>Cada vez que des clic en <strong>+ Columna</strong> se agrega una columna nueva con la fecha del día (puedes cambiarla).</li>
-        <li>Úsalas para escribir comentarios o acuerdos específicos de cada reunión.</li>
-        <li>El botón <strong>Solo hoy</strong> oculta todas las demás reuniones y deja visible sólo la columna con la fecha de hoy (si existe).</li>
-      </ul>
-
-      <h4>Estados y contadores</h4>
-      <ul>
-        <li>El color de la columna estado cambia según P, EP o T.</li>
-        <li>Los chips de la parte superior se actualizan automáticamente con el número de tareas en cada estado.</li>
-        <li>Si marcas <strong>Ocultar T</strong>, las tareas terminadas se ocultan de la vista, pero siguen guardadas.</li>
-      </ul>
-
-      <h4>Responsables</h4>
-      <ul>
-        <li>Haz clic en el botón <strong>Responsables</strong> para abrir la lista.</li>
-        <li>Puedes <strong>agregar, renombrar o eliminar</strong> responsables. Los cambios se guardan en tu navegador.</li>
-        <li>Los select de la columna responsable se actualizan automáticamente con la lista nueva.</li>
-      </ul>
-
-      <h4>Comentarios</h4>
-      <ul>
-        <li>Haz <strong>clic derecho</strong> en cualquier celda (excepto responsable y estado) para agregar o editar un comentario.</li>
-        <li>Las celdas con comentario muestran un <strong>triángulo amarillo</strong> en la esquina superior derecha.</li>
-      </ul>
-
-      <h4>Exportar e importar</h4>
-      <ul>
-        <li>El botón <strong>⬇ Exp</strong> descarga un archivo JSON con todas las tareas de este usuario.</li>
-        <li>El botón <strong>⬆ Imp</strong> te permite cargar un JSON exportado previamente.</li>
-        <li>Úsalo como respaldo, o para mover datos a otra computadora.</li>
-      </ul>
-
-      <p class="badge-tip">Tip: siempre usa el mismo correo en el login para que tus tareas y responsables se mantengan juntos.</p>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL RESPONSABLES -->
-<div class="modal-backdrop" id="responsablesModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Lista de responsables</div>
-      <button class="modal-close" data-close="responsablesModal">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="badge-tip">
-        Esta lista es por usuario y se guarda en este navegador.  
-        Los cambios se reflejan inmediatamente en la columna responsable.
-      </div>
-      <div class="responsables-list" id="responsablesList">
-        <!-- items dinámicos -->
-      </div>
-
-      <input type="text" id="nuevoResponsableInput" class="input-inline" placeholder="Nuevo responsable" />
-      <button class="btn-primary btn-small" id="btnAgregarResponsableModal" style="margin-top:6px;">
-        Agregar responsable
-      </button>
-    </div>
-  </div>
-</div>
-
-<script>
-  /************ UTILIDADES BÁSICAS DE SESIÓN / ALMACENAMIENTO ************/
-  const STORAGE_KEY_BASE = "sr_tabla_";
-  const RESPONSABLES_KEY_BASE = "sr_responsables_";
-
-  function getUserEmail() {
-    // guardado por index.html en sessionStorage
-    const email = sessionStorage.getItem("sr_user_email") || "";
-    return email;
-  }
-
-  function getUserStorageKey() {
-    const email = getUserEmail();
-    return STORAGE_KEY_BASE + (email || "anon");
-  }
-
-  function getRespStorageKey() {
-    const email = getUserEmail();
-    return RESPONSABLES_KEY_BASE + (email || "anon");
-  }
-
-  function loadData() {
-    try {
-      const raw = localStorage.getItem(getUserStorageKey());
-      if (!raw) return { columns: [], rows: [] };
-      return JSON.parse(raw);
-    } catch (e) {
-      console.error("Error al leer datos:", e);
-      return { columns: [], rows: [] };
-    }
-  }
-
-  function saveData() {
-    const payload = {
-      columns: meetingColumns,
-      rows: tableRows
-    };
-    localStorage.setItem(getUserStorageKey(), JSON.stringify(payload));
-  }
-
-  function loadResponsables() {
-    try {
-      const raw = localStorage.getItem(getRespStorageKey());
-      if (!raw) return ["Sin asignar"];
-      const arr = JSON.parse(raw);
-      return Array.isArray(arr) && arr.length > 0 ? arr : ["Sin asignar"];
-    } catch (e) {
-      console.error("Error al leer responsables:", e);
-      return ["Sin asignar"];
-    }
-  }
-
-  function saveResponsables() {
-    localStorage.setItem(getRespStorageKey(), JSON.stringify(responsables));
-  }
-
-  /************ ESTADO EN MEMORIA ************/
-  let meetingColumns = []; // array de strings (fechas)
-  let tableRows = [];      // [{tema, subTema, responsable, estado, fechaTermino, reuniones:{colFecha: texto}, comments:{celdaId: texto}}]
-  let responsables = [];
-
-  // filtros
-  let currentFilter = {
-    text: "",
-    column: "all",
-    estado: "todos",
-    responsable: "todos",
-    ocultarT: false,
-    soloHoy: false
-  };
-
-  /************ INICIALIZACIÓN ************/
-  document.addEventListener("DOMContentLoaded", () => {
-    const email = getUserEmail();
-    const label = document.getElementById("userEmailLabel");
-    if (email) {
-      label.textContent = email;
-    } else {
-      label.textContent = "";
-      alert("No hay sesión activa, vuelve a iniciar desde el login.");
-      window.location.href = "index.html";
-      return;
+    if (localStorage.getItem('sesionActiva') !== '1') {
+      alert('No hay sesión activa, vuelve a iniciar desde el login.');
+      window.location.href = 'index.html';
     }
 
-    // Cargar datos
-    const data = loadData();
-    meetingColumns = data.columns || [];
-    tableRows = data.rows || [];
-
-    // Responsables
-    responsables = loadResponsables();
-
-    buildHeader();
-    renderResponsableFilterOptions();
-    renderTable();
-    updateCounters();
-
-    // Eventos globales
-    document.getElementById("btnAddRow").addEventListener("click", addRow);
-    document.getElementById("btnAddMeetingCol").addEventListener("click", addMeetingColumn);
-    document.getElementById("btnExport").addEventListener("click", exportJSON);
-    document.getElementById("btnImport").addEventListener("click", () => {
-      document.getElementById("importFileInput").click();
-    });
-    document.getElementById("importFileInput").addEventListener("change", importJSON);
-
-    document.getElementById("btnHelp").addEventListener("click", () => openModal("helpModal"));
-    document.querySelectorAll(".modal-close").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const id = btn.dataset.close;
-        closeModal(id);
-      });
+    document.getElementById('btnLogout').addEventListener('click', () => {
+      localStorage.removeItem('sesionActiva');
+      localStorage.removeItem('usuarioEmail');
+      window.location.href = 'index.html';
     });
 
-    document.getElementById("btnManageResponsables").addEventListener("click", () => {
-      renderResponsablesModal();
-      openModal("responsablesModal");
-    });
-    document.getElementById("btnAgregarResponsableModal").addEventListener("click", agregarResponsableDesdeModal);
+    /********** UTILIDADES **********/
+    const ESTADOS = ['P', 'EP', 'T'];
 
-    // Filtros
-    document.getElementById("btnAplicarFiltro").addEventListener("click", applyFilterFromUI);
-    document.getElementById("btnQuitarFiltro").addEventListener("click", clearFilterUI);
-    document.getElementById("btnSoloHoy").addEventListener("click", () => {
-      currentFilter.soloHoy = true;
-      applyFilterFromUI();
-    });
+    const STORAGE_KEY = 'tablero_tareas_v3';
+    const RESPONSABLES_KEY = 'tablero_responsables_v3';
 
-    document.getElementById("btnLogout").addEventListener("click", () => {
-      sessionStorage.removeItem("sr_user_email");
-      window.location.href = "index.html";
-    });
-
-    // clic derecho comentarios
-    const table = document.getElementById("mainTable");
-    table.addEventListener("contextmenu", handleCellContextMenu);
-  });
-
-  /************ RENDER HEADER ************/
-  function buildHeader() {
-    const headerRow = document.getElementById("headerRow");
-    // Limpia todo menos las 5 columnas base
-    while (headerRow.children.length > 5) {
-      headerRow.removeChild(headerRow.lastChild);
+    function showToast(msg, type = 'info') {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.className = 'toast show';
+      if (type === 'success') toast.classList.add('toast-success');
+      if (type === 'error') toast.classList.add('toast-error');
+      setTimeout(() => {
+        toast.className = 'toast';
+      }, 2200);
     }
-    meetingColumns.forEach(dateStr => {
-      const th = document.createElement("th");
-      th.textContent = dateStr;
-      th.dataset.meeting = dateStr;
-      headerRow.appendChild(th);
-    });
-  }
 
-  /************ RENDER TABLA ************/
-  function renderTable() {
-    const tbody = document.getElementById("tableBody");
-    tbody.innerHTML = "";
+    function hoyISO() {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
 
-    const hoy = new Date().toISOString().slice(0,10);
+    function isoToDDMMYY(iso) {
+      if (!iso) return '';
+      const [y, m, d] = iso.split('-');
+      return `${d}/${m}/${y.slice(-2)}`;
+    }
 
-    tableRows.forEach((row, rowIndex) => {
-
-      // aplicar filtros por fila
-      if (!passesRowFilters(row)) return;
-
-      const tr = document.createElement("tr");
-
-      // tema
-      const tdTema = document.createElement("td");
-      tdTema.classList.add("cell-comment");
-      tdTema.dataset.col = "tema";
-      const inputTema = document.createElement("input");
-      inputTema.type = "text";
-      inputTema.value = row.tema || "";
-      inputTema.addEventListener("input", () => {
-        row.tema = inputTema.value;
-        saveData();
-      });
-      tdTema.appendChild(inputTema);
-      markCommentTriangle(row, tdTema, rowIndex, "tema");
-      tr.appendChild(tdTema);
-
-      // sub tema
-      const tdSub = document.createElement("td");
-      tdSub.classList.add("cell-comment");
-      tdSub.dataset.col = "subTema";
-      const inputSub = document.createElement("input");
-      inputSub.type = "text";
-      inputSub.value = row.subTema || "";
-      inputSub.addEventListener("input", () => {
-        row.subTema = inputSub.value;
-        saveData();
-      });
-      tdSub.appendChild(inputSub);
-      markCommentTriangle(row, tdSub, rowIndex, "subTema");
-      tr.appendChild(tdSub);
-
-      // responsable
-      const tdResp = document.createElement("td");
-      const selResp = document.createElement("select");
-      responsables.forEach(r => {
-        const opt = document.createElement("option");
-        opt.value = r;
-        opt.textContent = r;
-        selResp.appendChild(opt);
-      });
-      if (!row.responsable) {
-        row.responsable = responsables[0] || "Sin asignar";
+    function ddmmyyToISO(str) {
+      if (!str) return '';
+      const parts = str.split(/[\/\-]/);
+      if (parts.length < 3) return '';
+      let [d, m, y] = parts;
+      if (y.length === 2) {
+        const currentCentury = String(new Date().getFullYear()).slice(0, 2);
+        y = currentCentury + y;
       }
-      selResp.value = row.responsable;
-      selResp.addEventListener("change", () => {
-        row.responsable = selResp.value;
-        saveData();
-      });
-      tdResp.appendChild(selResp);
-      tr.appendChild(tdResp);
-
-      // estado
-      const tdEstado = document.createElement("td");
-      const selEstado = document.createElement("select");
-      ["P","EP","T"].forEach(e => {
-        const opt = document.createElement("option");
-        opt.value = e;
-        opt.textContent = e;
-        selEstado.appendChild(opt);
-      });
-      if (!row.estado) row.estado = "P";
-      selEstado.value = row.estado;
-      selEstado.addEventListener("change", () => {
-        row.estado = selEstado.value;
-        saveData();
-        updateCounters();
-        renderTable(); // para ocultar T si el filtro está activo
-      });
-      tdEstado.appendChild(selEstado);
-      tr.appendChild(tdEstado);
-
-      // fecha termino
-      const tdFecha = document.createElement("td");
-      tdFecha.classList.add("cell-comment");
-      tdFecha.dataset.col = "fechaTermino";
-      const inputFecha = document.createElement("input");
-      inputFecha.type = "text";
-      inputFecha.placeholder = "dd/mm/aa";
-      inputFecha.value = row.fechaTermino || "";
-      inputFecha.addEventListener("input", () => {
-        row.fechaTermino = inputFecha.value;
-        saveData();
-      });
-      tdFecha.appendChild(inputFecha);
-      markCommentTriangle(row, tdFecha, rowIndex, "fechaTermino");
-      tr.appendChild(tdFecha);
-
-      // columnas de reuniones
-      meetingColumns.forEach(colDate => {
-        const td = document.createElement("td");
-        td.classList.add("cell-comment");
-        td.dataset.col = `reunion_${colDate}`;
-
-        const input = document.createElement("input");
-        input.type = "text";
-        input.value = (row.reuniones && row.reuniones[colDate]) || "";
-        input.addEventListener("input", () => {
-          if (!row.reuniones) row.reuniones = {};
-          row.reuniones[colDate] = input.value;
-          saveData();
-        });
-        td.appendChild(input);
-        markCommentTriangle(row, td, rowIndex, `reunion_${colDate}`);
-        tr.appendChild(td);
-      });
-
-      // Colorear fila según estado
-      const estado = row.estado || "P";
-      if (estado === "P") {
-        tr.classList.remove("estado-ep", "estado-t");
-        tr.classList.add("estado-p");
-      } else if (estado === "EP") {
-        tr.classList.remove("estado-p", "estado-t");
-        tr.classList.add("estado-ep");
-      } else if (estado === "T") {
-        tr.classList.remove("estado-p", "estado-ep");
-        tr.classList.add("estado-t");
-      }
-
-      tbody.appendChild(tr);
-    });
-
-    updateCounters();
-  }
-
-  /************ FILTROS ************/
-  function passesRowFilters(row) {
-    const { text, column, estado, responsable, ocultarT } = currentFilter;
-
-    if (ocultarT && row.estado === "T") return false;
-
-    if (estado !== "todos" && row.estado !== estado) return false;
-
-    if (responsable !== "todos" && row.responsable !== responsable) return false;
-
-    if (text && text.trim() !== "") {
-      const q = text.toLowerCase();
-      if (column === "all") {
-        const allText = [
-          row.tema || "",
-          row.subTema || "",
-          row.responsable || "",
-          row.estado || "",
-          row.fechaTermino || ""
-        ].join(" ").toLowerCase();
-        if (!allText.includes(q)) return false;
-      } else {
-        const map = {
-          tema: row.tema || "",
-          subTema: row.subTema || "",
-          responsable: row.responsable || "",
-          estado: row.estado || "",
-          fechaTermino: row.fechaTermino || ""
-        };
-        if (!(map[column] || "").toLowerCase().includes(q)) return false;
-      }
+      return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
     }
 
-    return true;
-  }
-
-  function applyFilterFromUI() {
-    currentFilter.text = document.getElementById("searchText").value.trim();
-    currentFilter.column = document.getElementById("searchColumn").value;
-    currentFilter.estado = document.getElementById("filterEstado").value;
-    currentFilter.responsable = document.getElementById("filterResponsable").value;
-    currentFilter.ocultarT = document.getElementById("chkOcultarTerminados").checked;
-
-    renderTable();
-  }
-
-  function clearFilterUI() {
-    document.getElementById("searchText").value = "";
-    document.getElementById("searchColumn").value = "all";
-    document.getElementById("filterEstado").value = "todos";
-    document.getElementById("filterResponsable").value = "todos";
-    document.getElementById("chkOcultarTerminados").checked = false;
-    currentFilter = {
-      text: "",
-      column: "all",
-      estado: "todos",
-      responsable: "todos",
-      ocultarT: false,
-      soloHoy: false
+    /********** ESTADO DE LA APP **********/
+    let responsables = [];
+    let data = {
+      columnasReunion: [], // [{id, tituloISO}]
+      filas: [] // {tema, subTema, responsable, estado, fechaTerminoISO, reuniones:{colId: texto}}
     };
-    renderTable();
-  }
 
-  /************ CONTADORES ************/
-  function updateCounters() {
-    let cP = 0, cEP = 0, cT = 0;
-    tableRows.forEach(r => {
-      if (r.estado === "T") cT++;
-      else if (r.estado === "EP") cEP++;
-      else cP++;
-    });
-    document.getElementById("countP").textContent = cP;
-    document.getElementById("countEP").textContent = cEP;
-    document.getElementById("countT").textContent = cT;
-  }
-
-  /************ FILAS / COLUMNAS ************/
-  function addRow() {
-    const newRow = {
-      tema: "",
-      subTema: "",
-      responsable: responsables[0] || "Sin asignar",
-      estado: "P",
-      fechaTermino: "",
-      reuniones: {},
-      comments: {}
-    };
-    tableRows.push(newRow);
-    saveData();
-    renderTable();
-  }
-
-  function addMeetingColumn() {
-    const hoy = new Date().toISOString().slice(0, 10);
-    let fecha = prompt("Fecha para la nueva columna de reunión (YYYY-MM-DD):", hoy);
-    if (!fecha) return;
-    fecha = fecha.trim();
-    if (meetingColumns.includes(fecha)) {
-      alert("Ya existe una columna con esa fecha.");
-      return;
-    }
-    meetingColumns.push(fecha);
-    saveData();
-    buildHeader();
-    renderTable();
-  }
-
-  /************ EXPORT / IMPORT ************/
-  function exportJSON() {
-    const data = {
-      columns: meetingColumns,
-      rows: tableRows,
-      responsables
-    };
-    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "seguimiento_reuniones.json";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }
-
-  function importJSON(evt) {
-    const file = evt.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = e => {
+    function cargarDesdeStorage() {
       try {
-        const data = JSON.parse(e.target.result);
-        meetingColumns = data.columns || [];
-        tableRows = data.rows || [];
-        responsables = data.responsables && data.responsables.length ? data.responsables : responsables;
-        saveData();
-        saveResponsables();
-        buildHeader();
-        renderResponsableFilterOptions();
-        renderTable();
-      } catch (err) {
-        alert("Archivo inválido");
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) data = JSON.parse(raw);
+      } catch (e) {
+        console.error(e);
       }
+      try {
+        const rawR = localStorage.getItem(RESPONSABLES_KEY);
+        if (rawR) responsables = JSON.parse(rawR);
+        else responsables = ['cruiz@elcedro.mx'];
+      } catch (e) {
+        responsables = ['cruiz@elcedro.mx'];
+      }
+    }
+
+    function guardarEnStorage() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      localStorage.setItem(RESPONSABLES_KEY, JSON.stringify(responsables));
+    }
+
+    /********** UI: CABECERAS + FILTROS EN ENCABEZADO **********/
+    const columnasBase = [
+      { key: 'tema', label: 'tema', ancho: 180 },
+      { key: 'subTema', label: 'sub tema', ancho: 220 },
+      { key: 'responsable', label: 'responsable', ancho: 160 },
+      { key: 'estado', label: 'estado', ancho: 100 },
+      { key: 'fechaTermino', label: 'fecha de termino', ancho: 130 }
+    ];
+
+    const filtros = {
+      tema: '',
+      subTema: '',
+      responsable: '',
+      estado: '',
+      fechaTermino: ''
     };
-    reader.readAsText(file);
-    evt.target.value = "";
-  }
 
-  /************ MODALES ************/
-  function openModal(id) {
-    document.getElementById(id).classList.add("active");
-  }
-  function closeModal(id) {
-    document.getElementById(id).classList.remove("active");
-  }
+    let filtroFechaModo = 'todas'; // todas | ultimas2 | hoy
 
-  /************ RESPONSABLES ************/
-  function renderResponsableFilterOptions() {
-    const sel = document.getElementById("filterResponsable");
-    const current = sel.value || "todos";
-    sel.innerHTML = "";
-    const optAll = document.createElement("option");
-    optAll.value = "todos";
-    optAll.textContent = "Todos";
-    sel.appendChild(optAll);
-    responsables.forEach(r => {
-      const opt = document.createElement("option");
-      opt.value = r;
-      opt.textContent = r;
-      sel.appendChild(opt);
-    });
-    if ([...sel.options].some(o => o.value === current)) {
-      sel.value = current;
-    }
-  }
+    function construirEncabezado() {
+      const theadRow = document.getElementById('thead-row');
+      theadRow.innerHTML = '';
 
-  function renderResponsablesModal() {
-    const container = document.getElementById("responsablesList");
-    container.innerHTML = "";
-    responsables.forEach((r, idx) => {
-      const item = document.createElement("div");
-      item.className = "responsable-item";
-      const nameSpan = document.createElement("span");
-      nameSpan.textContent = r;
-      item.appendChild(nameSpan);
+      function creaTH(col) {
+        const th = document.createElement('th');
+        th.style.minWidth = col.ancho + 'px';
 
-      const actions = document.createElement("div");
-      actions.className = "responsable-actions";
+        const labelDiv = document.createElement('div');
+        labelDiv.className = 'th-label';
+        const labelSpan = document.createElement('span');
+        labelSpan.textContent = col.label;
+        labelDiv.appendChild(labelSpan);
+        th.appendChild(labelDiv);
 
-      const btnRen = document.createElement("button");
-      btnRen.className = "btn-xs";
-      btnRen.textContent = "Renombrar";
-      btnRen.addEventListener("click", () => {
-        const nuevo = prompt("Nuevo nombre para responsable:", r);
-        if (!nuevo) return;
-        const newName = nuevo.trim();
-        if (!newName) return;
-        // actualizar lista
-        responsables[idx] = newName;
-        // actualizar filas
-        tableRows.forEach(row => {
-          if (row.responsable === r) row.responsable = newName;
+        // input filtro
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.placeholder = 'filtrar...';
+        input.style.width = '100%';
+        input.style.marginTop = '3px';
+        input.style.borderRadius = '999px';
+        input.style.border = '1px solid var(--gris-borde)';
+        input.style.padding = '2px 8px';
+        input.style.fontSize = '11px';
+        input.dataset.key = col.key;
+
+        input.value = filtros[col.key] || '';
+
+        input.addEventListener('input', (e) => {
+          filtros[col.key] = e.target.value.toLowerCase();
+          renderTabla();
         });
-        saveResponsables();
-        saveData();
-        renderResponsablesModal();
-        renderResponsableFilterOptions();
-        renderTable();
+
+        th.appendChild(input);
+        return th;
+      }
+
+      columnasBase.forEach(c => {
+        theadRow.appendChild(creaTH(c));
       });
 
-      const btnDel = document.createElement("button");
-      btnDel.className = "btn-xs danger";
-      btnDel.textContent = "Eliminar";
-      btnDel.addEventListener("click", () => {
-        if (!confirm("¿Eliminar responsable \""+r+"\"? Las filas que lo tengan quedarán con ese texto, pero ya no aparecerá en la lista.")) return;
-        responsables.splice(idx,1);
-        saveResponsables();
-        renderResponsablesModal();
-        renderResponsableFilterOptions();
-        renderTable();
+      // columnas de reunión (después de fecha de termino)
+      data.columnasReunion.forEach(col => {
+        const th = document.createElement('th');
+        th.textContent = col.titulo || col.id;
+        th.style.minWidth = '160px';
+        theadRow.appendChild(th);
       });
+    }
 
-      actions.appendChild(btnRen);
-      actions.appendChild(btnDel);
-      item.appendChild(actions);
-      container.appendChild(item);
+    /********** UI: RENDER FILAS **********/
+    function pasaFiltros(fila) {
+      // filtros de texto
+      const tTema = (fila.tema || '').toLowerCase();
+      const tSub = (fila.subTema || '').toLowerCase();
+      const tResp = (fila.responsable || '').toLowerCase();
+      const tEst = (fila.estado || '').toLowerCase();
+      const fech = isoToDDMMYY(fila.fechaTermino || '').toLowerCase();
+
+      if (filtros.tema && !tTema.includes(filtros.tema)) return false;
+      if (filtros.subTema && !tSub.includes(filtros.subTema)) return false;
+      if (filtros.responsable && !tResp.includes(filtros.responsable)) return false;
+      if (filtros.estado && !tEst.includes(filtros.estado)) return false;
+      if (filtros.fechaTermino && !fech.includes(filtros.fechaTermino)) return false;
+
+      return true;
+    }
+
+    function columnasReunionVisibles() {
+      if (filtroFechaModo === 'todas') return data.columnasReunion;
+
+      if (filtroFechaModo === 'ultimas2') {
+        return data.columnasReunion.slice(-2);
+      }
+
+      if (filtroFechaModo === 'hoy') {
+        const hoy = hoyISO();
+        return data.columnasReunion.filter(c => c.tituloISO === hoy);
+      }
+
+      return data.columnasReunion;
+    }
+
+    function renderTabla() {
+      construirEncabezado();
+
+      const tbody = document.getElementById('tbody');
+      tbody.innerHTML = '';
+
+      const colsReuVisibles = columnasReunionVisibles();
+
+      data.filas.forEach((fila, rowIndex) => {
+        if (!pasaFiltros(fila)) return;
+
+        const tr = document.createElement('tr');
+
+        // tema
+        let tdTema = document.createElement('td');
+        const inpTema = document.createElement('textarea');
+        inpTema.className = 'td-textarea';
+        inpTema.value = fila.tema || '';
+        inpTema.addEventListener('change', () => {
+          fila.tema = inpTema.value;
+          guardarEnStorage();
+        });
+        tdTema.appendChild(inpTema);
+        tr.appendChild(tdTema);
+
+        // sub tema
+        let tdSub = document.createElement('td');
+        const inpSub = document.createElement('textarea');
+        inpSub.className = 'td-textarea';
+        inpSub.value = fila.subTema || '';
+        // doble clic para abrir link si sólo hay URL
+        inpSub.addEventListener('dblclick', () => {
+          const v = inpSub.value.trim();
+          if (v.startsWith('http://') || v.startsWith('https://')) {
+            window.open(v, '_blank');
+          }
+        });
+        inpSub.addEventListener('change', () => {
+          fila.subTema = inpSub.value;
+          guardarEnStorage();
+        });
+        tdSub.appendChild(inpSub);
+        tr.appendChild(tdSub);
+
+        // responsable
+        let tdResp = document.createElement('td');
+        const selResp = document.createElement('select');
+        selResp.className = 'select-responsable';
+
+        // opción vacía
+        const optEmpty = document.createElement('option');
+        optEmpty.value = '';
+        optEmpty.textContent = '';
+        selResp.appendChild(optEmpty);
+
+        responsables.forEach(r => {
+          const opt = document.createElement('option');
+          opt.value = r;
+          opt.textContent = r;
+          selResp.appendChild(opt);
+        });
+        selResp.value = fila.responsable || '';
+
+        selResp.addEventListener('change', () => {
+          fila.responsable = selResp.value;
+          guardarEnStorage();
+        });
+
+        tdResp.appendChild(selResp);
+        tr.appendChild(tdResp);
+
+        // estado (badge + select)
+        let tdEst = document.createElement('td');
+        const wrapEst = document.createElement('div');
+        wrapEst.style.display = 'flex';
+        wrapEst.style.alignItems = 'center';
+        wrapEst.style.gap = '6px';
+
+        const badge = document.createElement('span');
+        badge.className = 'badge-estado';
+        setBadgeEstado(badge, fila.estado || 'P');
+
+        const selEst = document.createElement('select');
+        selEst.className = 'select-estado';
+        ESTADOS.forEach(e => {
+          const opt = document.createElement('option');
+          opt.value = e;
+          opt.textContent = e;
+          selEst.appendChild(opt);
+        });
+        selEst.value = fila.estado || 'P';
+
+        selEst.addEventListener('change', () => {
+          fila.estado = selEst.value;
+          setBadgeEstado(badge, selEst.value);
+          guardarEnStorage();
+        });
+
+        wrapEst.appendChild(badge);
+        wrapEst.appendChild(selEst);
+        tdEst.appendChild(wrapEst);
+        tr.appendChild(tdEst);
+
+        // fecha de termino (input date al enfoque)
+        let tdFecha = document.createElement('td');
+        tdFecha.className = 'td-fecha';
+
+        const inpFecha = document.createElement('input');
+        inpFecha.type = 'text';
+        inpFecha.className = 'td-input';
+        inpFecha.readOnly = true;
+        inpFecha.value = isoToDDMMYY(fila.fechaTermino || '');
+
+        inpFecha.addEventListener('click', () => {
+          // crear input date temporal
+          const tmp = document.createElement('input');
+          tmp.type = 'date';
+          tmp.style.position = 'absolute';
+          const rect = inpFecha.getBoundingClientRect();
+          tmp.style.left = rect.left + 'px';
+          tmp.style.top = rect.top + 'px';
+          tmp.style.zIndex = '40';
+          tmp.value = fila.fechaTermino || hoyISO();
+          document.body.appendChild(tmp);
+          tmp.focus();
+
+          tmp.addEventListener('change', () => {
+            fila.fechaTermino = tmp.value;
+            inpFecha.value = isoToDDMMYY(tmp.value);
+            guardarEnStorage();
+          });
+
+          const cleanup = () => {
+            document.body.removeChild(tmp);
+          };
+          tmp.addEventListener('blur', cleanup, { once: true });
+        });
+
+        tdFecha.appendChild(inpFecha);
+        tr.appendChild(tdFecha);
+
+        // columnas de reunión visibles
+        colsReuVisibles.forEach(col => {
+          const td = document.createElement('td');
+          const ta = document.createElement('textarea');
+          ta.className = 'td-textarea';
+          ta.value = (fila.reuniones && fila.reuniones[col.id]) || '';
+          ta.addEventListener('change', () => {
+            if (!fila.reuniones) fila.reuniones = {};
+            fila.reuniones[col.id] = ta.value;
+            guardarEnStorage();
+          });
+          td.appendChild(ta);
+          tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function setBadgeEstado(el, estado) {
+      el.textContent = estado;
+      el.className = 'badge-estado';
+      if (estado === 'P') el.classList.add('estado-P');
+      if (estado === 'EP') el.classList.add('estado-EP');
+      if (estado === 'T') el.classList.add('estado-T');
+    }
+
+    /********** ACCIONES **********/
+    document.getElementById('btnAddRow').addEventListener('click', () => {
+      data.filas.push({
+        tema: '',
+        subTema: '',
+        responsable: '',
+        estado: 'P',
+        fechaTermino: '',
+        reuniones: {}
+      });
+      guardarEnStorage();
+      renderTabla();
     });
-  }
 
-  function agregarResponsableDesdeModal() {
-    const input = document.getElementById("nuevoResponsableInput");
-    const val = input.value.trim();
-    if (!val) return;
-    if (responsables.includes(val)) {
-      alert("Ese responsable ya existe.");
-      return;
+    document.getElementById('btnAddColumn').addEventListener('click', () => {
+      const iso = hoyISO();
+      const titulo = prompt('Título de la nueva columna de reunión (ej. fecha de la junta):', iso);
+      if (!titulo) return;
+      const id = 'col_' + Date.now();
+      data.columnasReunion.push({ id, titulo, tituloISO: iso });
+      guardarEnStorage();
+      renderTabla();
+    });
+
+    // exportar / importar
+    document.getElementById('btnExport').addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify({ data, responsables }, null, 2)], {
+        type: 'application/json'
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'tablero_reuniones.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('JSON exportado', 'success');
+    });
+
+    document.getElementById('btnImport').addEventListener('click', () => {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'application/json';
+      input.addEventListener('change', e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = ev => {
+          try {
+            const obj = JSON.parse(ev.target.result);
+            if (obj.data) data = obj.data;
+            if (obj.responsables) responsables = obj.responsables;
+            guardarEnStorage();
+            renderTabla();
+            showToast('JSON importado', 'success');
+          } catch (err) {
+            console.error(err);
+            showToast('Error al importar', 'error');
+          }
+        };
+        reader.readAsText(file);
+      });
+      input.click();
+    });
+
+    // scroll horizontal
+    const scrollDiv = document.getElementById('tableScroll');
+    document.getElementById('btnScrollLeft').addEventListener('click', () => {
+      scrollDiv.scrollBy({ left: -250, behavior: 'smooth' });
+    });
+    document.getElementById('btnScrollRight').addEventListener('click', () => {
+      scrollDiv.scrollBy({ left: 250, behavior: 'smooth' });
+    });
+
+    // filtros de columnas de reunión (Todas / Últimas 2 / Hoy)
+    const btnTodos = document.getElementById('btnFiltroTodos');
+    const btnUltimas2 = document.getElementById('btnFiltroUltimas2');
+    const btnHoy = document.getElementById('btnFiltroHoy');
+
+    function actualizarChipFechaActiva() {
+      [btnTodos, btnUltimas2, btnHoy].forEach(b => b.classList.remove('chip-toggle--active'));
+      if (filtroFechaModo === 'todas') btnTodos.classList.add('chip-toggle--active');
+      if (filtroFechaModo === 'ultimas2') btnUltimas2.classList.add('chip-toggle--active');
+      if (filtroFechaModo === 'hoy') btnHoy.classList.add('chip-toggle--active');
     }
-    responsables.push(val);
-    saveResponsables();
-    input.value = "";
-    renderResponsablesModal();
-    renderResponsableFilterOptions();
-    renderTable();
-  }
 
-  /************ COMENTARIOS ************/
-  function handleCellContextMenu(e) {
-    const cell = e.target.closest("td");
-    if (!cell) return;
+    btnTodos.addEventListener('click', () => {
+      filtroFechaModo = 'todas';
+      actualizarChipFechaActiva();
+      renderTabla();
+    });
 
-    const colId = cell.dataset.col;
-    if (!colId) return; // no comments for responsable/estado
+    btnUltimas2.addEventListener('click', () => {
+      filtroFechaModo = 'ultimas2';
+      actualizarChipFechaActiva();
+      renderTabla();
+    });
 
-    e.preventDefault();
+    btnHoy.addEventListener('click', () => {
+      filtroFechaModo = 'hoy';
+      actualizarChipFechaActiva();
+      renderTabla();
+    });
 
-    const rowIndex = [...cell.parentNode.parentNode.children].indexOf(cell.parentNode);
-    const row = tableRows[rowIndex];
-    if (!row) return;
-    if (!row.comments) row.comments = {};
+    /********** MODAL DE AYUDA **********/
+    const helpBackdrop = document.getElementById('helpBackdrop');
+    document.getElementById('btnHelp').addEventListener('click', () => {
+      helpBackdrop.style.display = 'flex';
+    });
+    document.getElementById('btnHelpClose').addEventListener('click', () => {
+      helpBackdrop.style.display = 'none';
+    });
+    helpBackdrop.addEventListener('click', (e) => {
+      if (e.target === helpBackdrop) helpBackdrop.style.display = 'none';
+    });
 
-    const key = colId;
-    const actual = row.comments[key] || "";
-    const nuevo = prompt("Comentario para esta celda (dejar vacío para borrar):", actual);
-    if (nuevo === null) return;
-
-    if (nuevo.trim() === "") {
-      delete row.comments[key];
-    } else {
-      row.comments[key] = nuevo.trim();
-    }
-    saveData();
-    renderTable();
-  }
-
-  function markCommentTriangle(row, td, rowIndex, colId) {
-    if (!row.comments) return;
-    if (row.comments[colId]) {
-      td.classList.add("has-comment");
-    } else {
-      td.classList.remove("has-comment");
-    }
-  }
-
-</script>
+    /********** INICIO **********/
+    cargarDesdeStorage();
+    actualizarChipFechaActiva();
+    renderTabla();
+  </script>
 </body>
+
 </html>

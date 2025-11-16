@@ -4,217 +4,258 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Seguimiento de reuniones</title>
-  
-  <!-- Importamos Supabase como módulo -->
-  <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-    // --- Configuración de Supabase ---
-    const supabaseUrl = 'https://tvifqejxdmhfsvygqvyr.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR2aWZxZWp4ZG1oZnN2eWdxdnlyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTk4NzEzODcsImV4cCI6MjAxNTI0NzM4N30.8ZP2J9EOw7KgBeE1qzO34cOYPQNjYzZICZtdnPvjK-g';
-    const supabase = createClient(supabaseUrl, supabaseKey);
+  <!-- Fuente -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-    // --- Selectores del DOM ---
-    // Esperamos a que el DOM esté cargado para asignar los elementos
-    document.addEventListener('DOMContentLoaded', () => {
-      
-      const emailInput = document.getElementById('email');
-      const passwordInput = document.getElementById('password');
-      const loginBtn = document.getElementById('login-btn');
-      const signupBtn = document.getElementById('signup-btn');
-      const messageBox = document.getElementById('message-box');
+  <!-- Supabase JS clásico (más compatible que el modo module) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-      // --- Función de Feedback para el Usuario ---
-      /**
-       * Muestra un mensaje en la página.
-       * @param {string} message - El texto a mostrar.
-       * @param {boolean} isError - true si es error (rojo), false si es éxito (verde).
-       */
-      function showMessage(message, isError = true) {
-        messageBox.textContent = message;
-        messageBox.className = 'message'; // Resetea clases
-        if (message) {
-          messageBox.classList.add(isError ? 'error' : 'success');
-        }
-      }
-
-      /**
-       * Activa o desactiva los botones y el estado de carga.
-       * @param {boolean} isLoading - true para desactivar botones (cargando).
-       */
-      function setLoading(isLoading) {
-        loginBtn.disabled = isLoading;
-        signupBtn.disabled = isLoading;
-        loginBtn.textContent = isLoading ? 'Cargando...' : 'Entrar';
-        signupBtn.textContent = isLoading ? 'Cargando...' : 'Crear cuenta';
-      }
-
-      // --- Funciones de Autenticación ---
-      async function login() {
-        setLoading(true);
-        showMessage('', false); // Limpia mensajes anteriores
-
-        const email = emailInput.value;
-        const password = passwordInput.value;
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-
-        if (error) {
-          showMessage('Error al iniciar sesión: ' + error.message);
-        } else {
-          showMessage('Inicio de sesión exitoso. ¡Bienvenido!', false);
-          // Aquí puedes redirigir a otra página si lo deseas
-          // window.location.href = '/dashboard.html';
-        }
-        setLoading(false);
-      }
-
-      async function signup() {
-        setLoading(true);
-        showMessage('', false); // Limpia mensajes anteriores
-
-        const email = emailInput.value;
-        const password = passwordInput.value;
-        const { error } = await supabase.auth.signUp({ email, password });
-
-        if (error) {
-          showMessage('Error al crear cuenta: ' + error.message);
-        } else {
-          showMessage('Cuenta creada. Revisa tu correo para confirmar.', false);
-        }
-        setLoading(false);
-      }
-
-      // --- Asignación de Eventos ---
-      // Usamos addEventListener en lugar de 'onclick' en el HTML.
-      // Esto es más limpio y funciona mejor con módulos.
-      loginBtn.addEventListener('click', login);
-      signupBtn.addEventListener('click', signup);
-    });
-    
-  </script>
-  
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Inter', sans-serif;
       background-color: #f5f6fa;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       margin: 0;
-      padding: 1rem;
-      box-sizing: border-box;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0f172a;
     }
+
     .card {
-      background: white;
-      padding: 2rem;
-      border-radius: 1rem;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
+      background: #ffffff;
+      padding: 2.5rem 2.75rem;
+      border-radius: 1.25rem;
+      box-shadow:
+        0 10px 25px rgba(15, 23, 42, 0.08),
+        0 1px 2px rgba(15, 23, 42, 0.05);
       width: 100%;
-      max-width: 400px;
-      box-sizing: border-box;
+      max-width: 430px;
     }
-    .card h1 {
-      font-size: 1.4rem;
-      margin-bottom: 1rem;
-      color: #1e293b;
+
+    .title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
     }
-    p {
-      color: #475569;
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: #6b7280;
+      margin-bottom: 1.75rem;
     }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 0.35rem;
+      color: #374151;
+    }
+
     input {
       width: 100%;
-      padding: 0.75rem;
-      margin-bottom: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 0.5rem;
-      box-sizing: border-box; /* Añadido para consistencia */
-    }
-    
-    /* --- Estilos para el cuadro de mensajes --- */
-    .message {
+      padding: 0.7rem 0.8rem;
+      border-radius: 0.6rem;
+      border: 1px solid #d1d5db;
       font-size: 0.9rem;
-      padding: 0.75rem;
-      border-radius: 0.5rem;
       margin-bottom: 1rem;
-      display: block;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      word-wrap: break-word; /* Para errores largos */
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
-    .message.error {
-      background-color: #fee2e2;
-      color: #b91c1c;
-      opacity: 1;
+
+    input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.25);
     }
-    .message.success {
-      background-color: #dcfce7;
-      color: #166534;
-      opacity: 1;
-    }
-    /* Oculta el contenedor si no tiene texto */
-    .message:empty {
-      display: none;
-    }
-    
+
     .actions {
       display: flex;
-      justify-content: space-between;
-      gap: 1rem; /* Añadido espacio entre botones */
+      gap: 0.75rem;
+      margin-top: 0.25rem;
     }
+
     button {
-      flex: 1; /* Hace que los botones compartan el espacio */
-      padding: 0.75rem 1.5rem;
+      flex: 1;
+      padding: 0.7rem 0.9rem;
+      border-radius: 999px;
       border: none;
-      border-radius: 0.5rem;
-      background-color: #2563eb;
-      color: white;
-      font-weight: bold;
+      font-size: 0.9rem;
+      font-weight: 500;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      transition: background-color 0.15s, box-shadow 0.15s, transform 0.05s;
     }
-    button:hover {
-      background-color: #1d4ed8;
+
+    button:active {
+      transform: scale(0.98);
     }
-    button.secondary {
-      background-color: #e2e8f0;
-      color: #1e293b;
+
+    #btnLogin {
+      background: #2563eb;
+      color: #ffffff;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.35);
     }
-    button.secondary:hover {
-      background-color: #cbd5e1;
+
+    #btnLogin:hover {
+      background: #1d4ed8;
     }
-    button:disabled {
-      background-color: #94a3b8;
-      color: #e2e8f0;
-      cursor: not-allowed;
+
+    #btnSignup {
+      background: #e5e7eb;
+      color: #111827;
     }
-    /* Estilo para el botón secundario cuando está deshabilitado */
-    button.secondary:disabled {
-      background-color: #e2e8f0;
-      color: #94a3b8;
+
+    #btnSignup:hover {
+      background: #d1d5db;
+    }
+
+    .helper {
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      color: #6b7280;
+      line-height: 1.4;
+    }
+
+    .helper strong {
+      color: #111827;
+    }
+
+    .alert {
+      margin-bottom: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.6rem;
+      font-size: 0.8rem;
+      display: none;
+    }
+
+    .alert.error {
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .alert.success {
+      background: #ecfdf3;
+      color: #166534;
+      border: 1px solid #bbf7d0;
     }
   </style>
 </head>
+
 <body>
   <div class="card">
-    <h1>Seguimiento de reuniones</h1>
-    <p>Inicia sesión con tu correo y contraseña para acceder al tablero.</p>
-    
-    <input type="email" id="email" placeholder="tucorreo@ejemplo.com" />
-    <input type="password" id="password" placeholder="Contraseña" />
-    
-    <!-- Contenedor para mostrar mensajes de error o éxito -->
-    <div id="message-box" class="message"></div>
-    
-    <div class="actions">
-      <!-- IDs añadidos para seleccionarlos en JS -->
-      <button id="login-btn">Entrar</button>
-      <button class="secondary" id="signup-btn">Crear cuenta</button>
+    <div class="title">Seguimiento de reuniones</div>
+    <div class="subtitle">
+      Inicia sesión con tu correo y contraseña para acceder al tablero.
     </div>
-    
-    <p style="font-size: 0.8rem; margin-top: 1rem;">Esta sesión se cierra automáticamente al cerrar la pestaña o recargar la página.</p>
+
+    <!-- Mensajes -->
+    <div id="alert" class="alert"></div>
+
+    <form id="authForm">
+      <label for="email">Correo</label>
+      <input type="email" id="email" placeholder="tucorreo@ejemplo.com" required />
+
+      <label for="password">Contraseña</label>
+      <input type="password" id="password" placeholder="Contraseña" required />
+
+      <div class="actions">
+        <button type="button" id="btnLogin">Entrar</button>
+        <button type="button" id="btnSignup">Crear cuenta</button>
+      </div>
+    </form>
+
+    <div class="helper">
+      Esta sesión se cierra automáticamente al cerrar la pestaña o recargar la página.<br />
+      <strong>Tip:</strong> usa siempre el mismo correo para que tus permisos y tareas se mantengan.
+    </div>
   </div>
+
+  <script>
+    // === Configuración Supabase ===
+    const supabaseUrl = 'https://hrbmstaklleraiacqmky.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhyYm1zdGFrbGxlcmFpYWNxbWt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyMTA2OTQsImV4cCI6MjA3ODc4NjY5NH0.tN00tAjMJpJK_8gnerocbOSzHp93N5yc9KohTBpMeZc';
+
+    // cliente supabase (sin persistir sesión para que siempre pida login)
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey, {
+      auth: { persistSession: false }
+    });
+
+    const alertBox = document.getElementById('alert');
+
+    function showAlert(message, type = 'error') {
+      alertBox.textContent = message;
+      alertBox.className = 'alert ' + type;
+      alertBox.style.display = 'block';
+    }
+
+    function clearAlert() {
+      alertBox.style.display = 'none';
+      alertBox.textContent = '';
+    }
+
+    async function handleLogin() {
+      clearAlert();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!email || !password) {
+        showAlert('Ingresa correo y contraseña.', 'error');
+        return;
+      }
+
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        console.error(error);
+        showAlert('Error al iniciar sesión: ' + error.message, 'error');
+      } else {
+        console.log('Sesion iniciada:', data);
+        showAlert('Inicio de sesión exitoso.', 'success');
+
+        // 👉 aquí puedes redirigir a tu tablero HTML:
+        // window.location.href = 'tablero.html';
+      }
+    }
+
+    async function handleSignup() {
+      clearAlert();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!email || !password) {
+        showAlert('Ingresa correo y contraseña para crear la cuenta.', 'error');
+        return;
+      }
+
+      const { data, error } = await supabase.auth.signUp({ email, password });
+
+      if (error) {
+        console.error(error);
+        showAlert('Error al crear cuenta: ' + error.message, 'error');
+      } else {
+        console.log('Cuenta creada:', data);
+        showAlert('Cuenta creada correctamente. Revisa tu correo para confirmar.', 'success');
+      }
+    }
+
+    // Eventos de los botones
+    document.getElementById('btnLogin').addEventListener('click', handleLogin);
+    document.getElementById('btnSignup').addEventListener('click', handleSignup);
+
+    // Prevenir que el form recargue la página si se presiona Enter
+    document.getElementById('authForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+    });
+  </script>
 </body>
 </html>

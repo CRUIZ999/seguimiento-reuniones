@@ -2,1382 +2,1344 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Seguimiento de tareas y reuniones</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <!-- Fuente -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --azul: #2563eb;
-      --azul-oscuro: #1e40af;
-      --gris-fondo: #f3f4f6;
-      --gris-borde: #e5e7eb;
-      --texto: #111827;
-      --verde: #16a34a;
-      --amarillo: #facc15;
-      --rojo: #dc2626;
+      --bg: #f5f7fb;
+      --card-bg: #ffffff;
+      --primary: #0f72e5;
+      --primary-soft: #e5f0ff;
+      --danger: #f05252;
+      --text-main: #111827;
+      --text-soft: #6b7280;
+      --border-soft: #e5e7eb;
+      --success: #16a34a;
+      --warning: #f97316;
+      --shadow-soft: 0 16px 40px rgba(15, 35, 52, 0.08);
+      --radius-xl: 18px;
+      --radius-md: 10px;
     }
 
     * {
       box-sizing: border-box;
     }
-
     body {
       margin: 0;
-      font-family: "Inter", sans-serif;
-      background: var(--gris-fondo);
-      color: var(--texto);
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #e7f0ff 0, #f6f7fb 45%, #f5f5f5 100%);
+      color: var(--text-main);
     }
 
-    .page {
-      max-width: 1300px;
-      margin: 16px auto 32px auto;
-      padding: 0 16px;
+    .app-shell {
+      max-width: 1480px;
+      margin: 32px auto 40px;
+      padding: 0 24px 32px;
     }
 
-    header.header-main {
+    /* HEADER */
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      gap: 16px;
+    }
+
+    .header-left {
       display: flex;
       align-items: center;
-      justify-content: space-between;
       gap: 12px;
-      margin-bottom: 10px;
     }
 
-    .title-block {
+    .app-title {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .help-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      border: none;
+      background: #e5efff;
+      color: #2563eb;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .help-icon:hover {
+      background: #d6e4ff;
+    }
+
+    .user-info {
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .header-right {
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    .title-text h1 {
-      margin: 0;
-      font-size: 22px;
-      font-weight: 600;
-    }
-
-    .title-text .subtitle {
-      margin: 2px 0 0 0;
-      font-size: 12px;
-      color: #6b7280;
-    }
-
-    #userLabel {
-      font-weight: 500;
-      color: #111827;
-    }
-
-    /* Icono de ayuda */
-    #helpIcon {
-      width: 30px;
-      height: 30px;
+    .counter-pill {
+      padding: 6px 12px;
       border-radius: 999px;
-      border: 1px solid #d1d5db;
+      font-size: 12px;
+      font-weight: 500;
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      font-size: 18px;
-      cursor: pointer;
+      gap: 6px;
       background: #f9fafb;
-      color: #111827;
-      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.12);
-      user-select: none;
+      border: 1px solid #e5e7eb;
     }
 
-    #helpIcon:hover {
-      background: #e5e7eb;
+    .counter-pill span.value {
+      font-weight: 600;
     }
 
-    .toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: flex-end;
-    }
+    .counter-p { color: var(--danger); }
+    .counter-ep { color: var(--warning); }
+    .counter-t { color: var(--success); }
 
-    button.btn {
+    .btn-ghost {
+      background: transparent;
       border-radius: 999px;
-      border: 1px solid #d1d5db;
-      padding: 7px 12px;
+      border: 1px solid #e5e7eb;
+      padding: 6px 14px;
       font-size: 13px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      color: var(--text-soft);
+    }
+
+    .btn-ghost:hover {
       background: #f3f4f6;
-      color: #111827;
-      font-weight: 500;
     }
 
-    button.btn-primary {
-      background: var(--azul);
-      border-color: var(--azul);
-      color: #ffffff;
+    /* TOP CONTROLS */
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-soft);
+      padding: 16px 18px 18px;
     }
 
-    button.btn-danger {
-      background: #fee2e2;
-      border-color: #fecaca;
-      color: #b91c1c;
-    }
-
-    button.btn:hover {
-      background: #e5e7eb;
-    }
-
-    button.btn-primary:hover {
-      background: var(--azul-oscuro);
-    }
-
-    button.btn-danger:hover {
-      background: #fecaca;
-    }
-
-    .card-main {
-      background: #ffffff;
-      border-radius: 18px;
-      box-shadow:
-        0 12px 25px rgba(15, 23, 42, 0.12),
-        0 1px 2px rgba(15, 23, 42, 0.06);
-      padding: 14px 14px 10px 14px;
-    }
-
-    /* Resumen y filtros */
-    .summary-row {
+    .top-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
       justify-content: space-between;
-      font-size: 13px;
-      color: #4b5563;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
-    .summary-left span {
-      margin-right: 10px;
-    }
-
-    .summary-left b {
-      color: #111827;
-    }
-
-    .summary-right {
+    .top-row-left,
+    .top-row-right {
       display: flex;
-      gap: 6px;
       flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
     }
 
-    .chip {
+    .btn-primary {
       border-radius: 999px;
-      border: 1px solid #d1d5db;
-      padding: 4px 10px;
-      font-size: 12px;
+      border: none;
+      background: var(--primary);
+      color: white;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 8px 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       cursor: pointer;
-      background: #f3f4f6;
-      color: #111827;
+      box-shadow: 0 10px 18px rgba(37, 99, 235, 0.28);
     }
 
-    .chip:hover {
-      background: #e5e7eb;
+    .btn-primary.secondary {
+      background: #eff3ff;
+      color: #1d4ed8;
+      box-shadow: none;
+      border: 1px solid #d9e2ff;
     }
 
-    .chip.active-chip {
-      background: var(--azul);
-      border-color: var(--azul);
-      color: #ffffff;
+    .btn-primary.secondary:hover {
+      background: #e1e8ff;
     }
+
+    .btn-primary:hover {
+      background: #0b63ca;
+    }
+
+    .btn-small {
+      padding: 6px 12px;
+      font-size: 12px;
+      box-shadow: none;
+    }
+
+    .icon-circle {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.2);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 12px;
+    }
+
+    /* Filters row */
 
     .filters-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
-      justify-content: space-between;
-      margin-bottom: 8px;
-      padding: 8px 10px;
-      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+
+    .filters-row label {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-right: 4px;
+    }
+
+    .select, .input, .checkbox-label {
+      font-size: 13px;
+    }
+
+    select, input[type="text"], input[type="date"] {
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: #f9fafb;
+      padding: 7px 12px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    select:focus, input[type="text"]:focus {
+      border-color: var(--primary);
+      background: #fff;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+    }
+
+    .checkbox-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 999px;
       background: #f9fafb;
       border: 1px solid #e5e7eb;
-      font-size: 13px;
     }
 
-    .filters-left {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
+    .checkbox-label input {
+      margin: 0;
     }
 
-    .filters-left label {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      color: #4b5563;
-    }
-
-    .filters-left input[type="text"],
-    .filters-left select {
+    .btn-pill {
       border-radius: 999px;
-      border: 1px solid #d1d5db;
-      padding: 5px 10px;
-      font-size: 13px;
-      background: #ffffff;
-    }
-
-    .filters-left input[type="text"] {
-      min-width: 200px;
-    }
-
-    .filters-left .checkbox-inline {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .filters-right {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .btn-filter {
-      border-radius: 999px;
-      border: 1px solid #d1d5db;
-      padding: 6px 12px;
-      font-size: 13px;
-      cursor: pointer;
-      background: #e5e7eb;
-      color: #111827;
-    }
-
-    .btn-filter.primary {
-      background: var(--azul);
-      border-color: var(--azul);
-      color: #ffffff;
-    }
-
-    .btn-filter.primary:hover {
-      background: var(--azul-oscuro);
-    }
-
-    .btn-filter.secondary:hover {
-      background: #d1d5db;
-    }
-
-    /* Tabla */
-    .table-wrapper {
-      margin-top: 6px;
-      border-radius: 12px;
-      border: 1px solid var(--gris-borde);
-      overflow: hidden;
+      border: 1px solid #e5e7eb;
       background: #f9fafb;
+      padding: 6px 14px;
+      font-size: 12px;
+      cursor: pointer;
     }
 
-    .table-scroll {
-      overflow-x: auto;
-      overflow-y: auto;
-      max-height: 520px;
+    .btn-pill:hover {
+      background: #eef2ff;
+      border-color: #d4d4ff;
+    }
+
+    .btn-pill.primary {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: #eef3ff;
+    }
+
+    /* TABLE */
+
+    .table-wrapper {
+      border-radius: 14px;
+      border: 1px solid var(--border-soft);
+      overflow: auto;
+      background: #fcfcff;
     }
 
     table {
+      width: 100%;
       border-collapse: collapse;
-      width: max(100%, 900px);
-      font-size: 12px;
+      font-size: 13px;
     }
 
     thead {
-      background: #f3f4f6;
-      position: sticky;
-      top: 0;
-      z-index: 5;
+      background: linear-gradient(to right, #eef2ff, #e5f0ff);
     }
 
     th, td {
+      padding: 6px 10px;
       border-bottom: 1px solid #e5e7eb;
-      padding: 6px 8px;
-      text-align: left;
-      min-width: 140px;
-      background: #ffffff;
+      white-space: nowrap;
     }
 
     th {
+      text-align: left;
       font-weight: 600;
-      font-size: 12px;
       color: #374151;
-    }
-
-    /* Fijar primeras 5 columnas */
-    th.sticky,
-    td.sticky {
       position: sticky;
-      left: 0;
-      z-index: 4;
-      background: #ffffff;
+      top: 0;
+      z-index: 1;
     }
 
-    th.sticky:nth-child(1), td.sticky:nth-child(1) { left: 0; }
-    th.sticky:nth-child(2), td.sticky:nth-child(2) { left: 140px; }
-    th.sticky:nth-child(3), td.sticky:nth-child(3) { left: 280px; }
-    th.sticky:nth-child(4), td.sticky:nth-child(4) { left: 420px; }
-    th.sticky:nth-child(5), td.sticky:nth-child(5) { left: 560px; }
-
-    tr:nth-child(even) td {
+    tbody tr:nth-child(even) {
       background: #f9fafb;
     }
 
-    tr.hidden-by-filter {
-      display: none;
+    tbody tr:hover {
+      background: #eef2ff;
     }
 
-    td[contenteditable="true"] {
-      cursor: text;
+    td input[type="text"] {
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      padding: 4px 6px;
+      background: transparent;
+      font-size: 13px;
     }
 
-    td:focus-visible {
-      outline: 2px solid var(--azul);
-      outline-offset: -2px;
+    td input[type="text"]:focus {
+      border-color: var(--primary);
+      background: #fff;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2);
     }
 
-    /* Estado pill */
-    .estado-pill {
-      padding: 2px 7px;
+    td select {
+      width: 100%;
       border-radius: 999px;
-      font-size: 11px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-left: 4px;
+      padding: 3px 10px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
     }
 
-    .estado-P  { background: #fee2e2; color: #b91c1c; }
-    .estado-EP { background: #fef3c7; color: #92400e; }
-    .estado-T  { background: #dcfce7; color: #166534; }
+    /* Estado badges */
 
-    .estado-select {
+    .estado-badge {
       border-radius: 999px;
-      border: 1px solid #d1d5db;
-      padding: 2px 6px;
-      font-size: 11px;
+      padding: 3px 10px;
+      font-size: 12px;
+      border: none;
+      color: #111827;
+    }
+    .estado-p {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+    .estado-ep {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .estado-t {
+      background: #dcfce7;
+      color: #166534;
     }
 
-    /* Comentarios triangulito amarillo */
-    td[data-has-comment="1"] {
+    /* Triángulo comentario */
+
+    .cell-comment {
       position: relative;
     }
 
-    td[data-has-comment="1"]::after {
+    .cell-comment.has-comment::after {
       content: "";
       position: absolute;
-      right: 0;
-      top: 0;
-      width: 0;
-      height: 0;
-      border-top: 10px solid var(--amarillo);
-      border-left: 10px solid transparent;
+      right: 2px;
+      top: 2px;
+      border-width: 0 0 8px 8px;
+      border-style: solid;
+      border-color: transparent transparent #facc15 transparent;
     }
+
+    /* FOOTER */
 
     .footer-note {
+      margin-top: 8px;
       font-size: 11px;
-      color: #6b7280;
-      margin-top: 6px;
+      color: var(--text-soft);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    /* Modal genérico (ayuda y responsables) */
+    .footer-note input[type="checkbox"] {
+      margin-right: 4px;
+    }
+
+    /* MODALS */
+
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.45);
+      background: rgba(15, 23, 42, 0.35);
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 999;
+      z-index: 50;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
     }
 
     .modal {
       background: #ffffff;
       border-radius: 16px;
-      max-width: 720px;
-      width: 90%;
-      max-height: 80vh;
-      overflow-y: auto;
-      padding: 20px 24px 16px 24px;
-      box-shadow:
-        0 20px 25px -5px rgba(15, 23, 42, 0.25),
-        0 8px 10px -6px rgba(15, 23, 42, 0.2);
+      max-width: 540px;
+      width: 100%;
+      box-shadow: 0 24px 45px rgba(15, 23, 42, 0.28);
+      padding: 18px 20px 18px;
     }
 
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
+      margin-bottom: 4px;
     }
 
     .modal-title {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 600;
     }
 
     .modal-close {
-      cursor: pointer;
+      border-radius: 999px;
       border: none;
-      background: transparent;
-      font-size: 20px;
-      padding: 0 4px;
-    }
-
-    .modal-body p {
-      margin: 4px 0;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .modal-body hr {
-      border: none;
-      border-top: 1px solid #e5e7eb;
-      margin: 8px 0;
-    }
-
-    /* Menú flotante responsables */
-    .responsable-menu {
-      position: absolute;
-      background: #ffffff;
-      border-radius: 10px;
-      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.25);
-      padding: 6px 0 4px 0;
-      min-width: 180px;
-      z-index: 998;
-      display: none;
-    }
-
-    .responsable-menu-item {
-      padding: 6px 12px;
-      cursor: pointer;
-      font-size: 13px;
-    }
-
-    .responsable-menu-item:hover {
       background: #f3f4f6;
+      width: 26px;
+      height: 26px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
     }
 
-    .responsable-menu-footer {
-      border-top: 1px solid #e5e7eb;
-      margin-top: 4px;
-      padding: 4px 6px;
+    .modal-close:hover {
+      background: #e5e7eb;
+    }
+
+    .modal-body {
+      font-size: 13px;
+      color: #374151;
+      max-height: 380px;
+      overflow: auto;
+    }
+
+    .modal-body h4 {
+      margin: 10px 0 4px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .modal-body ul {
+      margin: 0 0 8px 18px;
+      padding: 0;
+    }
+
+    /* Responsables modal */
+
+    .responsables-list {
+      margin: 10px 0;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      padding: 6px 8px;
+      max-height: 230px;
+      overflow: auto;
+    }
+
+    .responsable-item {
       display: flex;
-      gap: 4px;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 4px;
+      border-radius: 6px;
+      font-size: 13px;
     }
 
-    .responsable-menu-footer button {
-      flex: 1;
+    .responsable-item:nth-child(odd) {
+      background: #f9fafb;
+    }
+
+    .responsable-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .chip {
       border-radius: 999px;
       border: 1px solid #e5e7eb;
-      background: #f9fafb;
-      padding: 3px 6px;
+      padding: 3px 8px;
       font-size: 11px;
-      cursor: pointer;
     }
 
-    .responsable-menu-footer button:hover {
+    .btn-xs {
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      padding: 3px 8px;
+      font-size: 11px;
+      cursor: pointer;
+      background: #f9fafb;
+    }
+
+    .btn-xs.danger {
+      border-color: #fecaca;
+      color: #b91c1c;
+      background: #fef2f2;
+    }
+
+    .btn-xs:hover {
       background: #eef2ff;
     }
 
-    .responsables-list-row {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-      margin-bottom: 6px;
-    }
-
-    .responsables-list-row input {
-      flex: 1;
-      padding: 5px 7px;
-      font-size: 13px;
-      border-radius: 8px;
-      border: 1px solid #d1d5db;
-    }
-
-    .responsables-list-row button {
-      border-radius: 999px;
-      border: 1px solid #e5e7eb;
-      background: #f9fafb;
-      padding: 4px 8px;
-      font-size: 12px;
-      cursor: pointer;
-    }
-
-    .responsables-list-row button:hover {
+    .btn-xs.danger:hover {
       background: #fee2e2;
     }
 
-    .responsables-modal-footer {
-      margin-top: 10px;
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-    }
-
-    .responsables-modal-footer button {
+    .input-inline {
+      width: 100%;
       border-radius: 999px;
       border: 1px solid #e5e7eb;
       padding: 6px 10px;
       font-size: 13px;
-      cursor: pointer;
+      margin-top: 6px;
     }
 
-    .responsables-modal-footer button.primary {
-      background: var(--azul);
-      color: #ffffff;
-      border-color: var(--azul);
+    .badge-tip {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-top: 4px;
     }
 
-    .responsables-modal-footer button.primary:hover {
-      background: var(--azul-oscuro);
-    }
-
-    @media (max-width: 768px) {
-      header.header-main {
+    @media (max-width: 900px) {
+      .header {
         flex-direction: column;
         align-items: flex-start;
       }
-      .toolbar {
+      .header-right {
+        flex-wrap: wrap;
+      }
+      .top-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .top-row-right {
+        align-self: stretch;
         justify-content: flex-start;
+      }
+      .filters-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .table-wrapper {
+        border-radius: 10px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <header class="header-main">
-      <div class="title-block">
-        <div class="title-text">
-          <h1>Seguimiento de tareas y reuniones</h1>
-          <div class="subtitle">
-            Usuario: <span id="userLabel">Cargando…</span>
-          </div>
-        </div>
-        <div id="helpIcon" title="Doble clic para ver ayuda">?</div>
-      </div>
+<div class="app-shell">
 
-      <div class="toolbar">
-        <button id="btnAddRow" class="btn btn-primary">+ Fila</button>
-        <button id="btnAddColumn" class="btn">+ Columna</button>
-        <button id="btnExport" class="btn">⬇ Exportar JSON</button>
-        <button id="btnImport" class="btn">⬆ Importar JSON</button>
-        <button id="btnLogout" class="btn btn-danger">Cerrar sesión</button>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <div class="app-title">
+        Seguimiento de tareas y reuniones
+        <button class="help-icon" id="btnHelp">?</button>
       </div>
-    </header>
+      <div class="user-info" id="userEmailLabel"></div>
+    </div>
 
-    <div class="card-main">
-      <!-- Contadores -->
-      <div class="summary-row">
-        <div class="summary-left">
-          <span>Pendientes: <b id="countPendientes">0</b></span>
-          <span>En proceso: <b id="countEnProceso">0</b></span>
-          <span>Terminados: <b id="countTerminados">0</b></span>
-        </div>
-        <div class="summary-right">
-          <button id="btnSoloHoy" class="chip">Solo hoy</button>
-        </div>
+    <div class="header-right">
+      <div class="counter-pill counter-p">
+        P: <span class="value" id="countP">0</span>
       </div>
+      <div class="counter-pill counter-ep">
+        EP: <span class="value" id="countEP">0</span>
+      </div>
+      <div class="counter-pill counter-t">
+        T: <span class="value" id="countT">0</span>
+      </div>
+      <button class="btn-ghost" id="btnLogout">Cerrar sesión</button>
+    </div>
+  </div>
 
-      <!-- Filtros en una sola fila -->
+  <div class="card">
+
+    <!-- TOP ROW buttons -->
+    <div class="top-row">
+      <div class="top-row-left">
+        <button class="btn-primary btn-small" id="btnAddRow">
+          <span class="icon-circle">+</span>Fila
+        </button>
+        <button class="btn-primary btn-small secondary" id="btnAddMeetingCol">
+          <span class="icon-circle">+</span>Columna
+        </button>
+        <button class="btn-primary btn-small secondary" id="btnManageResponsables">
+          Responsables
+        </button>
+      </div>
+      <div class="top-row-right">
+        <button class="btn-primary btn-small secondary" id="btnExport">⬇ Exp</button>
+        <button class="btn-primary btn-small secondary" id="btnImport">⬆ Imp</button>
+        <input type="file" id="importFileInput" accept="application/json" style="display:none" />
+      </div>
+    </div>
+
+    <!-- FILTERS ROW -->
+    <div class="filters-row">
+
       <div class="filters-row">
-        <div class="filters-left">
-          <label>
-            Buscar:
-            <input id="filtroTexto" type="text" placeholder="Palabra o frase..." />
-          </label>
-
-          <label>
-            Estado:
-            <select id="filtroEstado">
-              <option value="todos">Todos</option>
-              <option value="P">Pendiente</option>
-              <option value="EP">En proceso</option>
-              <option value="T">Terminado</option>
-            </select>
-          </label>
-
-          <label>
-            Responsable:
-            <select id="filtroResponsable">
-              <option value="todos">Todos</option>
-            </select>
-          </label>
-
-          <label class="checkbox-inline">
-            <input type="checkbox" id="chkOcultarTerminados" />
-            Ocultar terminados
-          </label>
-        </div>
-
-        <div class="filters-right">
-          <button id="btnAplicarFiltros" class="btn-filter primary">Filtro</button>
-          <button id="btnQuitarFiltros" class="btn-filter secondary">Quitar filtro</button>
-        </div>
+        <label for="searchColumn">Buscar:</label>
+        <select id="searchColumn">
+          <option value="all">Todas las columnas</option>
+          <option value="tema">tema</option>
+          <option value="subTema">sub tema</option>
+          <option value="responsable">responsable</option>
+          <option value="estado">estado</option>
+          <option value="fechaTermino">fecha de término</option>
+        </select>
+        <input type="text" id="searchText" placeholder="Escribe una palabra o frase" />
       </div>
 
-      <!-- Tabla -->
-      <div class="table-wrapper">
-        <div class="table-scroll">
-          <table id="tabla">
-            <thead>
-              <tr id="headerRow"></tr>
-            </thead>
-            <tbody id="bodyRows"></tbody>
-          </table>
-        </div>
-      </div>
+      <div class="filters-row">
+        <label for="filterEstado">Estado:</label>
+        <select id="filterEstado">
+          <option value="todos">Todos</option>
+          <option value="P">P</option>
+          <option value="EP">EP</option>
+          <option value="T">T</option>
+        </select>
 
-      <div class="footer-note">
-        ✔ Los datos (incluyendo comentarios y lista de responsables) se guardan en este navegador, por usuario.
+        <label for="filterResponsable">Responsable:</label>
+        <select id="filterResponsable">
+          <option value="todos">Todos</option>
+        </select>
+
+        <label class="checkbox-label">
+          <input type="checkbox" id="chkOcultarTerminados" />
+          Ocultar T
+        </label>
+
+        <button class="btn-pill" id="btnSoloHoy">Solo hoy</button>
+
+        <button class="btn-pill primary" id="btnAplicarFiltro">Filtro</button>
+        <button class="btn-pill" id="btnQuitarFiltro">Quitar filtro</button>
       </div>
     </div>
-  </div>
 
-  <!-- Modal Ayuda -->
-  <div id="helpModalBackdrop" class="modal-backdrop">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-title">Ayuda rápida</div>
-        <button id="helpModalClose" class="modal-close">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p><strong>Columnas base:</strong> <em>tema</em>, <em>sub tema</em>, <em>responsable</em>, <em>estado</em>, <em>fecha de término</em>.</p>
-        <p><strong>estado</strong> usa: <strong>P</strong> (Pendiente), <strong>EP</strong> (En proceso), <strong>T</strong> (Terminado).</p>
+    <!-- TABLE -->
+    <div class="table-wrapper">
+      <table id="mainTable">
+        <thead>
+        <tr id="headerRow">
+          <th style="min-width:160px;">tema</th>
+          <th style="min-width:160px;">sub tema</th>
+          <th style="min-width:140px;">responsable</th>
+          <th style="min-width:90px;">estado</th>
+          <th style="min-width:120px;">fecha de termino</th>
+          <!-- columnas de reuniones dinámicas se agregan aquí -->
+        </tr>
+        </thead>
+        <tbody id="tableBody">
+        <!-- filas dinámicas -->
+        </tbody>
+      </table>
+    </div>
 
-        <p>👉 En <strong>sub tema</strong> puedes pegar un link de Google Drive; si la celda sólo tiene la URL, con <strong>doble clic</strong> se abre en otra pestaña.</p>
-        <p>👉 Clic derecho en cualquier celda (excepto responsable) para agregar comentario (triángulo amarillo).</p>
-        <p>👉 Clic en una celda de <strong>responsable</strong> para abrir la lista y seleccionar un nombre.</p>
-        <p>👉 Clic derecho en una celda de <strong>responsable</strong> abre el editor de la lista de responsables (agregar / quitar nombres).</p>
-
-        <hr>
-
-        <p><strong>Reuniones:</strong> cada nueva columna de reunión se crea con la fecha del día como título (puedes ajustar manualmente el texto).</p>
-        <p><strong>Filtros rápidos:</strong> puedes filtrar por texto, estado, responsable y ocultar tareas terminadas. El botón "Solo hoy" filtra por fecha de término igual a la fecha actual.</p>
-
-        <hr>
-
-        <p><strong>Datos:</strong> todas las tareas y comentarios se guardan en <em>localStorage</em> por usuario (usando la sesión de Supabase).</p>
-      </div>
+    <div class="footer-note">
+      <input type="checkbox" id="chkLocal" checked disabled />
+      <span>
+        Los datos (incluyendo comentarios y lista de responsables) se guardan en este navegador, por usuario.
+      </span>
     </div>
   </div>
+</div>
 
-  <!-- Menú flotante de responsables -->
-  <div id="responsableMenu" class="responsable-menu">
-    <div id="responsableMenuList"></div>
-    <div class="responsable-menu-footer">
-      <button id="responsableMenuAdd">+ Agregar</button>
-      <button id="responsableMenuEdit">Editar lista</button>
+<!-- MODAL AYUDA -->
+<div class="modal-backdrop" id="helpModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Ayuda rápida</div>
+      <button class="modal-close" data-close="helpModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>Este tablero está pensado para llevar el <strong>seguimiento de tareas y acuerdos</strong> de tus reuniones.</p>
+
+      <h4>Columnas base</h4>
+      <ul>
+        <li><strong>tema</strong>: título corto del tema o acuerdo.</li>
+        <li><strong>sub tema</strong>: detalle, área o referencia adicional.</li>
+        <li><strong>responsable</strong>: persona dueña de la acción (elige de la lista o agrega en el botón Responsables).</li>
+        <li><strong>estado</strong>: usa P (Pendiente), EP (En proceso) o T (Terminado).</li>
+        <li><strong>fecha de término</strong>: meta de cierre de la tarea.</li>
+      </ul>
+
+      <h4>Columnas de reuniones</h4>
+      <ul>
+        <li>Cada vez que des clic en <strong>+ Columna</strong> se agrega una columna nueva con la fecha del día (puedes cambiarla).</li>
+        <li>Úsalas para escribir comentarios o acuerdos específicos de cada reunión.</li>
+        <li>El botón <strong>Solo hoy</strong> oculta todas las demás reuniones y deja visible sólo la columna con la fecha de hoy (si existe).</li>
+      </ul>
+
+      <h4>Estados y contadores</h4>
+      <ul>
+        <li>El color de la columna estado cambia según P, EP o T.</li>
+        <li>Los chips de la parte superior se actualizan automáticamente con el número de tareas en cada estado.</li>
+        <li>Si marcas <strong>Ocultar T</strong>, las tareas terminadas se ocultan de la vista, pero siguen guardadas.</li>
+      </ul>
+
+      <h4>Responsables</h4>
+      <ul>
+        <li>Haz clic en el botón <strong>Responsables</strong> para abrir la lista.</li>
+        <li>Puedes <strong>agregar, renombrar o eliminar</strong> responsables. Los cambios se guardan en tu navegador.</li>
+        <li>Los select de la columna responsable se actualizan automáticamente con la lista nueva.</li>
+      </ul>
+
+      <h4>Comentarios</h4>
+      <ul>
+        <li>Haz <strong>clic derecho</strong> en cualquier celda (excepto responsable y estado) para agregar o editar un comentario.</li>
+        <li>Las celdas con comentario muestran un <strong>triángulo amarillo</strong> en la esquina superior derecha.</li>
+      </ul>
+
+      <h4>Exportar e importar</h4>
+      <ul>
+        <li>El botón <strong>⬇ Exp</strong> descarga un archivo JSON con todas las tareas de este usuario.</li>
+        <li>El botón <strong>⬆ Imp</strong> te permite cargar un JSON exportado previamente.</li>
+        <li>Úsalo como respaldo, o para mover datos a otra computadora.</li>
+      </ul>
+
+      <p class="badge-tip">Tip: siempre usa el mismo correo en el login para que tus tareas y responsables se mantengan juntos.</p>
     </div>
   </div>
+</div>
 
-  <!-- Modal editar responsables -->
-  <div id="responsablesModalBackdrop" class="modal-backdrop">
-    <div class="modal">
-      <div class="modal-header">
-        <div class="modal-title">Editar responsables</div>
-        <button id="responsablesModalClose" class="modal-close">&times;</button>
+<!-- MODAL RESPONSABLES -->
+<div class="modal-backdrop" id="responsablesModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Lista de responsables</div>
+      <button class="modal-close" data-close="responsablesModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="badge-tip">
+        Esta lista es por usuario y se guarda en este navegador.  
+        Los cambios se reflejan inmediatamente en la columna responsable.
       </div>
-      <div class="modal-body">
-        <p>Puedes agregar o quitar nombres. Esta lista se guarda en este navegador.</p>
-        <div id="responsablesEditList"></div>
-        <button id="responsablesAddRow" style="margin-top:6px;">+ Agregar responsable</button>
+      <div class="responsables-list" id="responsablesList">
+        <!-- items dinámicos -->
+      </div>
 
-        <div class="responsables-modal-footer">
-          <button id="responsablesCancel">Cancelar</button>
-          <button id="responsablesSave" class="primary">Guardar</button>
-        </div>
-      </div>
+      <input type="text" id="nuevoResponsableInput" class="input-inline" placeholder="Nuevo responsable" />
+      <button class="btn-primary btn-small" id="btnAgregarResponsableModal" style="margin-top:6px;">
+        Agregar responsable
+      </button>
     </div>
   </div>
+</div>
 
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    // ===========================
-    // CONFIGURACIÓN SUPABASE
-    // ===========================
-    const SUPABASE_URL = 'https://hrbmstaklleraiacqmky.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhyYm1zdGFrbGxlcmFpYWNxbWt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyMTA2OTQsImV4cCI6MjA3ODc4NjY5NH0.tN00tAjMJpJK_8gnerocbOSzHp93N5yc9KohTBpMeZc';
+<script>
+  /************ UTILIDADES BÁSICAS DE SESIÓN / ALMACENAMIENTO ************/
+  const STORAGE_KEY_BASE = "sr_tabla_";
+  const RESPONSABLES_KEY_BASE = "sr_responsables_";
 
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  function getUserEmail() {
+    // guardado por index.html en sessionStorage
+    const email = sessionStorage.getItem("sr_user_email") || "";
+    return email;
+  }
 
-    const BASE_COLUMNS = ['tema', 'subTema', 'responsable', 'estado', 'fechaTermino'];
-    const BASE_HEADERS = {
-      tema: 'tema',
-      subTema: 'sub tema',
-      responsable: 'responsable',
-      estado: 'estado',
-      fechaTermino: 'fecha de termino'
+  function getUserStorageKey() {
+    const email = getUserEmail();
+    return STORAGE_KEY_BASE + (email || "anon");
+  }
+
+  function getRespStorageKey() {
+    const email = getUserEmail();
+    return RESPONSABLES_KEY_BASE + (email || "anon");
+  }
+
+  function loadData() {
+    try {
+      const raw = localStorage.getItem(getUserStorageKey());
+      if (!raw) return { columns: [], rows: [] };
+      return JSON.parse(raw);
+    } catch (e) {
+      console.error("Error al leer datos:", e);
+      return { columns: [], rows: [] };
+    }
+  }
+
+  function saveData() {
+    const payload = {
+      columns: meetingColumns,
+      rows: tableRows
     };
+    localStorage.setItem(getUserStorageKey(), JSON.stringify(payload));
+  }
 
-    let currentUser = null;
-    let storageKey = null;
+  function loadResponsables() {
+    try {
+      const raw = localStorage.getItem(getRespStorageKey());
+      if (!raw) return ["Sin asignar"];
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) && arr.length > 0 ? arr : ["Sin asignar"];
+    } catch (e) {
+      console.error("Error al leer responsables:", e);
+      return ["Sin asignar"];
+    }
+  }
 
-    const state = {
-      responsables: [],
-      meetings: [],
-      rows: [],
-      comments: {},
-    };
+  function saveResponsables() {
+    localStorage.setItem(getRespStorageKey(), JSON.stringify(responsables));
+  }
 
-    const headerRow = document.getElementById('headerRow');
-    const bodyRows = document.getElementById('bodyRows');
+  /************ ESTADO EN MEMORIA ************/
+  let meetingColumns = []; // array de strings (fechas)
+  let tableRows = [];      // [{tema, subTema, responsable, estado, fechaTermino, reuniones:{colFecha: texto}, comments:{celdaId: texto}}]
+  let responsables = [];
 
-    const userLabel = document.getElementById('userLabel');
+  // filtros
+  let currentFilter = {
+    text: "",
+    column: "all",
+    estado: "todos",
+    responsable: "todos",
+    ocultarT: false,
+    soloHoy: false
+  };
 
-    const btnAddRow = document.getElementById('btnAddRow');
-    const btnAddColumn = document.getElementById('btnAddColumn');
-    const btnExport = document.getElementById('btnExport');
-    const btnImport = document.getElementById('btnImport');
-    const btnLogout = document.getElementById('btnLogout');
-
-    const filtroTexto = document.getElementById('filtroTexto');
-    const filtroEstado = document.getElementById('filtroEstado');
-    const filtroResponsable = document.getElementById('filtroResponsable');
-    const chkOcultarTerminados = document.getElementById('chkOcultarTerminados');
-    const btnAplicarFiltros = document.getElementById('btnAplicarFiltros');
-    const btnQuitarFiltros = document.getElementById('btnQuitarFiltros');
-    const btnSoloHoy = document.getElementById('btnSoloHoy');
-
-    const spanPend = document.getElementById('countPendientes');
-    const spanEP = document.getElementById('countEnProceso');
-    const spanT = document.getElementById('countTerminados');
-
-    const helpIcon = document.getElementById('helpIcon');
-    const helpModalBackdrop = document.getElementById('helpModalBackdrop');
-    const helpModalClose = document.getElementById('helpModalClose');
-
-    const responsableMenu = document.getElementById('responsableMenu');
-    const responsableMenuList = document.getElementById('responsableMenuList');
-    const responsableMenuAdd = document.getElementById('responsableMenuAdd');
-    const responsableMenuEdit = document.getElementById('responsableMenuEdit');
-
-    const responsablesModalBackdrop = document.getElementById('responsablesModalBackdrop');
-    const responsablesModalClose = document.getElementById('responsablesModalClose');
-    const responsablesEditList = document.getElementById('responsablesEditList');
-    const responsablesAddRow = document.getElementById('responsablesAddRow');
-    const responsablesCancel = document.getElementById('responsablesCancel');
-    const responsablesSave = document.getElementById('responsablesSave');
-
-    let filtroSoloHoy = false;
-
-    // ===========================
-    // UTILIDADES
-    // ===========================
-    function todayString() {
-      const d = new Date();
-      const dd = String(d.getDate()).padStart(2, '0');
-      const mm = String(d.getMonth() + 1).padStart(2, '0');
-      const yyyy = d.getFullYear();
-      return `${dd}/${mm}/${yyyy}`;
+  /************ INICIALIZACIÓN ************/
+  document.addEventListener("DOMContentLoaded", () => {
+    const email = getUserEmail();
+    const label = document.getElementById("userEmailLabel");
+    if (email) {
+      label.textContent = email;
+    } else {
+      label.textContent = "";
+      alert("No hay sesión activa, vuelve a iniciar desde el login.");
+      window.location.href = "index.html";
+      return;
     }
 
-    function getCommentKey(rowIndex, colKey) {
-      return rowIndex + '|' + colKey;
-    }
+    // Cargar datos
+    const data = loadData();
+    meetingColumns = data.columns || [];
+    tableRows = data.rows || [];
 
-    function saveState() {
-      if (!storageKey) return;
-      localStorage.setItem(storageKey, JSON.stringify(state));
-    }
+    // Responsables
+    responsables = loadResponsables();
 
-    function loadState() {
-      if (!storageKey) return;
-      const raw = localStorage.getItem(storageKey);
-      if (!raw) {
-        state.responsables = [''];
-        state.meetings = [];
-        state.rows = [];
-        state.comments = {};
-        return;
+    buildHeader();
+    renderResponsableFilterOptions();
+    renderTable();
+    updateCounters();
+
+    // Eventos globales
+    document.getElementById("btnAddRow").addEventListener("click", addRow);
+    document.getElementById("btnAddMeetingCol").addEventListener("click", addMeetingColumn);
+    document.getElementById("btnExport").addEventListener("click", exportJSON);
+    document.getElementById("btnImport").addEventListener("click", () => {
+      document.getElementById("importFileInput").click();
+    });
+    document.getElementById("importFileInput").addEventListener("change", importJSON);
+
+    document.getElementById("btnHelp").addEventListener("click", () => openModal("helpModal"));
+    document.querySelectorAll(".modal-close").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.dataset.close;
+        closeModal(id);
+      });
+    });
+
+    document.getElementById("btnManageResponsables").addEventListener("click", () => {
+      renderResponsablesModal();
+      openModal("responsablesModal");
+    });
+    document.getElementById("btnAgregarResponsableModal").addEventListener("click", agregarResponsableDesdeModal);
+
+    // Filtros
+    document.getElementById("btnAplicarFiltro").addEventListener("click", applyFilterFromUI);
+    document.getElementById("btnQuitarFiltro").addEventListener("click", clearFilterUI);
+    document.getElementById("btnSoloHoy").addEventListener("click", () => {
+      currentFilter.soloHoy = true;
+      applyFilterFromUI();
+    });
+
+    document.getElementById("btnLogout").addEventListener("click", () => {
+      sessionStorage.removeItem("sr_user_email");
+      window.location.href = "index.html";
+    });
+
+    // clic derecho comentarios
+    const table = document.getElementById("mainTable");
+    table.addEventListener("contextmenu", handleCellContextMenu);
+  });
+
+  /************ RENDER HEADER ************/
+  function buildHeader() {
+    const headerRow = document.getElementById("headerRow");
+    // Limpia todo menos las 5 columnas base
+    while (headerRow.children.length > 5) {
+      headerRow.removeChild(headerRow.lastChild);
+    }
+    meetingColumns.forEach(dateStr => {
+      const th = document.createElement("th");
+      th.textContent = dateStr;
+      th.dataset.meeting = dateStr;
+      headerRow.appendChild(th);
+    });
+  }
+
+  /************ RENDER TABLA ************/
+  function renderTable() {
+    const tbody = document.getElementById("tableBody");
+    tbody.innerHTML = "";
+
+    const hoy = new Date().toISOString().slice(0,10);
+
+    tableRows.forEach((row, rowIndex) => {
+
+      // aplicar filtros por fila
+      if (!passesRowFilters(row)) return;
+
+      const tr = document.createElement("tr");
+
+      // tema
+      const tdTema = document.createElement("td");
+      tdTema.classList.add("cell-comment");
+      tdTema.dataset.col = "tema";
+      const inputTema = document.createElement("input");
+      inputTema.type = "text";
+      inputTema.value = row.tema || "";
+      inputTema.addEventListener("input", () => {
+        row.tema = inputTema.value;
+        saveData();
+      });
+      tdTema.appendChild(inputTema);
+      markCommentTriangle(row, tdTema, rowIndex, "tema");
+      tr.appendChild(tdTema);
+
+      // sub tema
+      const tdSub = document.createElement("td");
+      tdSub.classList.add("cell-comment");
+      tdSub.dataset.col = "subTema";
+      const inputSub = document.createElement("input");
+      inputSub.type = "text";
+      inputSub.value = row.subTema || "";
+      inputSub.addEventListener("input", () => {
+        row.subTema = inputSub.value;
+        saveData();
+      });
+      tdSub.appendChild(inputSub);
+      markCommentTriangle(row, tdSub, rowIndex, "subTema");
+      tr.appendChild(tdSub);
+
+      // responsable
+      const tdResp = document.createElement("td");
+      const selResp = document.createElement("select");
+      responsables.forEach(r => {
+        const opt = document.createElement("option");
+        opt.value = r;
+        opt.textContent = r;
+        selResp.appendChild(opt);
+      });
+      if (!row.responsable) {
+        row.responsable = responsables[0] || "Sin asignar";
       }
-      try {
-        const parsed = JSON.parse(raw);
-        Object.assign(state, parsed);
-      } catch (e) {
-        console.error('Error leyendo estado guardado', e);
-      }
-    }
+      selResp.value = row.responsable;
+      selResp.addEventListener("change", () => {
+        row.responsable = selResp.value;
+        saveData();
+      });
+      tdResp.appendChild(selResp);
+      tr.appendChild(tdResp);
 
-    // ===========================
-    // RENDER TABLA
-    // ===========================
-    function renderHeader() {
-      headerRow.innerHTML = '';
-      BASE_COLUMNS.forEach((colName, index) => {
-        const th = document.createElement('th');
-        th.textContent = BASE_HEADERS[colName];
-        th.classList.add('sticky');
-        headerRow.appendChild(th);
+      // estado
+      const tdEstado = document.createElement("td");
+      const selEstado = document.createElement("select");
+      ["P","EP","T"].forEach(e => {
+        const opt = document.createElement("option");
+        opt.value = e;
+        opt.textContent = e;
+        selEstado.appendChild(opt);
+      });
+      if (!row.estado) row.estado = "P";
+      selEstado.value = row.estado;
+      selEstado.addEventListener("change", () => {
+        row.estado = selEstado.value;
+        saveData();
+        updateCounters();
+        renderTable(); // para ocultar T si el filtro está activo
+      });
+      tdEstado.appendChild(selEstado);
+      tr.appendChild(tdEstado);
+
+      // fecha termino
+      const tdFecha = document.createElement("td");
+      tdFecha.classList.add("cell-comment");
+      tdFecha.dataset.col = "fechaTermino";
+      const inputFecha = document.createElement("input");
+      inputFecha.type = "text";
+      inputFecha.placeholder = "dd/mm/aa";
+      inputFecha.value = row.fechaTermino || "";
+      inputFecha.addEventListener("input", () => {
+        row.fechaTermino = inputFecha.value;
+        saveData();
+      });
+      tdFecha.appendChild(inputFecha);
+      markCommentTriangle(row, tdFecha, rowIndex, "fechaTermino");
+      tr.appendChild(tdFecha);
+
+      // columnas de reuniones
+      meetingColumns.forEach(colDate => {
+        const td = document.createElement("td");
+        td.classList.add("cell-comment");
+        td.dataset.col = `reunion_${colDate}`;
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.value = (row.reuniones && row.reuniones[colDate]) || "";
+        input.addEventListener("input", () => {
+          if (!row.reuniones) row.reuniones = {};
+          row.reuniones[colDate] = input.value;
+          saveData();
+        });
+        td.appendChild(input);
+        markCommentTriangle(row, td, rowIndex, `reunion_${colDate}`);
+        tr.appendChild(td);
       });
 
-      state.meetings.forEach(dateLabel => {
-        const th = document.createElement('th');
-        th.textContent = dateLabel;
-        headerRow.appendChild(th);
-      });
-    }
-
-    function renderBody() {
-      bodyRows.innerHTML = '';
-
-      state.rows.forEach((row, rowIndex) => {
-        const tr = document.createElement('tr');
-        tr.dataset.index = rowIndex;
-
-        // tema
-        let td = document.createElement('td');
-        td.classList.add('sticky', 'cell-tema');
-        td.contentEditable = true;
-        td.textContent = row.tema || '';
-        td.dataset.row = rowIndex;
-        td.dataset.field = 'tema';
-        td.addEventListener('input', handleTextEdit);
-        tr.appendChild(td);
-
-        // subTema
-        td = document.createElement('td');
-        td.classList.add('sticky', 'cell-subtema');
-        td.contentEditable = true;
-        td.textContent = row.subTema || '';
-        td.dataset.row = rowIndex;
-        td.dataset.field = 'subTema';
-        td.addEventListener('input', handleTextEdit);
-        tr.appendChild(td);
-
-        // responsable
-        td = document.createElement('td');
-        td.classList.add('sticky', 'cell-responsable');
-        td.dataset.row = rowIndex;
-        td.textContent = row.responsable || '';
-        tr.appendChild(td);
-
-        // estado
-        td = document.createElement('td');
-        td.classList.add('sticky', 'cell-estado');
-        const sel = document.createElement('select');
-        sel.className = 'estado-select';
-        [['P','P'], ['EP','EP'], ['T','T']].forEach(([val, label]) => {
-          const opt = document.createElement('option');
-          opt.value = val;
-          opt.textContent = label;
-          sel.appendChild(opt);
-        });
-        sel.value = row.estado || 'P';
-        sel.dataset.row = rowIndex;
-        sel.addEventListener('change', (e) => {
-          state.rows[rowIndex].estado = e.target.value;
-          saveState();
-          renderBody();
-          recalcularContadores();
-        });
-        const pill = document.createElement('span');
-        pill.className = 'estado-pill estado-' + (row.estado || 'P');
-        pill.textContent = row.estado || 'P';
-        td.appendChild(sel);
-        td.appendChild(pill);
-        tr.appendChild(td);
-
-        // fechaTermino
-        td = document.createElement('td');
-        td.classList.add('sticky', 'cell-fecha');
-        td.contentEditable = true;
-        td.textContent = row.fechaTermino || '';
-        td.dataset.row = rowIndex;
-        td.dataset.field = 'fechaTermino';
-        td.addEventListener('input', handleTextEdit);
-        tr.appendChild(td);
-
-        // columnas de reuniones
-        state.meetings.forEach(dateLabel => {
-          td = document.createElement('td');
-          const colKey = dateLabel;
-          const value = (row.reuniones || {})[colKey] || '';
-          td.contentEditable = true;
-          td.textContent = value;
-          td.dataset.row = rowIndex;
-          td.dataset.meeting = colKey;
-          td.addEventListener('input', handleMeetingEdit);
-
-          const cKey = getCommentKey(rowIndex, colKey);
-          if (state.comments[cKey]) {
-            td.dataset.hasComment = '1';
-          }
-
-          tr.appendChild(td);
-        });
-
-        bodyRows.appendChild(tr);
-      });
-
-      aplicarFiltros(); // re-aplicar filtros después de render
-      recalcularContadores();
-    }
-
-    function handleTextEdit(e) {
-      const rowIndex = Number(e.target.dataset.row);
-      const field = e.target.dataset.field;
-      if (!Number.isFinite(rowIndex) || !field) return;
-      state.rows[rowIndex][field] = e.target.textContent;
-      saveState();
-    }
-
-    function handleMeetingEdit(e) {
-      const rowIndex = Number(e.target.dataset.row);
-      const meetingKey = e.target.dataset.meeting;
-      if (!Number.isFinite(rowIndex) || !meetingKey) return;
-      if (!state.rows[rowIndex].reuniones) {
-        state.rows[rowIndex].reuniones = {};
-      }
-      state.rows[rowIndex].reuniones[meetingKey] = e.target.textContent;
-      saveState();
-    }
-
-    // ===========================
-    // COMENTARIOS (clic derecho)
-    // ===========================
-    document.getElementById('tabla').addEventListener('contextmenu', (e) => {
-      const td = e.target.closest('td');
-      if (!td || td.closest('thead')) return;
-      // si es responsable: intercepta para abrir modal de responsables
-      if (td.classList.contains('cell-responsable')) {
-        e.preventDefault();
-        openResponsablesModal();
-        return;
+      // Colorear fila según estado
+      const estado = row.estado || "P";
+      if (estado === "P") {
+        tr.classList.remove("estado-ep", "estado-t");
+        tr.classList.add("estado-p");
+      } else if (estado === "EP") {
+        tr.classList.remove("estado-p", "estado-t");
+        tr.classList.add("estado-ep");
+      } else if (estado === "T") {
+        tr.classList.remove("estado-p", "estado-ep");
+        tr.classList.add("estado-t");
       }
 
-      e.preventDefault();
-      const rowIndex = td.dataset.row;
-      if (rowIndex === undefined) return;
+      tbody.appendChild(tr);
+    });
 
-      let colKey = td.dataset.field;
-      if (td.dataset.meeting) colKey = td.dataset.meeting;
-      if (!colKey) colKey = 'base-' + td.cellIndex;
+    updateCounters();
+  }
 
-      const key = getCommentKey(rowIndex, colKey);
-      const actual = state.comments[key] || '';
+  /************ FILTROS ************/
+  function passesRowFilters(row) {
+    const { text, column, estado, responsable, ocultarT } = currentFilter;
 
-      const nuevo = prompt('Comentario para esta celda (deja vacío para borrar):', actual);
-      if (nuevo === null) return;
+    if (ocultarT && row.estado === "T") return false;
 
-      if (nuevo.trim() === '') {
-        delete state.comments[key];
-        td.removeAttribute('data-has-comment');
+    if (estado !== "todos" && row.estado !== estado) return false;
+
+    if (responsable !== "todos" && row.responsable !== responsable) return false;
+
+    if (text && text.trim() !== "") {
+      const q = text.toLowerCase();
+      if (column === "all") {
+        const allText = [
+          row.tema || "",
+          row.subTema || "",
+          row.responsable || "",
+          row.estado || "",
+          row.fechaTermino || ""
+        ].join(" ").toLowerCase();
+        if (!allText.includes(q)) return false;
       } else {
-        state.comments[key] = nuevo.trim();
-        td.dataset.hasComment = '1';
-      }
-      saveState();
-    });
-
-    // ===========================
-    // BOTONES PRINCIPALES
-    // ===========================
-    btnAddRow.addEventListener('click', () => {
-      state.rows.push({
-        tema: '',
-        subTema: '',
-        responsable: '',
-        estado: 'P',
-        fechaTermino: '',
-        reuniones: {}
-      });
-      saveState();
-      renderBody();
-    });
-
-    btnAddColumn.addEventListener('click', () => {
-      const today = todayString();
-      const label = prompt('Fecha para la nueva reunión (dd/mm/aaaa). Deja vacío para usar la fecha de hoy:', today) || today;
-      if (state.meetings.includes(label)) {
-        alert('Esa fecha ya existe como columna.');
-        return;
-      }
-      state.meetings.push(label);
-      state.rows.forEach(row => {
-        if (!row.reuniones) row.reuniones = {};
-        row.reuniones[label] = row.reuniones[label] || '';
-      });
-      saveState();
-      renderHeader();
-      renderBody();
-    });
-
-    btnExport.addEventListener('click', () => {
-      const dataStr = JSON.stringify(state, null, 2);
-      const blob = new Blob([dataStr], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'seguimiento_reuniones.json';
-      a.click();
-      URL.revokeObjectURL(url);
-    });
-
-    btnImport.addEventListener('click', () => {
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'application/json';
-      input.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = () => {
-          try {
-            const imported = JSON.parse(reader.result);
-            Object.assign(state, imported);
-            saveState();
-            renderHeader();
-            renderBody();
-            rellenarComboResponsables();
-          } catch (err) {
-            console.error(err);
-            alert('No se pudo importar el archivo JSON.');
-          }
+        const map = {
+          tema: row.tema || "",
+          subTema: row.subTema || "",
+          responsable: row.responsable || "",
+          estado: row.estado || "",
+          fechaTermino: row.fechaTermino || ""
         };
-        reader.readAsText(file);
-      });
-      input.click();
-    });
+        if (!(map[column] || "").toLowerCase().includes(q)) return false;
+      }
+    }
 
-    btnLogout.addEventListener('click', async () => {
+    return true;
+  }
+
+  function applyFilterFromUI() {
+    currentFilter.text = document.getElementById("searchText").value.trim();
+    currentFilter.column = document.getElementById("searchColumn").value;
+    currentFilter.estado = document.getElementById("filterEstado").value;
+    currentFilter.responsable = document.getElementById("filterResponsable").value;
+    currentFilter.ocultarT = document.getElementById("chkOcultarTerminados").checked;
+
+    renderTable();
+  }
+
+  function clearFilterUI() {
+    document.getElementById("searchText").value = "";
+    document.getElementById("searchColumn").value = "all";
+    document.getElementById("filterEstado").value = "todos";
+    document.getElementById("filterResponsable").value = "todos";
+    document.getElementById("chkOcultarTerminados").checked = false;
+    currentFilter = {
+      text: "",
+      column: "all",
+      estado: "todos",
+      responsable: "todos",
+      ocultarT: false,
+      soloHoy: false
+    };
+    renderTable();
+  }
+
+  /************ CONTADORES ************/
+  function updateCounters() {
+    let cP = 0, cEP = 0, cT = 0;
+    tableRows.forEach(r => {
+      if (r.estado === "T") cT++;
+      else if (r.estado === "EP") cEP++;
+      else cP++;
+    });
+    document.getElementById("countP").textContent = cP;
+    document.getElementById("countEP").textContent = cEP;
+    document.getElementById("countT").textContent = cT;
+  }
+
+  /************ FILAS / COLUMNAS ************/
+  function addRow() {
+    const newRow = {
+      tema: "",
+      subTema: "",
+      responsable: responsables[0] || "Sin asignar",
+      estado: "P",
+      fechaTermino: "",
+      reuniones: {},
+      comments: {}
+    };
+    tableRows.push(newRow);
+    saveData();
+    renderTable();
+  }
+
+  function addMeetingColumn() {
+    const hoy = new Date().toISOString().slice(0, 10);
+    let fecha = prompt("Fecha para la nueva columna de reunión (YYYY-MM-DD):", hoy);
+    if (!fecha) return;
+    fecha = fecha.trim();
+    if (meetingColumns.includes(fecha)) {
+      alert("Ya existe una columna con esa fecha.");
+      return;
+    }
+    meetingColumns.push(fecha);
+    saveData();
+    buildHeader();
+    renderTable();
+  }
+
+  /************ EXPORT / IMPORT ************/
+  function exportJSON() {
+    const data = {
+      columns: meetingColumns,
+      rows: tableRows,
+      responsables
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "seguimiento_reuniones.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function importJSON(evt) {
+    const file = evt.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
       try {
-        await supabaseClient.auth.signOut();
-      } catch (e) {
-        console.warn('Error al cerrar sesión', e);
-      } finally {
-        window.location.href = 'index.html';
+        const data = JSON.parse(e.target.result);
+        meetingColumns = data.columns || [];
+        tableRows = data.rows || [];
+        responsables = data.responsables && data.responsables.length ? data.responsables : responsables;
+        saveData();
+        saveResponsables();
+        buildHeader();
+        renderResponsableFilterOptions();
+        renderTable();
+      } catch (err) {
+        alert("Archivo inválido");
       }
+    };
+    reader.readAsText(file);
+    evt.target.value = "";
+  }
+
+  /************ MODALES ************/
+  function openModal(id) {
+    document.getElementById(id).classList.add("active");
+  }
+  function closeModal(id) {
+    document.getElementById(id).classList.remove("active");
+  }
+
+  /************ RESPONSABLES ************/
+  function renderResponsableFilterOptions() {
+    const sel = document.getElementById("filterResponsable");
+    const current = sel.value || "todos";
+    sel.innerHTML = "";
+    const optAll = document.createElement("option");
+    optAll.value = "todos";
+    optAll.textContent = "Todos";
+    sel.appendChild(optAll);
+    responsables.forEach(r => {
+      const opt = document.createElement("option");
+      opt.value = r;
+      opt.textContent = r;
+      sel.appendChild(opt);
     });
-
-    // ===========================
-    // FILTROS Y CONTADORES
-    // ===========================
-    function rellenarComboResponsables() {
-      if (!filtroResponsable) return;
-      const valueActual = filtroResponsable.value || 'todos';
-      filtroResponsable.innerHTML = '<option value="todos">Todos</option>';
-      (responsablesList || []).forEach((name) => {
-        const opt = document.createElement('option');
-        opt.value = name;
-        opt.textContent = name;
-        filtroResponsable.appendChild(opt);
-      });
-      const opt = Array.from(filtroResponsable.options).find(o => o.value === valueActual);
-      if (opt) opt.selected = true;
+    if ([...sel.options].some(o => o.value === current)) {
+      sel.value = current;
     }
+  }
 
-    function recalcularContadores() {
-      const rows = document.querySelectorAll('#bodyRows tr');
-      let cP = 0, cEP = 0, cT = 0;
+  function renderResponsablesModal() {
+    const container = document.getElementById("responsablesList");
+    container.innerHTML = "";
+    responsables.forEach((r, idx) => {
+      const item = document.createElement("div");
+      item.className = "responsable-item";
+      const nameSpan = document.createElement("span");
+      nameSpan.textContent = r;
+      item.appendChild(nameSpan);
 
-      rows.forEach(row => {
-        const cellEstado = row.querySelector('.cell-estado');
-        if (!cellEstado) return;
-        const pill = cellEstado.querySelector('.estado-pill');
-        const estado = (pill?.textContent || '').trim().toUpperCase();
-        if (estado === 'P') cP++;
-        else if (estado === 'EP') cEP++;
-        else if (estado === 'T') cT++;
-      });
+      const actions = document.createElement("div");
+      actions.className = "responsable-actions";
 
-      spanPend.textContent = cP;
-      spanEP.textContent = cEP;
-      spanT.textContent = cT;
-    }
-
-    function aplicarFiltros() {
-      const texto = (filtroTexto.value || '').toLowerCase().trim();
-      const est = filtroEstado.value;
-      const resp = filtroResponsable.value;
-      const ocultarTerminados = chkOcultarTerminados.checked;
-
-      const hoy = new Date();
-      const hoyStr = todayString();
-
-      const rows = document.querySelectorAll('#bodyRows tr');
-
-      rows.forEach(row => {
-        let visible = true;
-
-        const cellTema = row.querySelector('.cell-tema');
-        const cellSubTema = row.querySelector('.cell-subtema');
-        const cellResp = row.querySelector('.cell-responsable');
-        const cellEstado = row.querySelector('.cell-estado');
-        const cellFecha = row.querySelector('.cell-fecha');
-
-        const txtRow = [
-          cellTema?.textContent || '',
-          cellSubTema?.textContent || '',
-          cellResp?.textContent || ''
-        ].join(' ').toLowerCase();
-
-        const pill = cellEstado?.querySelector('.estado-pill');
-        const estado = (pill?.textContent || '').trim().toUpperCase();
-        const nombreResp = (cellResp?.textContent || '').trim();
-        const fechaTexto = (cellFecha?.textContent || '').trim();
-
-        // 1) filtro de texto
-        if (texto && !txtRow.includes(texto)) {
-          visible = false;
-        }
-
-        // 2) filtro de estado
-        if (visible && est !== 'todos') {
-          if (estado !== est) visible = false;
-        }
-
-        // 3) filtro de responsable
-        if (visible && resp !== 'todos') {
-          if (nombreResp !== resp) visible = false;
-        }
-
-        // 4) ocultar terminados
-        if (visible && ocultarTerminados && estado === 'T') {
-          visible = false;
-        }
-
-        // 5) Solo hoy
-        if (visible && filtroSoloHoy) {
-          if (fechaTexto !== hoyStr) visible = false;
-        }
-
-        if (visible) {
-          row.classList.remove('hidden-by-filter');
-        } else {
-          row.classList.add('hidden-by-filter');
-        }
-      });
-    }
-
-    btnAplicarFiltros.addEventListener('click', aplicarFiltros);
-
-    btnQuitarFiltros.addEventListener('click', () => {
-      filtroTexto.value = '';
-      filtroEstado.value = 'todos';
-      filtroResponsable.value = 'todos';
-      chkOcultarTerminados.checked = false;
-      filtroSoloHoy = false;
-      btnSoloHoy.classList.remove('active-chip');
-      const rows = document.querySelectorAll('#bodyRows tr');
-      rows.forEach(r => r.classList.remove('hidden-by-filter'));
-    });
-
-    btnSoloHoy.addEventListener('click', () => {
-      filtroSoloHoy = !filtroSoloHoy;
-      if (filtroSoloHoy) {
-        btnSoloHoy.classList.add('active-chip');
-      } else {
-        btnSoloHoy.classList.remove('active-chip');
-      }
-      aplicarFiltros();
-    });
-
-    // ===========================
-    // AYUDA (MODAL)
-    // ===========================
-    helpIcon.addEventListener('dblclick', () => {
-      helpModalBackdrop.style.display = 'flex';
-    });
-
-    helpModalClose.addEventListener('click', () => {
-      helpModalBackdrop.style.display = 'none';
-    });
-
-    helpModalBackdrop.addEventListener('click', (e) => {
-      if (e.target === helpModalBackdrop) {
-        helpModalBackdrop.style.display = 'none';
-      }
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        helpModalBackdrop.style.display = 'none';
-        responsablesModalBackdrop.style.display = 'none';
-      }
-    });
-
-    // ===========================
-    // RESPONSABLES
-    // ===========================
-    const RESPONSABLES_KEY = 'responsables_lista_v1';
-    function loadResponsablesLocal() {
-      try {
-        const raw = localStorage.getItem(RESPONSABLES_KEY);
-        if (!raw) return [];
-        const arr = JSON.parse(raw);
-        if (Array.isArray(arr)) return arr;
-        return [];
-      } catch (e) {
-        return [];
-      }
-    }
-    function saveResponsablesLocal() {
-      localStorage.setItem(RESPONSABLES_KEY, JSON.stringify(responsablesList));
-    }
-
-    let responsablesList = loadResponsablesLocal();
-    if (responsablesList.length === 0) {
-      responsablesList = ['Responsable 1', 'Responsable 2'];
-      saveResponsablesLocal();
-    }
-
-    function setResponsableForCell(cell, name) {
-      cell.textContent = name;
-      const rowIndex = Number(cell.dataset.row);
-      if (!Number.isFinite(rowIndex)) return;
-      state.rows[rowIndex].responsable = name;
-      saveState();
-      aplicarFiltros();
-    }
-
-    let currentResponsableCell = null;
-
-    function openResponsableMenu(cell) {
-      currentResponsableCell = cell;
-      responsableMenuList.innerHTML = '';
-
-      responsablesList.forEach((name) => {
-        const div = document.createElement('div');
-        div.className = 'responsable-menu-item';
-        div.textContent = name;
-        div.addEventListener('click', () => {
-          setResponsableForCell(cell, name);
-          hideResponsableMenu();
+      const btnRen = document.createElement("button");
+      btnRen.className = "btn-xs";
+      btnRen.textContent = "Renombrar";
+      btnRen.addEventListener("click", () => {
+        const nuevo = prompt("Nuevo nombre para responsable:", r);
+        if (!nuevo) return;
+        const newName = nuevo.trim();
+        if (!newName) return;
+        // actualizar lista
+        responsables[idx] = newName;
+        // actualizar filas
+        tableRows.forEach(row => {
+          if (row.responsable === r) row.responsable = newName;
         });
-        responsableMenuList.appendChild(div);
+        saveResponsables();
+        saveData();
+        renderResponsablesModal();
+        renderResponsableFilterOptions();
+        renderTable();
       });
 
-      const rect = cell.getBoundingClientRect();
-      const scrollX = window.scrollX || window.pageXOffset;
-      const scrollY = window.scrollY || window.pageYOffset;
-      responsableMenu.style.left = (rect.left + scrollX) + 'px';
-      responsableMenu.style.top = (rect.bottom + scrollY + 4) + 'px';
-      responsableMenu.style.display = 'block';
-    }
-
-    function hideResponsableMenu() {
-      responsableMenu.style.display = 'none';
-      currentResponsableCell = null;
-    }
-
-    document.addEventListener('click', (e) => {
-      const cell = e.target.closest('td.cell-responsable');
-      if (cell) {
-        openResponsableMenu(cell);
-      } else if (!e.target.closest('#responsableMenu')) {
-        hideResponsableMenu();
-      }
-    });
-
-    responsableMenuEdit.addEventListener('click', () => {
-      hideResponsableMenu();
-      openResponsablesModal();
-    });
-
-    responsableMenuAdd.addEventListener('click', () => {
-      hideResponsableMenu();
-      responsablesList.push('');
-      openResponsablesModal();
-    });
-
-    function renderResponsablesEditList() {
-      responsablesEditList.innerHTML = '';
-      responsablesList.forEach((name, idx) => {
-        const row = document.createElement('div');
-        row.className = 'responsables-list-row';
-
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.value = name;
-
-        const delBtn = document.createElement('button');
-        delBtn.textContent = 'Eliminar';
-        delBtn.addEventListener('click', () => {
-          responsablesList.splice(idx, 1);
-          renderResponsablesEditList();
-        });
-
-        row.appendChild(input);
-        row.appendChild(delBtn);
-        responsablesEditList.appendChild(row);
+      const btnDel = document.createElement("button");
+      btnDel.className = "btn-xs danger";
+      btnDel.textContent = "Eliminar";
+      btnDel.addEventListener("click", () => {
+        if (!confirm("¿Eliminar responsable \""+r+"\"? Las filas que lo tengan quedarán con ese texto, pero ya no aparecerá en la lista.")) return;
+        responsables.splice(idx,1);
+        saveResponsables();
+        renderResponsablesModal();
+        renderResponsableFilterOptions();
+        renderTable();
       });
-    }
 
-    function openResponsablesModal() {
-      renderResponsablesEditList();
-      responsablesModalBackdrop.style.display = 'flex';
-    }
-
-    function closeResponsablesModal() {
-      responsablesModalBackdrop.style.display = 'none';
-    }
-
-    responsablesModalClose.addEventListener('click', closeResponsablesModal);
-    responsablesCancel.addEventListener('click', closeResponsablesModal);
-
-    responsablesAddRow.addEventListener('click', () => {
-      responsablesList.push('');
-      renderResponsablesEditList();
+      actions.appendChild(btnRen);
+      actions.appendChild(btnDel);
+      item.appendChild(actions);
+      container.appendChild(item);
     });
+  }
 
-    responsablesSave.addEventListener('click', () => {
-      const inputs = responsablesEditList.querySelectorAll('input');
-      const nueva = [];
-      inputs.forEach((inp) => {
-        const val = inp.value.trim();
-        if (val) nueva.push(val);
-      });
-      responsablesList = nueva;
-      saveResponsablesLocal();
-      rellenarComboResponsables();
-      closeResponsablesModal();
-    });
-
-    responsablesModalBackdrop.addEventListener('click', (e) => {
-      if (e.target === responsablesModalBackdrop) {
-        closeResponsablesModal();
-      }
-    });
-
-    // ===========================
-    // INICIALIZACIÓN
-    // ===========================
-    async function init() {
-      const { data, error } = await supabaseClient.auth.getSession();
-      if (error) {
-        console.error(error);
-      }
-      if (!data || !data.session) {
-        window.location.href = 'index.html';
-        return;
-      }
-
-      currentUser = data.session.user;
-      storageKey = 'seguimiento_reuniones_' + currentUser.id;
-
-      userLabel.textContent = currentUser.email || 'Usuario';
-
-      loadState();
-
-      if (!Array.isArray(state.responsables) || state.responsables.length === 0) {
-        state.responsables = [];
-      }
-      if (!Array.isArray(state.rows)) state.rows = [];
-      if (!Array.isArray(state.meetings)) state.meetings = [];
-      if (!state.comments) state.comments = {};
-
-      renderHeader();
-      renderBody();
-      rellenarComboResponsables();
+  function agregarResponsableDesdeModal() {
+    const input = document.getElementById("nuevoResponsableInput");
+    const val = input.value.trim();
+    if (!val) return;
+    if (responsables.includes(val)) {
+      alert("Ese responsable ya existe.");
+      return;
     }
+    responsables.push(val);
+    saveResponsables();
+    input.value = "";
+    renderResponsablesModal();
+    renderResponsableFilterOptions();
+    renderTable();
+  }
 
-    init();
-  </script>
+  /************ COMENTARIOS ************/
+  function handleCellContextMenu(e) {
+    const cell = e.target.closest("td");
+    if (!cell) return;
+
+    const colId = cell.dataset.col;
+    if (!colId) return; // no comments for responsable/estado
+
+    e.preventDefault();
+
+    const rowIndex = [...cell.parentNode.parentNode.children].indexOf(cell.parentNode);
+    const row = tableRows[rowIndex];
+    if (!row) return;
+    if (!row.comments) row.comments = {};
+
+    const key = colId;
+    const actual = row.comments[key] || "";
+    const nuevo = prompt("Comentario para esta celda (dejar vacío para borrar):", actual);
+    if (nuevo === null) return;
+
+    if (nuevo.trim() === "") {
+      delete row.comments[key];
+    } else {
+      row.comments[key] = nuevo.trim();
+    }
+    saveData();
+    renderTable();
+  }
+
+  function markCommentTriangle(row, td, rowIndex, colId) {
+    if (!row.comments) return;
+    if (row.comments[colId]) {
+      td.classList.add("has-comment");
+    } else {
+      td.classList.remove("has-comment");
+    }
+  }
+
+</script>
 </body>
 </html>

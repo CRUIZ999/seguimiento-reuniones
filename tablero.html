@@ -3,946 +3,1343 @@
 <head>
   <meta charset="UTF-8" />
   <title>Seguimiento de tareas y reuniones</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Fuente -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --primary: #2563eb;
-      --primary-soft: #e0ecff;
-      --primary-soft-strong: #d1e3ff;
-      --bg: #f4f5f7;
+      --bg: #f5f7fb;
       --card-bg: #ffffff;
-      --border: #e5e7eb;
-      --border-dark: #cbd5e1;
+      --primary: #0f72e5;
+      --primary-soft: #e5f0ff;
+      --danger: #f05252;
       --text-main: #111827;
-      --text-muted: #6b7280;
-      --danger: #dc2626;
+      --text-soft: #6b7280;
+      --border-soft: #e5e7eb;
       --success: #16a34a;
-      --inprocess: #fbbf24;
+      --warning: #f97316;
+      --shadow-soft: 0 16px 40px rgba(15, 35, 52, 0.08);
+      --radius-xl: 18px;
+      --radius-md: 10px;
     }
 
     * {
       box-sizing: border-box;
-      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-        sans-serif;
     }
-
     body {
       margin: 0;
-      background: var(--bg);
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #e7f0ff 0, #f6f7fb 45%, #f5f5f5 100%);
       color: var(--text-main);
     }
 
-    .page {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 18px 18px 32px;
+    .app-shell {
+      max-width: 1480px;
+      margin: 32px auto 40px;
+      padding: 0 24px 32px;
     }
 
-    .header-row {
+    /* HEADER */
+
+    .header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 6px;
-    }
-
-    .title-block {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: 22px;
-    }
-
-    .subtitle {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .user-tag {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
-    .top-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
       align-items: center;
+      margin-bottom: 18px;
+      gap: 16px;
     }
 
-    .btn-chip {
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .app-title {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .help-icon {
+      width: 22px;
+      height: 22px;
       border-radius: 999px;
       border: none;
-      background: var(--primary);
-      color: white;
-      padding: 6px 14px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.35);
-      transition: transform 0.05s, box-shadow 0.15s, background 0.15s;
-    }
-
-    .btn-chip-secondary {
-      background: #f3f4f6;
-      color: #111827;
-      box-shadow: none;
-      border: 1px solid #e5e7eb;
-    }
-
-    .btn-chip:hover {
-      transform: translateY(-1px);
-      background: #1d4ed8;
-    }
-
-    .btn-chip-secondary:hover {
-      background: #e5e7eb;
-    }
-
-    .btn-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 999px;
-      border: 1px solid var(--border-dark);
-      background: white;
+      background: #e5efff;
+      color: #2563eb;
+      font-weight: 700;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: background 0.15s, transform 0.05s, box-shadow 0.15s;
+      font-size: 14px;
     }
 
-    .btn-icon:hover {
-      background: #f3f4ff;
-      box-shadow: 0 4px 10px rgba(148, 163, 184, 0.35);
-      transform: translateY(-1px);
+    .help-icon:hover {
+      background: #d6e4ff;
     }
 
-    .btn-outline-danger {
-      border: 1px solid #fecaca;
-      color: #b91c1c;
-      background: #fef2f2;
+    .user-info {
+      font-size: 13px;
+      color: var(--text-soft);
     }
 
-    .pill-badge {
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .counter-pill {
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+    }
+
+    .counter-pill span.value {
+      font-weight: 600;
+    }
+
+    .counter-p { color: var(--danger); }
+    .counter-ep { color: var(--warning); }
+    .counter-t { color: var(--success); }
+
+    .btn-ghost {
+      background: transparent;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      padding: 6px 14px;
+      font-size: 13px;
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
-      border-radius: 999px;
-      padding: 3px 10px;
-      font-size: 11px;
-      font-weight: 600;
-      border: 1px solid transparent;
+      gap: 6px;
+      color: var(--text-soft);
     }
 
-    .pill-p {
-      background: #fee2e2;
-      color: #b91c1c;
-      border-color: #fecaca;
+    .btn-ghost:hover {
+      background: #f3f4f6;
     }
 
-    .pill-ep {
-      background: #fef9c3;
-      color: #92400e;
-      border-color: #fef08a;
-    }
+    /* TOP CONTROLS */
 
-    .pill-t {
-      background: #dcfce7;
-      color: #166534;
-      border-color: #bbf7d0;
-    }
-
-    .card-table {
-      margin-top: 10px;
+    .card {
       background: var(--card-bg);
-      border-radius: 18px;
-      padding: 12px 14px 10px;
-      box-shadow:
-        0 20px 40px rgba(15, 23, 42, 0.12),
-        0 0 0 1px rgba(148, 163, 184, 0.25);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-soft);
+      padding: 16px 18px 18px;
+    }
+
+    .top-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .top-row-left,
+    .top-row-right {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      border-radius: 999px;
+      border: none;
+      background: var(--primary);
+      color: white;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 8px 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 10px 18px rgba(37, 99, 235, 0.28);
+    }
+
+    .btn-primary.secondary {
+      background: #eff3ff;
+      color: #1d4ed8;
+      box-shadow: none;
+      border: 1px solid #d9e2ff;
+    }
+
+    .btn-primary.secondary:hover {
+      background: #e1e8ff;
+    }
+
+    .btn-primary:hover {
+      background: #0b63ca;
+    }
+
+    .btn-small {
+      padding: 6px 12px;
+      font-size: 12px;
+      box-shadow: none;
+    }
+
+    .icon-circle {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.2);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 12px;
+    }
+
+    /* Filters row */
+
+    .filters-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .filters-row label {
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-right: 4px;
+    }
+
+    .select, .input, .checkbox-label {
+      font-size: 13px;
+    }
+
+    select, input[type="text"], input[type="date"] {
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: #f9fafb;
+      padding: 7px 12px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    select:focus, input[type="text"]:focus {
+      border-color: var(--primary);
+      background: #fff;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+    }
+
+    .checkbox-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+    }
+
+    .checkbox-label input {
+      margin: 0;
+    }
+
+    .btn-pill {
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #f9fafb;
+      padding: 6px 14px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .btn-pill:hover {
+      background: #eef2ff;
+      border-color: #d4d4ff;
+    }
+
+    .btn-pill.primary {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: #eef3ff;
+    }
+
+    /* TABLE */
+
+    .table-wrapper {
+      border-radius: 14px;
+      border: 1px solid var(--border-soft);
+      overflow: auto;
+      background: #fcfcff;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      table-layout: fixed;
-    }
-
-    thead th {
-      font-size: 12px;
-      font-weight: 600;
-      text-align: left;
-      padding: 6px 8px;
-      border-bottom: 1px solid var(--border);
-      color: #4b5563;
-    }
-
-    tbody td {
-      padding: 6px 8px;
       font-size: 13px;
-      border-bottom: 1px solid #f1f5f9;
-      vertical-align: top;
     }
 
-    tbody tr:last-child td {
-      border-bottom: none;
+    thead {
+      background: linear-gradient(to right, #eef2ff, #e5f0ff);
     }
 
-    .cell-input {
+    th, td {
+      padding: 6px 10px;
+      border-bottom: 1px solid #e5e7eb;
+      white-space: nowrap;
+    }
+
+    th {
+      text-align: left;
+      font-weight: 600;
+      color: #374151;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #f9fafb;
+    }
+
+    tbody tr:hover {
+      background: #eef2ff;
+    }
+
+    td input[type="text"] {
+      width: 100%;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      padding: 4px 6px;
+      background: transparent;
+      font-size: 13px;
+    }
+
+    td input[type="text"]:focus {
+      border-color: var(--primary);
+      background: #fff;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2);
+    }
+
+    td select {
       width: 100%;
       border-radius: 999px;
-      border: 1px solid transparent;
-      padding: 4px 7px;
-      font-size: 13px;
-      background: transparent;
-      outline: none;
-    }
-
-    .cell-input:hover {
+      padding: 3px 10px;
+      border: 1px solid #e5e7eb;
       background: #f9fafb;
-      border-color: #e5e7eb;
     }
 
-    .cell-input:focus {
-      background: #eef2ff;
-      border-color: #6366f1;
-      box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.35);
-    }
+    /* Estado badges */
 
-    .estado-select {
-      width: 80px;
+    .estado-badge {
       border-radius: 999px;
-      padding: 3px 7px;
-      border: 1px solid transparent;
+      padding: 3px 10px;
       font-size: 12px;
-      font-weight: 600;
-      text-align: center;
-      cursor: pointer;
-      outline: none;
-      background: #f1f5f9;
+      border: none;
       color: #111827;
     }
-
     .estado-p {
       background: #fee2e2;
       color: #b91c1c;
-      border-color: #fecaca;
     }
-
     .estado-ep {
-      background: #fef9c3;
+      background: #fef3c7;
       color: #92400e;
-      border-color: #fef08a;
     }
-
     .estado-t {
       background: #dcfce7;
       color: #166534;
-      border-color: #bbf7d0;
     }
 
+    /* Triángulo comentario */
+
+    .cell-comment {
+      position: relative;
+    }
+
+    .cell-comment.has-comment::after {
+      content: "";
+      position: absolute;
+      right: 2px;
+      top: 2px;
+      border-width: 0 0 8px 8px;
+      border-style: solid;
+      border-color: transparent transparent #facc15 transparent;
+    }
+
+    /* FOOTER */
+
     .footer-note {
-      margin-top: 6px;
+      margin-top: 8px;
       font-size: 11px;
-      color: var(--text-muted);
+      color: var(--text-soft);
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
     .footer-note input[type="checkbox"] {
-      transform: scale(0.9);
+      margin-right: 4px;
     }
 
-    /* Filtros en encabezados */
-    .header-filter-input {
-      width: 95%;
-      margin-top: 4px;
-      padding: 2px 4px;
-      font-size: 11px;
-      border-radius: 999px;
-      border: 1px solid #dde3f0;
-      outline: none;
-      background: #f9fafb;
-    }
+    /* MODALS */
 
-    .header-filter-select {
-      width: 95%;
-      margin-top: 4px;
-      padding: 2px 4px;
-      font-size: 11px;
-      border-radius: 999px;
-      border: 1px solid #dde3f0;
-      outline: none;
-      background: #f9fafb;
-    }
-
-    .header-filter-input:focus,
-    .header-filter-select:focus {
-      border-color: #2563eb;
-      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.25);
-      background: white;
-    }
-
-    .header-checkbox {
-      display: flex;
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.35);
+      display: none;
       align-items: center;
-      gap: 4px;
-      font-size: 10px;
-      margin-top: 2px;
-      color: #6b7280;
+      justify-content: center;
+      z-index: 50;
     }
 
-    /* Filtros de columnas de reuniones */
-    .meeting-filters {
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal {
+      background: #ffffff;
+      border-radius: 16px;
+      max-width: 540px;
+      width: 100%;
+      box-shadow: 0 24px 45px rgba(15, 23, 42, 0.28);
+      padding: 18px 20px 18px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      border-radius: 999px;
+      border: none;
+      background: #f3f4f6;
+      width: 26px;
+      height: 26px;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      justify-content: center;
+      cursor: pointer;
     }
 
-    .meeting-btn {
+    .modal-close:hover {
+      background: #e5e7eb;
+    }
+
+    .modal-body {
+      font-size: 13px;
+      color: #374151;
+      max-height: 380px;
+      overflow: auto;
+    }
+
+    .modal-body h4 {
+      margin: 10px 0 4px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .modal-body ul {
+      margin: 0 0 8px 18px;
+      padding: 0;
+    }
+
+    /* Responsables modal */
+
+    .responsables-list {
+      margin: 10px 0;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      padding: 6px 8px;
+      max-height: 230px;
+      overflow: auto;
+    }
+
+    .responsable-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 4px;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+
+    .responsable-item:nth-child(odd) {
+      background: #f9fafb;
+    }
+
+    .responsable-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .chip {
       border-radius: 999px;
       border: 1px solid #e5e7eb;
-      padding: 4px 10px;
+      padding: 3px 8px;
       font-size: 11px;
-      background: #f9fafb;
+    }
+
+    .btn-xs {
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      padding: 3px 8px;
+      font-size: 11px;
       cursor: pointer;
-      color: #374151;
+      background: #f9fafb;
     }
 
-    .meeting-btn.active {
-      background: #2563eb;
-      color: white;
-      border-color: #2563eb;
+    .btn-xs.danger {
+      border-color: #fecaca;
+      color: #b91c1c;
+      background: #fef2f2;
     }
 
-    /* Columna fecha de término */
-    .fecha-cell {
-      max-width: 40ch;
-      word-wrap: break-word;
-      white-space: normal;
+    .btn-xs:hover {
+      background: #eef2ff;
     }
 
-    /* Ocultar columnas dinámicamente */
-    .col-hidden {
-      display: none;
+    .btn-xs.danger:hover {
+      background: #fee2e2;
+    }
+
+    .input-inline {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      padding: 6px 10px;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    .badge-tip {
+      font-size: 11px;
+      color: var(--text-soft);
+      margin-top: 4px;
     }
 
     @media (max-width: 900px) {
-      .header-row {
+      .header {
         flex-direction: column;
         align-items: flex-start;
       }
-      .top-buttons {
+      .header-right {
+        flex-wrap: wrap;
+      }
+      .top-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .top-row-right {
+        align-self: stretch;
         justify-content: flex-start;
+      }
+      .filters-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .table-wrapper {
+        border-radius: 10px;
       }
     }
   </style>
 </head>
-
 <body>
-  <div class="page">
-    <div class="header-row">
-      <div class="title-block">
-        <h1>Seguimiento de tareas y reuniones</h1>
-        <div class="subtitle">
-          Columnas base: <strong>tema</strong>, <strong>sub tema</strong>,
-          <strong>responsable</strong>, <strong>estado</strong>,
-          <strong>fecha de término</strong>. Cada nueva reunión agrega una columna
-          con la fecha del día como título.
-          <br />
-          En <strong>estado</strong> usa: P (Pendiente), EP (En proceso), T
-          (Terminado).
-        </div>
-        <div class="user-tag" id="usuarioLabel"></div>
+<div class="app-shell">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <div class="app-title">
+        Seguimiento de tareas y reuniones
+        <button class="help-icon" id="btnHelp">?</button>
       </div>
+      <div class="user-info" id="userEmailLabel"></div>
+    </div>
 
-      <div class="top-buttons">
-        <button id="btnAddRow" class="btn-chip">
-          + Fila
+    <div class="header-right">
+      <div class="counter-pill counter-p">
+        P: <span class="value" id="countP">0</span>
+      </div>
+      <div class="counter-pill counter-ep">
+        EP: <span class="value" id="countEP">0</span>
+      </div>
+      <div class="counter-pill counter-t">
+        T: <span class="value" id="countT">0</span>
+      </div>
+      <button class="btn-ghost" id="btnLogout">Cerrar sesión</button>
+    </div>
+  </div>
+
+  <div class="card">
+
+    <!-- TOP ROW buttons -->
+    <div class="top-row">
+      <div class="top-row-left">
+        <button class="btn-primary btn-small" id="btnAddRow">
+          <span class="icon-circle">+</span>Fila
         </button>
-
-        <button id="btnAddColumn" class="btn-chip btn-chip-secondary">
-          + Columna
+        <button class="btn-primary btn-small secondary" id="btnAddMeetingCol">
+          <span class="icon-circle">+</span>Columna
         </button>
-
-        <button id="btnResponsables" class="btn-chip btn-chip-secondary">
+        <button class="btn-primary btn-small secondary" id="btnManageResponsables">
           Responsables
         </button>
-
-        <!-- Solo iconos para exportar / importar -->
-        <button id="btnExport" class="btn-icon" title="Exportar JSON">
-          ⬇
-        </button>
-        <button id="btnImport" class="btn-icon" title="Importar JSON">
-          ⬆
-        </button>
-
-        <button id="btnLogout" class="btn-chip btn-outline-danger">
-          Cerrar sesión
-        </button>
+      </div>
+      <div class="top-row-right">
+        <button class="btn-primary btn-small secondary" id="btnExport">⬇ Exp</button>
+        <button class="btn-primary btn-small secondary" id="btnImport">⬆ Imp</button>
+        <input type="file" id="importFileInput" accept="application/json" style="display:none" />
       </div>
     </div>
 
-    <div style="margin-top: 8px; display: flex; justify-content: flex-end;">
-      <div class="meeting-filters">
-        <button id="btnShowAllColumns" class="meeting-btn active">
-          Todas
-        </button>
-        <button id="btnLastTwoColumns" class="meeting-btn">
-          Últimas 2 fechas
-        </button>
-        <button id="btnTodayColumns" class="meeting-btn">
-          Solo hoy
-        </button>
+    <!-- FILTERS ROW -->
+    <div class="filters-row">
+
+      <div class="filters-row">
+        <label for="searchColumn">Buscar:</label>
+        <select id="searchColumn">
+          <option value="all">Todas las columnas</option>
+          <option value="tema">tema</option>
+          <option value="subTema">sub tema</option>
+          <option value="responsable">responsable</option>
+          <option value="estado">estado</option>
+          <option value="fechaTermino">fecha de término</option>
+        </select>
+        <input type="text" id="searchText" placeholder="Escribe una palabra o frase" />
+      </div>
+
+      <div class="filters-row">
+        <label for="filterEstado">Estado:</label>
+        <select id="filterEstado">
+          <option value="todos">Todos</option>
+          <option value="P">P</option>
+          <option value="EP">EP</option>
+          <option value="T">T</option>
+        </select>
+
+        <label for="filterResponsable">Responsable:</label>
+        <select id="filterResponsable">
+          <option value="todos">Todos</option>
+        </select>
+
+        <label class="checkbox-label">
+          <input type="checkbox" id="chkOcultarTerminados" />
+          Ocultar T
+        </label>
+
+        <button class="btn-pill" id="btnSoloHoy">Solo hoy</button>
+
+        <button class="btn-pill primary" id="btnAplicarFiltro">Filtro</button>
+        <button class="btn-pill" id="btnQuitarFiltro">Quitar filtro</button>
       </div>
     </div>
 
-    <div class="card-table">
-      <table id="tasksTable">
+    <!-- TABLE -->
+    <div class="table-wrapper">
+      <table id="mainTable">
         <thead>
-          <tr id="headerRow">
-            <th>
-              tema
-              <input
-                id="filterTema"
-                class="header-filter-input"
-                type="text"
-                placeholder="filtrar…"
-              />
-            </th>
-            <th>
-              sub tema
-              <input
-                id="filterSubtema"
-                class="header-filter-input"
-                type="text"
-                placeholder="filtrar…"
-              />
-            </th>
-            <th>
-              responsable
-              <select id="filterResponsable" class="header-filter-select">
-                <option value="Todos">Todos</option>
-              </select>
-            </th>
-            <th>
-              estado
-              <select id="filterEstado" class="header-filter-select">
-                <option value="Todos">Todos</option>
-                <option value="P">P</option>
-                <option value="EP">EP</option>
-                <option value="T">T</option>
-              </select>
-              <label class="header-checkbox">
-                <input type="checkbox" id="filterOcultarTerminados" />
-                Ocultar T
-              </label>
-            </th>
-            <th>
-              fecha de termino
-            </th>
-            <!-- aquí se insertan las columnas de reuniones dinámicamente -->
-          </tr>
+        <tr id="headerRow">
+          <th style="min-width:160px;">tema</th>
+          <th style="min-width:160px;">sub tema</th>
+          <th style="min-width:140px;">responsable</th>
+          <th style="min-width:90px;">estado</th>
+          <th style="min-width:120px;">fecha de termino</th>
+          <!-- columnas de reuniones dinámicas se agregan aquí -->
+        </tr>
         </thead>
-        <tbody id="tbody">
-          <!-- filas dinámicas -->
+        <tbody id="tableBody">
+        <!-- filas dinámicas -->
         </tbody>
       </table>
     </div>
 
-    <label class="footer-note">
-      <input type="checkbox" checked disabled />
-      Los datos (incluyendo comentarios y lista de responsables) se guardan en
-      este navegador, por usuario.
-    </label>
+    <div class="footer-note">
+      <input type="checkbox" id="chkLocal" checked disabled />
+      <span>
+        Los datos (incluyendo comentarios y lista de responsables) se guardan en este navegador, por usuario.
+      </span>
+    </div>
   </div>
+</div>
 
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-  <script>
-    const SUPABASE_URL = "https://hrbmstaklleraiacqmky.supabase.co";
-    const SUPABASE_ANON_KEY =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhyYm1zdGFrbGxlcmFpYWNxbWt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyMTA2OTQsImV4cCI6MjA3ODc4NjY5NH0.tN00tAjMJpJK_8gnerocbOSzHp93N5yc9KohTBpMeZc";
+<!-- MODAL AYUDA -->
+<div class="modal-backdrop" id="helpModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Ayuda rápida</div>
+      <button class="modal-close" data-close="helpModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>Este tablero está pensado para llevar el <strong>seguimiento de tareas y acuerdos</strong> de tus reuniones.</p>
 
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-      auth: {
-        persistSession: true,
-      },
+      <h4>Columnas base</h4>
+      <ul>
+        <li><strong>tema</strong>: título corto del tema o acuerdo.</li>
+        <li><strong>sub tema</strong>: detalle, área o referencia adicional.</li>
+        <li><strong>responsable</strong>: persona dueña de la acción (elige de la lista o agrega en el botón Responsables).</li>
+        <li><strong>estado</strong>: usa P (Pendiente), EP (En proceso) o T (Terminado).</li>
+        <li><strong>fecha de término</strong>: meta de cierre de la tarea.</li>
+      </ul>
+
+      <h4>Columnas de reuniones</h4>
+      <ul>
+        <li>Cada vez que des clic en <strong>+ Columna</strong> se agrega una columna nueva con la fecha del día (puedes cambiarla).</li>
+        <li>Úsalas para escribir comentarios o acuerdos específicos de cada reunión.</li>
+        <li>El botón <strong>Solo hoy</strong> oculta todas las demás reuniones y deja visible sólo la columna con la fecha de hoy (si existe).</li>
+      </ul>
+
+      <h4>Estados y contadores</h4>
+      <ul>
+        <li>El color de la columna estado cambia según P, EP o T.</li>
+        <li>Los chips de la parte superior se actualizan automáticamente con el número de tareas en cada estado.</li>
+        <li>Si marcas <strong>Ocultar T</strong>, las tareas terminadas se ocultan de la vista, pero siguen guardadas.</li>
+      </ul>
+
+      <h4>Responsables</h4>
+      <ul>
+        <li>Haz clic en el botón <strong>Responsables</strong> para abrir la lista.</li>
+        <li>Puedes <strong>agregar, renombrar o eliminar</strong> responsables. Los cambios se guardan en tu navegador.</li>
+        <li>Los select de la columna responsable se actualizan automáticamente con la lista nueva.</li>
+      </ul>
+
+      <h4>Comentarios</h4>
+      <ul>
+        <li>Haz <strong>clic derecho</strong> en cualquier celda (excepto responsable y estado) para agregar o editar un comentario.</li>
+        <li>Las celdas con comentario muestran un <strong>triángulo amarillo</strong> en la esquina superior derecha.</li>
+      </ul>
+
+      <h4>Exportar e importar</h4>
+      <ul>
+        <li>El botón <strong>⬇ Exp</strong> descarga un archivo JSON con todas las tareas de este usuario.</li>
+        <li>El botón <strong>⬆ Imp</strong> te permite cargar un JSON exportado previamente.</li>
+        <li>Úsalo como respaldo, o para mover datos a otra computadora.</li>
+      </ul>
+
+      <p class="badge-tip">Tip: siempre usa el mismo correo en el login para que tus tareas y responsables se mantengan juntos.</p>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RESPONSABLES -->
+<div class="modal-backdrop" id="responsablesModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Lista de responsables</div>
+      <button class="modal-close" data-close="responsablesModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="badge-tip">
+        Esta lista es por usuario y se guarda en este navegador.  
+        Los cambios se reflejan inmediatamente en la columna responsable.
+      </div>
+      <div class="responsables-list" id="responsablesList">
+        <!-- items dinámicos -->
+      </div>
+
+      <input type="text" id="nuevoResponsableInput" class="input-inline" placeholder="Nuevo responsable" />
+      <button class="btn-primary btn-small" id="btnAgregarResponsableModal" style="margin-top:6px;">
+        Agregar responsable
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  /************ UTILIDADES BÁSICAS DE SESIÓN / ALMACENAMIENTO ************/
+  const STORAGE_KEY_BASE = "sr_tabla_";
+  const RESPONSABLES_KEY_BASE = "sr_responsables_";
+
+  function getUserEmail() {
+    // guardado por index.html en sessionStorage
+    const email = sessionStorage.getItem("sr_user_email") || "";
+    return email;
+  }
+
+  function getUserStorageKey() {
+    const email = getUserEmail();
+    return STORAGE_KEY_BASE + (email || "anon");
+  }
+
+  function getRespStorageKey() {
+    const email = getUserEmail();
+    return RESPONSABLES_KEY_BASE + (email || "anon");
+  }
+
+  function loadData() {
+    try {
+      const raw = localStorage.getItem(getUserStorageKey());
+      if (!raw) return { columns: [], rows: [] };
+      return JSON.parse(raw);
+    } catch (e) {
+      console.error("Error al leer datos:", e);
+      return { columns: [], rows: [] };
+    }
+  }
+
+  function saveData() {
+    const payload = {
+      columns: meetingColumns,
+      rows: tableRows
+    };
+    localStorage.setItem(getUserStorageKey(), JSON.stringify(payload));
+  }
+
+  function loadResponsables() {
+    try {
+      const raw = localStorage.getItem(getRespStorageKey());
+      if (!raw) return ["Sin asignar"];
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) && arr.length > 0 ? arr : ["Sin asignar"];
+    } catch (e) {
+      console.error("Error al leer responsables:", e);
+      return ["Sin asignar"];
+    }
+  }
+
+  function saveResponsables() {
+    localStorage.setItem(getRespStorageKey(), JSON.stringify(responsables));
+  }
+
+  /************ ESTADO EN MEMORIA ************/
+  let meetingColumns = []; // array de strings (fechas)
+  let tableRows = [];      // [{tema, subTema, responsable, estado, fechaTermino, reuniones:{colFecha: texto}, comments:{celdaId: texto}}]
+  let responsables = [];
+
+  // filtros
+  let currentFilter = {
+    text: "",
+    column: "all",
+    estado: "todos",
+    responsable: "todos",
+    ocultarT: false,
+    soloHoy: false
+  };
+
+  /************ INICIALIZACIÓN ************/
+  document.addEventListener("DOMContentLoaded", () => {
+    const email = getUserEmail();
+    const label = document.getElementById("userEmailLabel");
+    if (email) {
+      label.textContent = email;
+    } else {
+      label.textContent = "";
+      alert("No hay sesión activa, vuelve a iniciar desde el login.");
+      window.location.href = "index.html";
+      return;
+    }
+
+    // Cargar datos
+    const data = loadData();
+    meetingColumns = data.columns || [];
+    tableRows = data.rows || [];
+
+    // Responsables
+    responsables = loadResponsables();
+
+    buildHeader();
+    renderResponsableFilterOptions();
+    renderTable();
+    updateCounters();
+
+    // Eventos globales
+    document.getElementById("btnAddRow").addEventListener("click", addRow);
+    document.getElementById("btnAddMeetingCol").addEventListener("click", addMeetingColumn);
+    document.getElementById("btnExport").addEventListener("click", exportJSON);
+    document.getElementById("btnImport").addEventListener("click", () => {
+      document.getElementById("importFileInput").click();
+    });
+    document.getElementById("importFileInput").addEventListener("change", importJSON);
+
+    document.getElementById("btnHelp").addEventListener("click", () => openModal("helpModal"));
+    document.querySelectorAll(".modal-close").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.dataset.close;
+        closeModal(id);
+      });
     });
 
-    // ---- Estado en memoria ----
-    let currentUserEmail = null;
-    let storageKey = null;
+    document.getElementById("btnManageResponsables").addEventListener("click", () => {
+      renderResponsablesModal();
+      openModal("responsablesModal");
+    });
+    document.getElementById("btnAgregarResponsableModal").addEventListener("click", agregarResponsableDesdeModal);
 
-    let rows = []; // { id, tema, subtema, responsable, estado, fecha, reuniones: { [colId]: texto } }
-    let responsables = ["Carlos Ruiz"];
-    let meetingColumns = []; // [{id, title, dateISO}]
+    // Filtros
+    document.getElementById("btnAplicarFiltro").addEventListener("click", applyFilterFromUI);
+    document.getElementById("btnQuitarFiltro").addEventListener("click", clearFilterUI);
+    document.getElementById("btnSoloHoy").addEventListener("click", () => {
+      currentFilter.soloHoy = true;
+      applyFilterFromUI();
+    });
 
-    const filtros = {
-      tema: "",
-      subtema: "",
-      estado: "Todos",
-      responsable: "Todos",
-      ocultarTerminados: false,
-    };
+    document.getElementById("btnLogout").addEventListener("click", () => {
+      sessionStorage.removeItem("sr_user_email");
+      window.location.href = "index.html";
+    });
 
-    // ---- Utilidades de almacenamiento ----
-    function saveToStorage() {
-      if (!storageKey) return;
-      const payload = { rows, responsables, meetingColumns };
-      localStorage.setItem(storageKey, JSON.stringify(payload));
+    // clic derecho comentarios
+    const table = document.getElementById("mainTable");
+    table.addEventListener("contextmenu", handleCellContextMenu);
+  });
+
+  /************ RENDER HEADER ************/
+  function buildHeader() {
+    const headerRow = document.getElementById("headerRow");
+    // Limpia todo menos las 5 columnas base
+    while (headerRow.children.length > 5) {
+      headerRow.removeChild(headerRow.lastChild);
     }
+    meetingColumns.forEach(dateStr => {
+      const th = document.createElement("th");
+      th.textContent = dateStr;
+      th.dataset.meeting = dateStr;
+      headerRow.appendChild(th);
+    });
+  }
 
-    function loadFromStorage() {
-      if (!storageKey) return;
-      const raw = localStorage.getItem(storageKey);
-      if (!raw) {
-        // Primera vez: una fila de ejemplo
-        rows = [
-          {
-            id: crypto.randomUUID(),
-            tema: "",
-            subtema: "",
-            responsable: "",
-            estado: "P",
-            fecha: "",
-            reuniones: {},
-          },
-        ];
-        responsables = ["Carlos Ruiz"];
-        meetingColumns = [];
-        return;
-      }
+  /************ RENDER TABLA ************/
+  function renderTable() {
+    const tbody = document.getElementById("tableBody");
+    tbody.innerHTML = "";
 
-      try {
-        const data = JSON.parse(raw);
-        rows = data.rows || [];
-        responsables = data.responsables || [];
-        meetingColumns = data.meetingColumns || [];
-      } catch (e) {
-        console.error("Error al leer storage", e);
-      }
-    }
+    const hoy = new Date().toISOString().slice(0,10);
 
-    // ---- Filtros de encabezado ----
-    function initHeaderFilters() {
-      const inputTema = document.getElementById("filterTema");
-      const inputSub = document.getElementById("filterSubtema");
-      const selEstado = document.getElementById("filterEstado");
-      const selResp = document.getElementById("filterResponsable");
-      const chkOcultarT = document.getElementById("filterOcultarTerminados");
+    tableRows.forEach((row, rowIndex) => {
 
+      // aplicar filtros por fila
+      if (!passesRowFilters(row)) return;
+
+      const tr = document.createElement("tr");
+
+      // tema
+      const tdTema = document.createElement("td");
+      tdTema.classList.add("cell-comment");
+      tdTema.dataset.col = "tema";
+      const inputTema = document.createElement("input");
+      inputTema.type = "text";
+      inputTema.value = row.tema || "";
       inputTema.addEventListener("input", () => {
-        filtros.tema = inputTema.value.trim().toLowerCase();
-        renderTablaFiltrada();
+        row.tema = inputTema.value;
+        saveData();
       });
+      tdTema.appendChild(inputTema);
+      markCommentTriangle(row, tdTema, rowIndex, "tema");
+      tr.appendChild(tdTema);
 
+      // sub tema
+      const tdSub = document.createElement("td");
+      tdSub.classList.add("cell-comment");
+      tdSub.dataset.col = "subTema";
+      const inputSub = document.createElement("input");
+      inputSub.type = "text";
+      inputSub.value = row.subTema || "";
       inputSub.addEventListener("input", () => {
-        filtros.subtema = inputSub.value.trim().toLowerCase();
-        renderTablaFiltrada();
+        row.subTema = inputSub.value;
+        saveData();
       });
+      tdSub.appendChild(inputSub);
+      markCommentTriangle(row, tdSub, rowIndex, "subTema");
+      tr.appendChild(tdSub);
 
-      selEstado.addEventListener("change", () => {
-        filtros.estado = selEstado.value;
-        renderTablaFiltrada();
-      });
-
-      selResp.addEventListener("change", () => {
-        filtros.responsable = selResp.value;
-        renderTablaFiltrada();
-      });
-
-      chkOcultarT.addEventListener("change", () => {
-        filtros.ocultarTerminados = chkOcultarT.checked;
-        renderTablaFiltrada();
-      });
-    }
-
-    function actualizarFiltroResponsables() {
-      const selResp = document.getElementById("filterResponsable");
-      if (!selResp) return;
-      const valorActual = selResp.value || "Todos";
-      selResp.innerHTML = '<option value="Todos">Todos</option>';
-      responsables.forEach((r) => {
+      // responsable
+      const tdResp = document.createElement("td");
+      const selResp = document.createElement("select");
+      responsables.forEach(r => {
         const opt = document.createElement("option");
         opt.value = r;
         opt.textContent = r;
         selResp.appendChild(opt);
       });
-      if ([...selResp.options].some((o) => o.value === valorActual)) {
-        selResp.value = valorActual;
+      if (!row.responsable) {
+        row.responsable = responsables[0] || "Sin asignar";
+      }
+      selResp.value = row.responsable;
+      selResp.addEventListener("change", () => {
+        row.responsable = selResp.value;
+        saveData();
+      });
+      tdResp.appendChild(selResp);
+      tr.appendChild(tdResp);
+
+      // estado
+      const tdEstado = document.createElement("td");
+      const selEstado = document.createElement("select");
+      ["P","EP","T"].forEach(e => {
+        const opt = document.createElement("option");
+        opt.value = e;
+        opt.textContent = e;
+        selEstado.appendChild(opt);
+      });
+      if (!row.estado) row.estado = "P";
+      selEstado.value = row.estado;
+      selEstado.addEventListener("change", () => {
+        row.estado = selEstado.value;
+        saveData();
+        updateCounters();
+        renderTable(); // para ocultar T si el filtro está activo
+      });
+      tdEstado.appendChild(selEstado);
+      tr.appendChild(tdEstado);
+
+      // fecha termino
+      const tdFecha = document.createElement("td");
+      tdFecha.classList.add("cell-comment");
+      tdFecha.dataset.col = "fechaTermino";
+      const inputFecha = document.createElement("input");
+      inputFecha.type = "text";
+      inputFecha.placeholder = "dd/mm/aa";
+      inputFecha.value = row.fechaTermino || "";
+      inputFecha.addEventListener("input", () => {
+        row.fechaTermino = inputFecha.value;
+        saveData();
+      });
+      tdFecha.appendChild(inputFecha);
+      markCommentTriangle(row, tdFecha, rowIndex, "fechaTermino");
+      tr.appendChild(tdFecha);
+
+      // columnas de reuniones
+      meetingColumns.forEach(colDate => {
+        const td = document.createElement("td");
+        td.classList.add("cell-comment");
+        td.dataset.col = `reunion_${colDate}`;
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.value = (row.reuniones && row.reuniones[colDate]) || "";
+        input.addEventListener("input", () => {
+          if (!row.reuniones) row.reuniones = {};
+          row.reuniones[colDate] = input.value;
+          saveData();
+        });
+        td.appendChild(input);
+        markCommentTriangle(row, td, rowIndex, `reunion_${colDate}`);
+        tr.appendChild(td);
+      });
+
+      // Colorear fila según estado
+      const estado = row.estado || "P";
+      if (estado === "P") {
+        tr.classList.remove("estado-ep", "estado-t");
+        tr.classList.add("estado-p");
+      } else if (estado === "EP") {
+        tr.classList.remove("estado-p", "estado-t");
+        tr.classList.add("estado-ep");
+      } else if (estado === "T") {
+        tr.classList.remove("estado-p", "estado-ep");
+        tr.classList.add("estado-t");
+      }
+
+      tbody.appendChild(tr);
+    });
+
+    updateCounters();
+  }
+
+  /************ FILTROS ************/
+  function passesRowFilters(row) {
+    const { text, column, estado, responsable, ocultarT } = currentFilter;
+
+    if (ocultarT && row.estado === "T") return false;
+
+    if (estado !== "todos" && row.estado !== estado) return false;
+
+    if (responsable !== "todos" && row.responsable !== responsable) return false;
+
+    if (text && text.trim() !== "") {
+      const q = text.toLowerCase();
+      if (column === "all") {
+        const allText = [
+          row.tema || "",
+          row.subTema || "",
+          row.responsable || "",
+          row.estado || "",
+          row.fechaTermino || ""
+        ].join(" ").toLowerCase();
+        if (!allText.includes(q)) return false;
       } else {
-        selResp.value = "Todos";
-      }
-    }
-
-    function aplicarFiltros() {
-      return rows.filter((row) => {
-        if (filtros.tema) {
-          const texto = (row.tema || "").toString().toLowerCase();
-          if (!texto.includes(filtros.tema)) return false;
-        }
-
-        if (filtros.subtema) {
-          const texto = (row.subtema || "").toString().toLowerCase();
-          if (!texto.includes(filtros.subtema)) return false;
-        }
-
-        if (filtros.estado !== "Todos" && row.estado !== filtros.estado) {
-          return false;
-        }
-
-        if (
-          filtros.responsable !== "Todos" &&
-          row.responsable !== filtros.responsable
-        ) {
-          return false;
-        }
-
-        if (filtros.ocultarTerminados && row.estado === "T") {
-          return false;
-        }
-
-        return true;
-      });
-    }
-
-    // ---- Renderizado tabla ----
-    function renderTablaFiltrada() {
-      const datos = aplicarFiltros();
-      renderTable(datos);
-    }
-
-    function renderTable(data) {
-      const tbody = document.getElementById("tbody");
-      tbody.innerHTML = "";
-
-      // Actualizar encabezado de columnas de reuniones
-      const headerRow = document.getElementById("headerRow");
-      // Limpia todas las th dinámicas previas
-      while (headerRow.children.length > 5) {
-        headerRow.removeChild(headerRow.lastChild);
-      }
-
-      meetingColumns.forEach((col) => {
-        const th = document.createElement("th");
-        th.textContent = col.title;
-        th.dataset.meetingId = col.id;
-        headerRow.appendChild(th);
-      });
-
-      data.forEach((row) => {
-        const tr = document.createElement("tr");
-
-        // tema
-        const tdTema = document.createElement("td");
-        const inputTema = document.createElement("input");
-        inputTema.className = "cell-input";
-        inputTema.value = row.tema || "";
-        inputTema.addEventListener("input", () => {
-          row.tema = inputTema.value;
-          saveToStorage();
-        });
-        tdTema.appendChild(inputTema);
-        tr.appendChild(tdTema);
-
-        // sub tema
-        const tdSub = document.createElement("td");
-        const inputSub = document.createElement("input");
-        inputSub.className = "cell-input";
-        inputSub.value = row.subtema || "";
-        inputSub.addEventListener("input", () => {
-          row.subtema = inputSub.value;
-          saveToStorage();
-        });
-        tdSub.appendChild(inputSub);
-        tr.appendChild(tdSub);
-
-        // responsable
-        const tdResp = document.createElement("td");
-        const selResp = document.createElement("select");
-        selResp.className = "cell-input";
-        const optEmpty = document.createElement("option");
-        optEmpty.value = "";
-        optEmpty.textContent = "";
-        selResp.appendChild(optEmpty);
-        responsables.forEach((r) => {
-          const opt = document.createElement("option");
-          opt.value = r;
-          opt.textContent = r;
-          selResp.appendChild(opt);
-        });
-        selResp.value = row.responsable || "";
-        selResp.addEventListener("change", () => {
-          row.responsable = selResp.value;
-          saveToStorage();
-        });
-        tdResp.appendChild(selResp);
-        tr.appendChild(tdResp);
-
-        // estado (solo un select con color)
-        const tdEstado = document.createElement("td");
-        const selEstado = document.createElement("select");
-        selEstado.className = "estado-select";
-        ["P", "EP", "T"].forEach((code) => {
-          const opt = document.createElement("option");
-          opt.value = code;
-          opt.textContent = code;
-          selEstado.appendChild(opt);
-        });
-        selEstado.value = row.estado || "P";
-
-        function updateEstadoClass() {
-          selEstado.classList.remove("estado-p", "estado-ep", "estado-t");
-          if (selEstado.value === "P") selEstado.classList.add("estado-p");
-          if (selEstado.value === "EP") selEstado.classList.add("estado-ep");
-          if (selEstado.value === "T") selEstado.classList.add("estado-t");
-        }
-        updateEstadoClass();
-
-        selEstado.addEventListener("change", () => {
-          row.estado = selEstado.value;
-          updateEstadoClass();
-          saveToStorage();
-          renderTablaFiltrada(); // para que se aplique "Ocultar T"
-        });
-
-        tdEstado.appendChild(selEstado);
-        tr.appendChild(tdEstado);
-
-        // fecha de termino
-        const tdFecha = document.createElement("td");
-        tdFecha.className = "fecha-cell";
-        const inputFecha = document.createElement("input");
-        inputFecha.className = "cell-input";
-        inputFecha.value = row.fecha || "";
-        inputFecha.addEventListener("input", () => {
-          row.fecha = inputFecha.value;
-          saveToStorage();
-        });
-        tdFecha.appendChild(inputFecha);
-        tr.appendChild(tdFecha);
-
-        // columnas de reuniones
-        meetingColumns.forEach((col) => {
-          const td = document.createElement("td");
-          const input = document.createElement("input");
-          input.className = "cell-input";
-          const value =
-            (row.reuniones && row.reuniones[col.id]) ? row.reuniones[col.id] : "";
-          input.value = value;
-          input.addEventListener("input", () => {
-            if (!row.reuniones) row.reuniones = {};
-            row.reuniones[col.id] = input.value;
-            saveToStorage();
-          });
-          td.appendChild(input);
-          tr.appendChild(td);
-        });
-
-        tbody.appendChild(tr);
-      });
-
-      aplicarFiltroColumnasReuniones();
-    }
-
-    // ---- Filtros de columnas de reuniones ----
-    let modoColumnas = "todas"; // "todas" | "ultimas2" | "soloHoy"
-
-    function aplicarFiltroColumnasReuniones() {
-      const table = document.getElementById("tasksTable");
-      const headerRow = document.getElementById("headerRow");
-
-      const hoyISO = new Date().toISOString().slice(0, 10);
-
-      // indices de columnas base: 0..4, las reuniones empiezan en 5
-      meetingColumns.forEach((col, index) => {
-        const thIndex = 5 + index;
-
-        let hide = false;
-        if (modoColumnas === "ultimas2") {
-          const start = Math.max(meetingColumns.length - 2, 0);
-          if (index < start) hide = true;
-        } else if (modoColumnas === "soloHoy") {
-          if (col.dateISO !== hoyISO) hide = true;
-        }
-
-        // th
-        const th = headerRow.children[thIndex];
-        if (th) th.classList.toggle("col-hidden", hide);
-
-        // tds
-        [...table.tBodies[0].rows].forEach((tr) => {
-          const td = tr.children[thIndex];
-          if (td) td.classList.toggle("col-hidden", hide);
-        });
-      });
-
-      // botones activos
-      document
-        .getElementById("btnShowAllColumns")
-        .classList.toggle("active", modoColumnas === "todas");
-      document
-        .getElementById("btnLastTwoColumns")
-        .classList.toggle("active", modoColumnas === "ultimas2");
-      document
-        .getElementById("btnTodayColumns")
-        .classList.toggle("active", modoColumnas === "soloHoy");
-    }
-
-    // ---- Botones de columnas ----
-    function initMeetingButtons() {
-      document.getElementById("btnShowAllColumns").addEventListener("click", () => {
-        modoColumnas = "todas";
-        aplicarFiltroColumnasReuniones();
-      });
-      document.getElementById("btnLastTwoColumns").addEventListener("click", () => {
-        modoColumnas = "ultimas2";
-        aplicarFiltroColumnasReuniones();
-      });
-      document.getElementById("btnTodayColumns").addEventListener("click", () => {
-        modoColumnas = "soloHoy";
-        aplicarFiltroColumnasReuniones();
-      });
-    }
-
-    // ---- Acciones principales ----
-    function addRow() {
-      const newRow = {
-        id: crypto.randomUUID(),
-        tema: "",
-        subtema: "",
-        responsable: "",
-        estado: "P",
-        fecha: "",
-        reuniones: {},
-      };
-      rows.push(newRow);
-      saveToStorage();
-      renderTablaFiltrada();
-    }
-
-    function addColumn() {
-      const hoy = new Date();
-      const dateISO = hoy.toISOString().slice(0, 10);
-      const title = hoy.toLocaleDateString("es-MX");
-      const col = {
-        id: crypto.randomUUID(),
-        title,
-        dateISO,
-      };
-      meetingColumns.push(col);
-      saveToStorage();
-      renderTablaFiltrada();
-    }
-
-    function gestionarResponsables() {
-      const actual = responsables.join(", ");
-      const texto = prompt(
-        "Lista de responsables (separados por coma):",
-        actual
-      );
-      if (texto === null) return;
-      const lista = texto
-        .split(",")
-        .map((t) => t.trim())
-        .filter((t) => t.length > 0);
-      responsables = [...new Set(lista)];
-      saveToStorage();
-      actualizarFiltroResponsables();
-      renderTablaFiltrada();
-    }
-
-    function exportJSON() {
-      const payload = { rows, responsables, meetingColumns };
-      const blob = new Blob([JSON.stringify(payload, null, 2)], {
-        type: "application/json",
-      });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "seguimiento_reuniones.json";
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function importJSON() {
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = "application/json";
-      input.addEventListener("change", () => {
-        const file = input.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = () => {
-          try {
-            const data = JSON.parse(reader.result);
-            rows = data.rows || [];
-            responsables = data.responsables || [];
-            meetingColumns = data.meetingColumns || [];
-            saveToStorage();
-            actualizarFiltroResponsables();
-            renderTablaFiltrada();
-          } catch (e) {
-            alert("Archivo JSON inválido");
-          }
+        const map = {
+          tema: row.tema || "",
+          subTema: row.subTema || "",
+          responsable: row.responsable || "",
+          estado: row.estado || "",
+          fechaTermino: row.fechaTermino || ""
         };
-        reader.readAsText(file);
-      });
-      input.click();
-    }
-
-    async function logout() {
-      await supabaseClient.auth.signOut();
-      window.location.href = "index.html";
-    }
-
-    // ---- Inicio ----
-    async function init() {
-      const { data } = await supabaseClient.auth.getSession();
-      if (!data.session || !data.session.user) {
-        alert("No hay sesión activa, vuelve a iniciar desde el login.");
-        window.location.href = "index.html";
-        return;
+        if (!(map[column] || "").toLowerCase().includes(q)) return false;
       }
-
-      currentUserEmail = data.session.user.email;
-      storageKey = "seguimiento_" + currentUserEmail;
-      document.getElementById("usuarioLabel").textContent =
-        "Usuario: " + currentUserEmail;
-
-      loadFromStorage();
-      initHeaderFilters();
-      initMeetingButtons();
-      actualizarFiltroResponsables();
-
-      // Botones
-      document.getElementById("btnAddRow").addEventListener("click", addRow);
-      document
-        .getElementById("btnAddColumn")
-        .addEventListener("click", addColumn);
-      document
-        .getElementById("btnResponsables")
-        .addEventListener("click", gestionarResponsables);
-      document.getElementById("btnExport").addEventListener("click", exportJSON);
-      document.getElementById("btnImport").addEventListener("click", importJSON);
-      document.getElementById("btnLogout").addEventListener("click", logout);
-
-      renderTablaFiltrada();
     }
 
-    window.addEventListener("load", init);
-  </script>
+    return true;
+  }
+
+  function applyFilterFromUI() {
+    currentFilter.text = document.getElementById("searchText").value.trim();
+    currentFilter.column = document.getElementById("searchColumn").value;
+    currentFilter.estado = document.getElementById("filterEstado").value;
+    currentFilter.responsable = document.getElementById("filterResponsable").value;
+    currentFilter.ocultarT = document.getElementById("chkOcultarTerminados").checked;
+
+    renderTable();
+  }
+
+  function clearFilterUI() {
+    document.getElementById("searchText").value = "";
+    document.getElementById("searchColumn").value = "all";
+    document.getElementById("filterEstado").value = "todos";
+    document.getElementById("filterResponsable").value = "todos";
+    document.getElementById("chkOcultarTerminados").checked = false;
+    currentFilter = {
+      text: "",
+      column: "all",
+      estado: "todos",
+      responsable: "todos",
+      ocultarT: false,
+      soloHoy: false
+    };
+    renderTable();
+  }
+
+  /************ CONTADORES ************/
+  function updateCounters() {
+    let cP = 0, cEP = 0, cT = 0;
+    tableRows.forEach(r => {
+      if (r.estado === "T") cT++;
+      else if (r.estado === "EP") cEP++;
+      else cP++;
+    });
+    document.getElementById("countP").textContent = cP;
+    document.getElementById("countEP").textContent = cEP;
+    document.getElementById("countT").textContent = cT;
+  }
+
+  /************ FILAS / COLUMNAS ************/
+  function addRow() {
+    const newRow = {
+      tema: "",
+      subTema: "",
+      responsable: responsables[0] || "Sin asignar",
+      estado: "P",
+      fechaTermino: "",
+      reuniones: {},
+      comments: {}
+    };
+    tableRows.push(newRow);
+    saveData();
+    renderTable();
+  }
+
+  function addMeetingColumn() {
+    const hoy = new Date().toISOString().slice(0, 10);
+    let fecha = prompt("Fecha para la nueva columna de reunión (YYYY-MM-DD):", hoy);
+    if (!fecha) return;
+    fecha = fecha.trim();
+    if (meetingColumns.includes(fecha)) {
+      alert("Ya existe una columna con esa fecha.");
+      return;
+    }
+    meetingColumns.push(fecha);
+    saveData();
+    buildHeader();
+    renderTable();
+  }
+
+  /************ EXPORT / IMPORT ************/
+  function exportJSON() {
+    const data = {
+      columns: meetingColumns,
+      rows: tableRows,
+      responsables
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "seguimiento_reuniones.json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function importJSON(evt) {
+    const file = evt.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        meetingColumns = data.columns || [];
+        tableRows = data.rows || [];
+        responsables = data.responsables && data.responsables.length ? data.responsables : responsables;
+        saveData();
+        saveResponsables();
+        buildHeader();
+        renderResponsableFilterOptions();
+        renderTable();
+      } catch (err) {
+        alert("Archivo inválido");
+      }
+    };
+    reader.readAsText(file);
+    evt.target.value = "";
+  }
+
+  /************ MODALES ************/
+  function openModal(id) {
+    document.getElementById(id).classList.add("active");
+  }
+  function closeModal(id) {
+    document.getElementById(id).classList.remove("active");
+  }
+
+  /************ RESPONSABLES ************/
+  function renderResponsableFilterOptions() {
+    const sel = document.getElementById("filterResponsable");
+    const current = sel.value || "todos";
+    sel.innerHTML = "";
+    const optAll = document.createElement("option");
+    optAll.value = "todos";
+    optAll.textContent = "Todos";
+    sel.appendChild(optAll);
+    responsables.forEach(r => {
+      const opt = document.createElement("option");
+      opt.value = r;
+      opt.textContent = r;
+      sel.appendChild(opt);
+    });
+    if ([...sel.options].some(o => o.value === current)) {
+      sel.value = current;
+    }
+  }
+
+  function renderResponsablesModal() {
+    const container = document.getElementById("responsablesList");
+    container.innerHTML = "";
+    responsables.forEach((r, idx) => {
+      const item = document.createElement("div");
+      item.className = "responsable-item";
+      const nameSpan = document.createElement("span");
+      nameSpan.textContent = r;
+      item.appendChild(nameSpan);
+
+      const actions = document.createElement("div");
+      actions.className = "responsable-actions";
+
+      const btnRen = document.createElement("button");
+      btnRen.className = "btn-xs";
+      btnRen.textContent = "Renombrar";
+      btnRen.addEventListener("click", () => {
+        const nuevo = prompt("Nuevo nombre para responsable:", r);
+        if (!nuevo) return;
+        const newName = nuevo.trim();
+        if (!newName) return;
+        // actualizar lista
+        responsables[idx] = newName;
+        // actualizar filas
+        tableRows.forEach(row => {
+          if (row.responsable === r) row.responsable = newName;
+        });
+        saveResponsables();
+        saveData();
+        renderResponsablesModal();
+        renderResponsableFilterOptions();
+        renderTable();
+      });
+
+      const btnDel = document.createElement("button");
+      btnDel.className = "btn-xs danger";
+      btnDel.textContent = "Eliminar";
+      btnDel.addEventListener("click", () => {
+        if (!confirm("¿Eliminar responsable \""+r+"\"? Las filas que lo tengan quedarán con ese texto, pero ya no aparecerá en la lista.")) return;
+        responsables.splice(idx,1);
+        saveResponsables();
+        renderResponsablesModal();
+        renderResponsableFilterOptions();
+        renderTable();
+      });
+
+      actions.appendChild(btnRen);
+      actions.appendChild(btnDel);
+      item.appendChild(actions);
+      container.appendChild(item);
+    });
+  }
+
+  function agregarResponsableDesdeModal() {
+    const input = document.getElementById("nuevoResponsableInput");
+    const val = input.value.trim();
+    if (!val) return;
+    if (responsables.includes(val)) {
+      alert("Ese responsable ya existe.");
+      return;
+    }
+    responsables.push(val);
+    saveResponsables();
+    input.value = "";
+    renderResponsablesModal();
+    renderResponsableFilterOptions();
+    renderTable();
+  }
+
+  /************ COMENTARIOS ************/
+  function handleCellContextMenu(e) {
+    const cell = e.target.closest("td");
+    if (!cell) return;
+
+    const colId = cell.dataset.col;
+    if (!colId) return; // no comments for responsable/estado
+
+    e.preventDefault();
+
+    const rowIndex = [...cell.parentNode.parentNode.children].indexOf(cell.parentNode);
+    const row = tableRows[rowIndex];
+    if (!row) return;
+    if (!row.comments) row.comments = {};
+
+    const key = colId;
+    const actual = row.comments[key] || "";
+    const nuevo = prompt("Comentario para esta celda (dejar vacío para borrar):", actual);
+    if (nuevo === null) return;
+
+    if (nuevo.trim() === "") {
+      delete row.comments[key];
+    } else {
+      row.comments[key] = nuevo.trim();
+    }
+    saveData();
+    renderTable();
+  }
+
+  function markCommentTriangle(row, td, rowIndex, colId) {
+    if (!row.comments) return;
+    if (row.comments[colId]) {
+      td.classList.add("has-comment");
+    } else {
+      td.classList.remove("has-comment");
+    }
+  }
+
+</script>
 </body>
 </html>
